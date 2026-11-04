@@ -1,0 +1,62 @@
+services:
+
+  # ── Neo4j Knowledge Graph ─────────────────────────────
+  neo4j:
+    image: neo4j:5.18-community
+    container_name: curator_neo4j
+    ports:
+      - "7474:7474"   # Browser
+      - "7687:7687"   # Bolt
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:-curator_password}
+      NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_dbms_security_procedures_unrestricted: apoc.*
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "${NEO4J_PASSWORD:-curator_password}", "RETURN 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # ── FastAPI Backend ────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: curator_backend
+    ports:
+      - "8000:8000"
+    env_file: .env
+    environment:
+      NEO4J_URI: bolt://neo4j:7687
+      MIMAR_DB_PATH: /app/data/mimar/mimar.sqlite3
+    volumes:
+      - ./backend:/app
+      - ./data:/app/data          # MİMAR store, indexes and artifacts stay on the local host
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # ── React Frontend ─────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: curator_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      VITE_API_URL: http://localhost:8000
+    command: npm run dev -- --host
+    depends_on:
+      - backend
+
+volumes:
+  neo4j_data:
+  neo4j_logs:

@@ -1,0 +1,4021 @@
+{
+ "meta": {
+  "source": "Mezuniyet Öncesi Tıp Eğitimi Ulusal Çekirdek Eğitim Programı 2020 (UÇEP-2020), Tablo 2.2 Çekirdek Hastalıklar/Klinik Problemler",
+  "official_document": "https://www.yok.gov.tr/Documents/Kurumsal/egitim_ogretim_dairesi/Ulusal-cekirdek-egitimi-programlari/mezuniyet-oncesi-tip-egitimi-cekirdek-egitimi-programi.pdf",
+  "transcribed_from": "https://tip.mu.edu.tr/Newfiles/31/Content/UÇEP ÇEKİRDEK HASTALIKLAR-DÜZEY KODLANMIŞ.pdf",
+  "items": 342,
+  "levels": {
+   "ÖnT": "Ön tanı koyarak sevk edebilmeli",
+   "T": "Tanı koyabilmeli ve tedavi hakkında bilgi sahibi olabilmeli",
+   "TT": "Tanı koyabilmeli, tedavi edebilmeli",
+   "A": "Acil durumu tanımlayarak ilk tedavisini yapabilmeli ve gerektiğinde uzmana yönlendirebilmeli",
+   "K": "Korunma önlemlerini uygulayabilmeli",
+   "İ": "Birinci basamak koşullarında uzun süreli takip (izlem) ve kontrolünü yapabilmeli"
+  },
+  "notes": [
+   "text_en alanı CURATOR için yazılmış İngilizce karşılıktır; resmi UÇEP metninin parçası değildir.",
+   "Liste ikincil bir kaynaktan aktarıldı; yazım normalleştirmeleri yapıldı (tire karakterleri, birleşik yazılmış sözcükler). Resmi PDF ile karşılaştırılmalıdır.",
+   "'marked' alanı listede yıldızla işaretli maddeleri gösterir; anlamı resmi belgeden doğrulanmalıdır."
+  ]
+ },
+ "items": [
+  {
+   "code": "UCEP2020-H001",
+   "no": 1,
+   "text_tr": "Abortus",
+   "text_en": "Abortion (miscarriage)",
+   "levels": [
+    "A"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H002",
+   "no": 2,
+   "text_tr": "Adenoid hipertrofi",
+   "text_en": "Adenoid hypertrophy",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Solunum",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H003",
+   "no": 3,
+   "text_tr": "Adrenokortikal yetmezlik",
+   "text_en": "Adrenocortical insufficiency",
+   "levels": [
+    "ÖnT",
+    "A"
+   ],
+   "system": "Endokrin",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H004",
+   "no": 4,
+   "text_tr": "Agorafobi/özgül fobiler",
+   "text_en": "Agoraphobia and specific phobias",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H005",
+   "no": 5,
+   "text_tr": "Ailevi akdeniz ateşi",
+   "text_en": "Familial Mediterranean fever",
+   "levels": [
+    "ÖnT",
+    "İ"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H006",
+   "no": 6,
+   "text_tr": "Akciğer dışı mesleksel hastalıklar",
+   "text_en": "Occupational diseases other than lung diseases",
+   "levels": [
+    "ÖnT",
+    "K",
+    "İ"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H007",
+   "no": 7,
+   "text_tr": "Akciğer tümörleri",
+   "text_en": "Lung tumors and lung cancer",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Solunum",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H008",
+   "no": 8,
+   "text_tr": "Akciğer ödemi",
+   "text_en": "Pulmonary edema",
+   "levels": [
+    "A"
+   ],
+   "system": "Solunum-Dolaşım",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H009",
+   "no": 9,
+   "text_tr": "Akciğer tüberkülozu",
+   "text_en": "Pulmonary tuberculosis",
+   "levels": [
+    "TT",
+    "K",
+    "İ"
+   ],
+   "system": "Solunum",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H010",
+   "no": 10,
+   "text_tr": "Akne vulgaris/rozasea",
+   "text_en": "Acne vulgaris and rosacea",
+   "levels": [
+    "TT",
+    "İ"
+   ],
+   "system": "Deri-Yumuşak Doku",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H011",
+   "no": 11,
+   "text_tr": "Akut böbrek hasarı",
+   "text_en": "Acute kidney injury and acute renal failure",
+   "levels": [
+    "T",
+    "A",
+    "K"
+   ],
+   "system": "Boşaltım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H012",
+   "no": 12,
+   "text_tr": "Akut glomerulonefrit",
+   "text_en": "Acute glomerulonephritis",
+   "levels": [
+    "T",
+    "A"
+   ],
+   "system": "Boşaltım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H013",
+   "no": 13,
+   "text_tr": "Akut hepatitler",
+   "text_en": "Acute hepatitis",
+   "levels": [
+    "T",
+    "K"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H014",
+   "no": 14,
+   "text_tr": "Akut karın sendrom",
+   "text_en": "Acute abdomen",
+   "levels": [
+    "T",
+    "A"
+   ],
+   "system": "Gastrointestinal",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H015",
+   "no": 15,
+   "text_tr": "Akut koroner sendromlar",
+   "text_en": "Acute coronary syndromes and myocardial infarction",
+   "levels": [
+    "T",
+    "A",
+    "K"
+   ],
+   "system": "Dolaşım",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H016",
+   "no": 16,
+   "text_tr": "Akut pankreatit",
+   "text_en": "Acute pancreatitis",
+   "levels": [
+    "A"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H017",
+   "no": 17,
+   "text_tr": "Akut romatizmal ateş",
+   "text_en": "Acute rheumatic fever",
+   "levels": [
+    "T",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H018",
+   "no": 18,
+   "text_tr": "Akut ve travma sonrası stres bozukluğu",
+   "text_en": "Acute and post-traumatic stress disorder",
+   "levels": [
+    "ÖnT",
+    "A"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H019",
+   "no": 19,
+   "text_tr": "Alkol ve madde kullanım bozuklukları",
+   "text_en": "Alcohol and substance use disorders",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H020",
+   "no": 20,
+   "text_tr": "Alkol ve madde kullanımı ile ilgili acil durumlar",
+   "text_en": "Alcohol and substance related emergencies and intoxication",
+   "levels": [
+    "A",
+    "K"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H021",
+   "no": 21,
+   "text_tr": "Alerjik reaksiyon",
+   "text_en": "Allergic reaction",
+   "levels": [
+    "TT",
+    "A"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H022",
+   "no": 22,
+   "text_tr": "Alerjik rinit",
+   "text_en": "Allergic rhinitis",
+   "levels": [
+    "TT",
+    "K"
+   ],
+   "system": "Solunum",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H023",
+   "no": 23,
+   "text_tr": "Alopesi",
+   "text_en": "Alopecia and hair loss",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Deri-Yumuşak Doku",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H024",
+   "no": 24,
+   "text_tr": "Alt gastrointestinal kanama",
+   "text_en": "Lower gastrointestinal bleeding",
+   "levels": [
+    "T",
+    "A"
+   ],
+   "system": "Gastrointestinal",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H025",
+   "no": 25,
+   "text_tr": "Alzheimer hastalığı",
+   "text_en": "Alzheimer disease",
+   "levels": [
+    "ÖnT",
+    "K",
+    "İ"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H026",
+   "no": 26,
+   "text_tr": "Anafilaksi",
+   "text_en": "Anaphylaxis",
+   "levels": [
+    "A",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H027",
+   "no": 27,
+   "text_tr": "Anal fissür",
+   "text_en": "Anal fissure",
+   "levels": [
+    "TT"
+   ],
+   "system": "Gastrointestinal",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H028",
+   "no": 28,
+   "text_tr": "Aort anevrizması",
+   "text_en": "Aortic aneurysm",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Dolaşım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H029",
+   "no": 29,
+   "text_tr": "Aort disseksiyonu",
+   "text_en": "Aortic dissection",
+   "levels": [
+    "A"
+   ],
+   "system": "Dolaşım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H030",
+   "no": 30,
+   "text_tr": "Apandisit",
+   "text_en": "Appendicitis",
+   "levels": [
+    "A"
+   ],
+   "system": "Gastrointestinal",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H031",
+   "no": 31,
+   "text_tr": "Aplastik anemi",
+   "text_en": "Aplastic anemia",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Hematopoetik",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H032",
+   "no": 32,
+   "text_tr": "Artrit",
+   "text_en": "Arthritis",
+   "levels": [
+    "T"
+   ],
+   "system": "Kas-İskelet",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H033",
+   "no": 33,
+   "text_tr": "Asit",
+   "text_en": "Ascites",
+   "levels": [
+    "T"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H034",
+   "no": 34,
+   "text_tr": "Asit-baz denge bozuklukları",
+   "text_en": "Acid-base balance disorders",
+   "levels": [
+    "A"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H035",
+   "no": 35,
+   "text_tr": "Astım",
+   "text_en": "Asthma",
+   "levels": [
+    "TT",
+    "A",
+    "K",
+    "İ"
+   ],
+   "system": "Solunum",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H036",
+   "no": 36,
+   "text_tr": "Ataksik bozukluklar",
+   "text_en": "Ataxic disorders and ataxia",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H037",
+   "no": 37,
+   "text_tr": "Avitaminoz",
+   "text_en": "Vitamin deficiencies (avitaminosis)",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H038",
+   "no": 38,
+   "text_tr": "Bası yaraları",
+   "text_en": "Pressure ulcers",
+   "levels": [
+    "TT",
+    "K",
+    "İ"
+   ],
+   "system": "Deri-Yumuşak Doku",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H039",
+   "no": 39,
+   "text_tr": "Baş-boyun tümörleri",
+   "text_en": "Head and neck tumors",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H040",
+   "no": 40,
+   "text_tr": "Bedensel belirti bozukluğu (Somatizasyon/konversiyon)",
+   "text_en": "Somatic symptom disorder, somatization disorder and conversion disorder",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H041",
+   "no": 41,
+   "text_tr": "Behçet hastalığı",
+   "text_en": "Behçet disease",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H042",
+   "no": 42,
+   "text_tr": "Benign paroksismal pozisyonel vertigo",
+   "text_en": "Benign paroxysmal positional vertigo",
+   "levels": [
+    "TT"
+   ],
+   "system": "Duyu",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H043",
+   "no": 43,
+   "text_tr": "Benign prostat hipertrofisi",
+   "text_en": "Benign prostatic hyperplasia",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Ürogenital",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H044",
+   "no": 44,
+   "text_tr": "Besin zehirlenmesi",
+   "text_en": "Food poisoning",
+   "levels": [
+    "A",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H045",
+   "no": 45,
+   "text_tr": "Bilişsel (kognitif) bozukluklar (Demans)",
+   "text_en": "Cognitive disorders and dementia",
+   "levels": [
+    "ÖnT",
+    "K",
+    "İ"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H046",
+   "no": 46,
+   "text_tr": "Bipolar bozukluk",
+   "text_en": "Bipolar disorder",
+   "levels": [
+    "ÖnT",
+    "A",
+    "K",
+    "İ"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H047",
+   "no": 47,
+   "text_tr": "Boğmaca",
+   "text_en": "Pertussis (whooping cough)",
+   "levels": [
+    "TT",
+    "A",
+    "K"
+   ],
+   "system": "Solunum",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H048",
+   "no": 48,
+   "text_tr": "Böbreğin kistik hastalıkları",
+   "text_en": "Cystic diseases of the kidney",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Boşaltım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H049",
+   "no": 49,
+   "text_tr": "Böbrek anomalileri",
+   "text_en": "Congenital anomalies of the kidney",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Boşaltım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H050",
+   "no": 50,
+   "text_tr": "Böbrek tümörleri",
+   "text_en": "Kidney tumors and renal cell carcinoma",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Ürogenital-Boşaltım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H051",
+   "no": 51,
+   "text_tr": "Bronşiektaziler",
+   "text_en": "Bronchiectasis",
+   "levels": [
+    "ÖnT",
+    "K",
+    "İ"
+   ],
+   "system": "Solunum",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H052",
+   "no": 52,
+   "text_tr": "Bronşiolit",
+   "text_en": "Bronchiolitis",
+   "levels": [
+    "T",
+    "A"
+   ],
+   "system": "Solunum",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H053",
+   "no": 53,
+   "text_tr": "Bruselloz",
+   "text_en": "Brucellosis",
+   "levels": [
+    "TT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H054",
+   "no": 54,
+   "text_tr": "Büllöz hastalıklar",
+   "text_en": "Bullous skin diseases",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Deri-Yumuşak Doku",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H055",
+   "no": 55,
+   "text_tr": "Cinsel işlev bozuklukları",
+   "text_en": "Sexual dysfunctions",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H056",
+   "no": 56,
+   "text_tr": "Cinsel kimlik bozuklukları",
+   "text_en": "Gender identity disorders (gender dysphoria)",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H057",
+   "no": 57,
+   "text_tr": "Cinsel yolla bulaşan enfeksiyonlar",
+   "text_en": "Sexually transmitted infections",
+   "levels": [
+    "TT",
+    "K",
+    "İ"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H058",
+   "no": 58,
+   "text_tr": "Crush yaralanması",
+   "text_en": "Crush injury and crush syndrome",
+   "levels": [
+    "T",
+    "A",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H059",
+   "no": 59,
+   "text_tr": "Cushing hastalığı",
+   "text_en": "Cushing disease and Cushing syndrome",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Endokrin",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H060",
+   "no": 60,
+   "text_tr": "Çıkık",
+   "text_en": "Joint dislocation",
+   "levels": [
+    "T",
+    "A",
+    "K"
+   ],
+   "system": "Kas-İskelet",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H061",
+   "no": 61,
+   "text_tr": "Çocukluk çağı solid tümörleri",
+   "text_en": "Solid tumors of childhood",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H062",
+   "no": 62,
+   "text_tr": "Çocukta fonksiyonel kabızlık",
+   "text_en": "Functional constipation in children",
+   "levels": [
+    "TT",
+    "K",
+    "İ"
+   ],
+   "system": "Gastrointestinal",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H063",
+   "no": 63,
+   "text_tr": "D vitamini eksikliği",
+   "text_en": "Vitamin D deficiency and rickets",
+   "levels": [
+    "TT",
+    "K",
+    "İ"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H064",
+   "no": 64,
+   "text_tr": "Dehidratasyon",
+   "text_en": "Dehydration",
+   "levels": [
+    "TT",
+    "A",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H065",
+   "no": 65,
+   "text_tr": "Dekompresyon hastalığı",
+   "text_en": "Decompression sickness",
+   "levels": [
+    "A"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H066",
+   "no": 66,
+   "text_tr": "Deliryum",
+   "text_en": "Delirium",
+   "levels": [
+    "T",
+    "A",
+    "K",
+    "İ"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H067",
+   "no": 67,
+   "text_tr": "Demir eksikliği anemisi",
+   "text_en": "Iron deficiency anemia",
+   "levels": [
+    "TT",
+    "A",
+    "K",
+    "İ"
+   ],
+   "system": "Hematopoetik",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H068",
+   "no": 68,
+   "text_tr": "Depresyon",
+   "text_en": "Depression",
+   "levels": [
+    "T",
+    "K",
+    "İ"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H069",
+   "no": 69,
+   "text_tr": "Deri tümörleri",
+   "text_en": "Skin tumors and skin cancer",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Deri-Yumuşak Doku",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H070",
+   "no": 70,
+   "text_tr": "Deri ve yumuşak doku enfeksiyonları, abseleri",
+   "text_en": "Skin and soft tissue infections and abscesses",
+   "levels": [
+    "TT",
+    "K"
+   ],
+   "system": "Deri-Yumuşak Doku",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H071",
+   "no": 71,
+   "text_tr": "Deri yaralanmaları",
+   "text_en": "Skin injuries and wounds",
+   "levels": [
+    "A"
+   ],
+   "system": "Deri-Yumuşak Doku",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H072",
+   "no": 72,
+   "text_tr": "Derin ven trombozu",
+   "text_en": "Deep vein thrombosis",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Dolaşım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H073",
+   "no": 73,
+   "text_tr": "Derinin paraziter hastalıkları",
+   "text_en": "Parasitic infections of the skin (scabies, pediculosis)",
+   "levels": [
+    "TT",
+    "K"
+   ],
+   "system": "Deri-Yumuşak Doku",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H074",
+   "no": 74,
+   "text_tr": "Dermatit (atopik, kontakt, seboreik, bebek bezi)",
+   "text_en": "Dermatitis: atopic, contact, seborrheic, diaper dermatitis",
+   "levels": [
+    "TT",
+    "K",
+    "İ"
+   ],
+   "system": "Deri-Yumuşak Doku",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H075",
+   "no": 75,
+   "text_tr": "Diabetes insipitus",
+   "text_en": "Diabetes insipidus",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Endokrin",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H076",
+   "no": 76,
+   "text_tr": "Diabetes mellitus ve komplikasyonları",
+   "text_en": "Diabetes mellitus and its complications",
+   "levels": [
+    "TT",
+    "A",
+    "K",
+    "İ"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H077",
+   "no": 77,
+   "text_tr": "Diafragma hernileri",
+   "text_en": "Diaphragmatic hernias",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H078",
+   "no": 78,
+   "text_tr": "Difteri",
+   "text_en": "Diphtheria",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H079",
+   "no": 79,
+   "text_tr": "Dikkat eksikliği ve hiperaktivite bozukluğu",
+   "text_en": "Attention deficit hyperactivity disorder",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H080",
+   "no": 80,
+   "text_tr": "Disk hernileri",
+   "text_en": "Intervertebral disc herniation",
+   "levels": [
+    "T",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H081",
+   "no": 81,
+   "text_tr": "Dislipidemi",
+   "text_en": "Dyslipidemia and hyperlipidemia",
+   "levels": [
+    "TT",
+    "K",
+    "İ"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H082",
+   "no": 82,
+   "text_tr": "Disosiyatif bozukluklar",
+   "text_en": "Dissociative disorders",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H083",
+   "no": 83,
+   "text_tr": "Divertiküler hastalıklar",
+   "text_en": "Diverticular disease",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H084",
+   "no": 84,
+   "text_tr": "Diyabetik anne bebeği",
+   "text_en": "Infant of a diabetic mother",
+   "levels": [
+    "T",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H085",
+   "no": 85,
+   "text_tr": "Doğum travması",
+   "text_en": "Birth trauma and birth injuries",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H086",
+   "no": 86,
+   "text_tr": "Doğumda asfiksi",
+   "text_en": "Perinatal asphyxia and birth asphyxia",
+   "levels": [
+    "A",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H087",
+   "no": 87,
+   "text_tr": "Doğumda fetal distres",
+   "text_en": "Fetal distress during labor",
+   "levels": [
+    "A",
+    "K"
+   ],
+   "system": "Solunum",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H088",
+   "no": 88,
+   "text_tr": "Doğuştan metabolik hastalıklar",
+   "text_en": "Inborn errors of metabolism",
+   "levels": [
+    "ÖnT",
+    "K",
+    "İ"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H089",
+   "no": 89,
+   "text_tr": "Doğuştan yapısal anomaliler",
+   "text_en": "Congenital structural anomalies and malformations",
+   "levels": [
+    "T",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H090",
+   "no": 90,
+   "text_tr": "Donmalar (soğuktan)",
+   "text_en": "Frostbite and cold injury",
+   "levels": [
+    "A"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H091",
+   "no": 91,
+   "text_tr": "Döküntülü enfeksiyöz hastalıklar",
+   "text_en": "Infectious diseases with rash (measles, rubella, varicella)",
+   "levels": [
+    "TT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H092",
+   "no": 92,
+   "text_tr": "Eklampsi, preeklampsi, HELLP sendromu",
+   "text_en": "Preeclampsia, eclampsia and HELLP syndrome",
+   "levels": [
+    "T",
+    "A",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H093",
+   "no": 93,
+   "text_tr": "Ekstrapulmoner tüberküloz",
+   "text_en": "Extrapulmonary tuberculosis",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H094",
+   "no": 94,
+   "text_tr": "Ekstremite travması/kırıkları",
+   "text_en": "Extremity trauma and fractures",
+   "levels": [
+    "T",
+    "A"
+   ],
+   "system": "Kas-İskelet",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H095",
+   "no": 95,
+   "text_tr": "Ekstremitede varis /Venöz Yetmezlik",
+   "text_en": "Varicose veins and chronic venous insufficiency",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H096",
+   "no": 96,
+   "text_tr": "Ektopik gebelik",
+   "text_en": "Ectopic pregnancy",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H097",
+   "no": 97,
+   "text_tr": "Endokardit",
+   "text_en": "Infective endocarditis",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Dolaşım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H098",
+   "no": 98,
+   "text_tr": "Endometriyozis",
+   "text_en": "Endometriosis",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H099",
+   "no": 99,
+   "text_tr": "Enterik ateş",
+   "text_en": "Enteric fever (typhoid fever)",
+   "levels": [
+    "A",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H100",
+   "no": 100,
+   "text_tr": "Epilepsi",
+   "text_en": "Epilepsy and seizures",
+   "levels": [
+    "ÖnT",
+    "A",
+    "K",
+    "İ"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H101",
+   "no": 101,
+   "text_tr": "Esansiyel hipertansiyon",
+   "text_en": "Essential hypertension",
+   "levels": [
+    "T",
+    "A",
+    "K",
+    "İ"
+   ],
+   "system": "Dolaşım",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H102",
+   "no": 102,
+   "text_tr": "Esansiyel tremor",
+   "text_en": "Essential tremor",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H103",
+   "no": 103,
+   "text_tr": "Fasial paralizi",
+   "text_en": "Facial paralysis",
+   "levels": [
+    "T",
+    "A"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H104",
+   "no": 104,
+   "text_tr": "Febril konvülsiyon",
+   "text_en": "Febrile seizures",
+   "levels": [
+    "TT",
+    "A",
+    "K"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H105",
+   "no": 105,
+   "text_tr": "Feokromositoma",
+   "text_en": "Pheochromocytoma",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Endokrin",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H106",
+   "no": 106,
+   "text_tr": "Fibromiyalji",
+   "text_en": "Fibromyalgia",
+   "levels": [
+    "T"
+   ],
+   "system": "Kas-İskelet",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H107",
+   "no": 107,
+   "text_tr": "Fimosis ve parafimosis",
+   "text_en": "Phimosis and paraphimosis",
+   "levels": [
+    "T"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H108",
+   "no": 108,
+   "text_tr": "Gastroenteritler",
+   "text_en": "Gastroenteritis and diarrhea",
+   "levels": [
+    "TT",
+    "A",
+    "K"
+   ],
+   "system": "Gastrointestinal",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H109",
+   "no": 109,
+   "text_tr": "Gastroinstestinal konjenital anomaliler",
+   "text_en": "Congenital anomalies of the gastrointestinal tract",
+   "levels": [
+    "A"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H110",
+   "no": 110,
+   "text_tr": "Gastrointestinal sistem tümörleri",
+   "text_en": "Gastrointestinal tumors (esophageal and gastric cancer)",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H111",
+   "no": 111,
+   "text_tr": "Gastrointestinal sistem motilite bozuklukları",
+   "text_en": "Gastrointestinal motility disorders",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H112",
+   "no": 112,
+   "text_tr": "Gastrointestinal sistem parazitozları",
+   "text_en": "Intestinal parasites and gastrointestinal protozoa",
+   "levels": [
+    "TT",
+    "K"
+   ],
+   "system": "Gastrointestinal",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H113",
+   "no": 113,
+   "text_tr": "Gastro-özefageal reflü",
+   "text_en": "Gastroesophageal reflux disease",
+   "levels": [
+    "TT",
+    "K",
+    "İ"
+   ],
+   "system": "Gastrointestinal",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H114",
+   "no": 114,
+   "text_tr": "Gazlı gangren",
+   "text_en": "Gas gangrene",
+   "levels": [
+    "A"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H115",
+   "no": 115,
+   "text_tr": "Gebelikte RH uyuşmazlığı",
+   "text_en": "Rh incompatibility in pregnancy",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H116",
+   "no": 116,
+   "text_tr": "Geçici iskemik atak",
+   "text_en": "Transient ischemic attack",
+   "levels": [
+    "A"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H117",
+   "no": 117,
+   "text_tr": "Gelişimsel kalça displazisi (kalça çıkığı)",
+   "text_en": "Developmental dysplasia of the hip",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Kas-İskelet",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H118",
+   "no": 118,
+   "text_tr": "Genital enfeksiyonlar",
+   "text_en": "Genital infections and vaginitis",
+   "levels": [
+    "TT",
+    "K"
+   ],
+   "system": "Ürogenital",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H119",
+   "no": 119,
+   "text_tr": "Ürogenital sistem travması",
+   "text_en": "Urogenital trauma",
+   "levels": [
+    "A"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H120",
+   "no": 120,
+   "text_tr": "Geriatrik sendromlar (kırılganlık, sarkopeni, düşme, vb.)",
+   "text_en": "Geriatric syndromes: frailty, sarcopenia, falls",
+   "levels": [
+    "ÖnT",
+    "A",
+    "K",
+    "İ"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H121",
+   "no": 121,
+   "text_tr": "Gerilim tipi başağrısı",
+   "text_en": "Tension-type headache",
+   "levels": [
+    "TT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H122",
+   "no": 122,
+   "text_tr": "Gestasyonel diyabet",
+   "text_en": "Gestational diabetes",
+   "levels": [
+    "T",
+    "K",
+    "İ"
+   ],
+   "system": "Endokrin",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H123",
+   "no": 123,
+   "text_tr": "Glokom",
+   "text_en": "Glaucoma",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Duyu",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H124",
+   "no": 124,
+   "text_tr": "Göz travması (fiziksel, kimyasal)",
+   "text_en": "Eye trauma, physical and chemical injury of the eye",
+   "levels": [
+    "A",
+    "K"
+   ],
+   "system": "Duyu",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H125",
+   "no": 125,
+   "text_tr": "Göz yaşı kanal tıkanıklığı",
+   "text_en": "Nasolacrimal duct obstruction",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Duyu",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H126",
+   "no": 126,
+   "text_tr": "Guatr",
+   "text_en": "Goiter",
+   "levels": [
+    "T",
+    "K",
+    "İ"
+   ],
+   "system": "Endokrin",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H127",
+   "no": 127,
+   "text_tr": "Guillain-Barre sendromu",
+   "text_en": "Guillain-Barré syndrome",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H128",
+   "no": 128,
+   "text_tr": "Gut hastalığı",
+   "text_en": "Gout",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H129",
+   "no": 129,
+   "text_tr": "Hemoglobinopatiler",
+   "text_en": "Hemoglobinopathies, thalassemia and sickle cell disease",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Hematopoetik",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H130",
+   "no": 130,
+   "text_tr": "Hemolitik anemi",
+   "text_en": "Hemolytic anemia",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Hematopoetik",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H131",
+   "no": 131,
+   "text_tr": "Hemolitik üremik sendrom/ trombotik trombositopenik purpura",
+   "text_en": "Hemolytic uremic syndrome and thrombotic thrombocytopenic purpura",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H132",
+   "no": 132,
+   "text_tr": "Hemokromatozis",
+   "text_en": "Hemochromatosis",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H133",
+   "no": 133,
+   "text_tr": "Hemoroid",
+   "text_en": "Hemorrhoids",
+   "levels": [
+    "TT",
+    "K"
+   ],
+   "system": "Gastrointestinal",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H134",
+   "no": 134,
+   "text_tr": "Henoch-Schönlein purpurası",
+   "text_en": "Henoch-Schönlein purpura (IgA vasculitis)",
+   "levels": [
+    "T"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H135",
+   "no": 135,
+   "text_tr": "Hepatik koma",
+   "text_en": "Hepatic coma and hepatic encephalopathy",
+   "levels": [
+    "A"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H136",
+   "no": 136,
+   "text_tr": "Hepatosteatoz",
+   "text_en": "Hepatic steatosis and fatty liver disease",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H137",
+   "no": 137,
+   "text_tr": "HIV enfeksiyonu",
+   "text_en": "HIV infection and AIDS",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H138",
+   "no": 138,
+   "text_tr": "Hidrosefali",
+   "text_en": "Hydrocephalus",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H139",
+   "no": 139,
+   "text_tr": "Hidrosel",
+   "text_en": "Hydrocele",
+   "levels": [
+    "T"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H140",
+   "no": 140,
+   "text_tr": "Hiperemezis gravidarum",
+   "text_en": "Hyperemesis gravidarum",
+   "levels": [
+    "TT",
+    "A"
+   ],
+   "system": "Ürogenital",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H141",
+   "no": 141,
+   "text_tr": "Hiperparatiroidizm",
+   "text_en": "Hyperparathyroidism",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Endokrin",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H142",
+   "no": 142,
+   "text_tr": "Hipertiroidizm",
+   "text_en": "Hyperthyroidism and thyrotoxicosis",
+   "levels": [
+    "T",
+    "A",
+    "İ"
+   ],
+   "system": "Endokrin",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H143",
+   "no": 143,
+   "text_tr": "Hipofiz bozuklukları",
+   "text_en": "Pituitary disorders",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Endokrin",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H144",
+   "no": 144,
+   "text_tr": "Hipoglisemi",
+   "text_en": "Hypoglycemia",
+   "levels": [
+    "A"
+   ],
+   "system": "Endokrin",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H145",
+   "no": 145,
+   "text_tr": "Hipoparatiroidizm",
+   "text_en": "Hypoparathyroidism",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Endokrin",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H146",
+   "no": 146,
+   "text_tr": "Hipospadiasis, epispadiasis",
+   "text_en": "Hypospadias and epispadias",
+   "levels": [
+    "T"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H147",
+   "no": 147,
+   "text_tr": "Hipotiroidizm",
+   "text_en": "Hypothyroidism",
+   "levels": [
+    "TT",
+    "İ"
+   ],
+   "system": "Endokrin",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H148",
+   "no": 148,
+   "text_tr": "Hipotonik bebek",
+   "text_en": "Hypotonic (floppy) infant",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H149",
+   "no": 149,
+   "text_tr": "İlaç yan etkileri",
+   "text_en": "Adverse drug reactions",
+   "levels": [
+    "T",
+    "A",
+    "K",
+    "İ"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H150",
+   "no": 150,
+   "text_tr": "İletişim bozuklukları (kekemelik, artikülasyon bozukluğu, sosyal iletişim bozukluğu, dil bozukluğu)",
+   "text_en": "Communication disorders: stuttering, articulation and language disorders",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H151",
+   "no": 151,
+   "text_tr": "İleus",
+   "text_en": "Ileus and intestinal obstruction",
+   "levels": [
+    "A"
+   ],
+   "system": "Gastrointestinal",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H152",
+   "no": 152,
+   "text_tr": "İnflamatuar barsak hastalığı",
+   "text_en": "Inflammatory bowel disease",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H153",
+   "no": 153,
+   "text_tr": "İnfluenza",
+   "text_en": "Influenza",
+   "levels": [
+    "TT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H154",
+   "no": 154,
+   "text_tr": "İnme",
+   "text_en": "Stroke",
+   "levels": [
+    "A",
+    "K",
+    "İ"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H155",
+   "no": 155,
+   "text_tr": "İnterstisyel akciğer hastalıkları",
+   "text_en": "Interstitial lung diseases",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Solunum",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H156",
+   "no": 156,
+   "text_tr": "İntrakraniyal kanamalar",
+   "text_en": "Intracranial hemorrhage",
+   "levels": [
+    "A"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H157",
+   "no": 157,
+   "text_tr": "İntrauterin büyüme geriliği",
+   "text_en": "Intrauterine growth restriction",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H158",
+   "no": 158,
+   "text_tr": "İntrauterin enfeksiyonlar",
+   "text_en": "Intrauterine (congenital) infections",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H159",
+   "no": 159,
+   "text_tr": "İnvajinasyon",
+   "text_en": "Intussusception",
+   "levels": [
+    "A"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H160",
+   "no": 160,
+   "text_tr": "İrritabl barsak hastalığı",
+   "text_en": "Irritable bowel syndrome",
+   "levels": [
+    "ÖnT",
+    "K",
+    "İ"
+   ],
+   "system": "Gastrointestinal",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H161",
+   "no": 161,
+   "text_tr": "İyonlaştırıcı olan/iyonlaştırıcı olmayan radyasyon maruziyeti",
+   "text_en": "Ionizing and non-ionizing radiation exposure",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H162",
+   "no": 162,
+   "text_tr": "K vitamini yetersizliği",
+   "text_en": "Vitamin K deficiency",
+   "levels": [
+    "A",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H163",
+   "no": 163,
+   "text_tr": "Kabakulak",
+   "text_en": "Mumps",
+   "levels": [
+    "TT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H164",
+   "no": 164,
+   "text_tr": "Kafa içi basınç artması sendromu (KİBAS; akut serebrovasküler olaylar)",
+   "text_en": "Increased intracranial pressure",
+   "levels": [
+    "A"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H165",
+   "no": 165,
+   "text_tr": "Kafa içi yer kaplayan lezyonlar",
+   "text_en": "Intracranial space-occupying lesions and brain tumors",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H166",
+   "no": 166,
+   "text_tr": "Kafa travması",
+   "text_en": "Head trauma",
+   "levels": [
+    "A"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H167",
+   "no": 167,
+   "text_tr": "Kalp kapak hastalıkları",
+   "text_en": "Valvular heart diseases",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Dolaşım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H168",
+   "no": 168,
+   "text_tr": "Kalp ritm bozuklukları",
+   "text_en": "Cardiac arrhythmias",
+   "levels": [
+    "T",
+    "A",
+    "İ"
+   ],
+   "system": "Dolaşım",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H169",
+   "no": 169,
+   "text_tr": "Kalp yetersizliği",
+   "text_en": "Heart failure",
+   "levels": [
+    "T",
+    "A",
+    "K",
+    "İ"
+   ],
+   "system": "Dolaşım",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H170",
+   "no": 170,
+   "text_tr": "Kan uyuşmazlıkları",
+   "text_en": "Blood group incompatibility",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Hematopoetik",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H171",
+   "no": 171,
+   "text_tr": "Kan ve ürünleri transfüzyon komplikasyonları",
+   "text_en": "Complications of blood transfusion",
+   "levels": [
+    "T",
+    "A"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H172",
+   "no": 172,
+   "text_tr": "Kanama bozuklukları (hemofili, trombositopeni, vb)",
+   "text_en": "Bleeding disorders: hemophilia and thrombocytopenia",
+   "levels": [
+    "ÖnT",
+    "K",
+    "İ"
+   ],
+   "system": "Hematopoetik",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H173",
+   "no": 173,
+   "text_tr": "Karaciğer sirozu",
+   "text_en": "Liver cirrhosis",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H174",
+   "no": 174,
+   "text_tr": "Kardiyo-pulmoner arrest",
+   "text_en": "Cardiopulmonary arrest and resuscitation",
+   "levels": [
+    "A"
+   ],
+   "system": "Dolaşım",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H175",
+   "no": 175,
+   "text_tr": "Karın travmaları",
+   "text_en": "Abdominal trauma",
+   "levels": [
+    "A"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H176",
+   "no": 176,
+   "text_tr": "Kas hastalıkları (miyopatiler)",
+   "text_en": "Muscle diseases and myopathies",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H177",
+   "no": 177,
+   "text_tr": "Kasık karın duvarı hernileri",
+   "text_en": "Inguinal and abdominal wall hernias",
+   "levels": [
+    "T",
+    "A"
+   ],
+   "system": "Gastrointestinal",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H178",
+   "no": 178,
+   "text_tr": "Katarakt",
+   "text_en": "Cataract",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Duyu",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H179",
+   "no": 179,
+   "text_tr": "Katılma nöbeti",
+   "text_en": "Breath-holding spells",
+   "levels": [
+    "T"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H180",
+   "no": 180,
+   "text_tr": "Kemik tümörleri",
+   "text_en": "Bone tumors",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Kas-İskelet",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H181",
+   "no": 181,
+   "text_tr": "Keratit",
+   "text_en": "Keratitis",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Duyu",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H182",
+   "no": 182,
+   "text_tr": "Kırım-kongo kanamalı ateşi",
+   "text_en": "Crimean-Congo hemorrhagic fever",
+   "levels": [
+    "T",
+    "A",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H183",
+   "no": 183,
+   "text_tr": "Kırma kusurları",
+   "text_en": "Refractive errors",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Duyu",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H184",
+   "no": 184,
+   "text_tr": "Kist hidatik hastalığı",
+   "text_en": "Hydatid cyst disease (echinococcosis)",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H185",
+   "no": 185,
+   "text_tr": "Kistik fibroz",
+   "text_en": "Cystic fibrosis",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H186",
+   "no": 186,
+   "text_tr": "Kişilik bozuklukları",
+   "text_en": "Personality disorders",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H187",
+   "no": 187,
+   "text_tr": "Kolesistit, kolelitiazis",
+   "text_en": "Cholecystitis and cholelithiasis",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H188",
+   "no": 188,
+   "text_tr": "Kolorektal tümörler",
+   "text_en": "Colorectal tumors and colorectal cancer",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H189",
+   "no": 189,
+   "text_tr": "Koma",
+   "text_en": "Coma",
+   "levels": [
+    "A"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H190",
+   "no": 190,
+   "text_tr": "Kompartman sendromu",
+   "text_en": "Compartment syndrome",
+   "levels": [
+    "A"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H191",
+   "no": 191,
+   "text_tr": "Konjenital adrenal hiperplazi",
+   "text_en": "Congenital adrenal hyperplasia",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Endokrin",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H192",
+   "no": 192,
+   "text_tr": "Konjenital hipotiroidizm",
+   "text_en": "Congenital hypothyroidism",
+   "levels": [
+    "T",
+    "A"
+   ],
+   "system": "Endokrin",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H193",
+   "no": 193,
+   "text_tr": "Konjenital kalp hastalıkları",
+   "text_en": "Congenital heart diseases",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Dolaşım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H194",
+   "no": 194,
+   "text_tr": "Konjonktivit",
+   "text_en": "Conjunctivitis",
+   "levels": [
+    "TT",
+    "K"
+   ],
+   "system": "Duyu",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H195",
+   "no": 195,
+   "text_tr": "Kromozom hastalıkları (sık görülen)",
+   "text_en": "Common chromosomal disorders (Down syndrome)",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H196",
+   "no": 196,
+   "text_tr": "Kronik böbrek hastalığı",
+   "text_en": "Chronic kidney disease",
+   "levels": [
+    "T",
+    "A",
+    "K",
+    "İ"
+   ],
+   "system": "Boşaltım",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H197",
+   "no": 197,
+   "text_tr": "Kronik glomerulonefrit",
+   "text_en": "Chronic glomerulonephritis",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Boşaltım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H198",
+   "no": 198,
+   "text_tr": "Kronik hepatit",
+   "text_en": "Chronic hepatitis",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H199",
+   "no": 199,
+   "text_tr": "Kronik Koroner Arter hastalığı",
+   "text_en": "Chronic coronary artery disease and chronic coronary syndromes",
+   "levels": [
+    "ÖnT",
+    "K",
+    "İ"
+   ],
+   "system": "Dolaşım",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H200",
+   "no": 200,
+   "text_tr": "Kronik Obstrüktif Akciğer hastalığı",
+   "text_en": "Chronic obstructive pulmonary disease",
+   "levels": [
+    "TT",
+    "A",
+    "K",
+    "İ"
+   ],
+   "system": "Solunum",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H201",
+   "no": 201,
+   "text_tr": "Kronik pankreatit",
+   "text_en": "Chronic pancreatitis",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H202",
+   "no": 202,
+   "text_tr": "Kuduz",
+   "text_en": "Rabies",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H203",
+   "no": 203,
+   "text_tr": "Kulak zarı perforasyonu",
+   "text_en": "Tympanic membrane perforation",
+   "levels": [
+    "T"
+   ],
+   "system": "Duyu",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H204",
+   "no": 204,
+   "text_tr": "Laringeal obstrüksiyon",
+   "text_en": "Laryngeal obstruction and upper airway obstruction",
+   "levels": [
+    "A"
+   ],
+   "system": "Solunum",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H205",
+   "no": 205,
+   "text_tr": "Leishmaniasis",
+   "text_en": "Leishmaniasis",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H206",
+   "no": 206,
+   "text_tr": "Lenfoproliferatif hastalıklar",
+   "text_en": "Lymphoproliferative diseases and lymphoma",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Hematopoetik",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H207",
+   "no": 207,
+   "text_tr": "Lenfödem/lipödem",
+   "text_en": "Lymphedema and lipedema",
+   "levels": [
+    "ÖnT",
+    "K",
+    "İ"
+   ],
+   "system": "Dolaşım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H208",
+   "no": 208,
+   "text_tr": "Lösemiler",
+   "text_en": "Leukemias",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Hematopoetik",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H209",
+   "no": 209,
+   "text_tr": "Malabsorbsiyon",
+   "text_en": "Malabsorption and celiac disease",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H210",
+   "no": 210,
+   "text_tr": "Malnutrisyon",
+   "text_en": "Malnutrition",
+   "levels": [
+    "TT",
+    "K",
+    "İ"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H211",
+   "no": 211,
+   "text_tr": "Megaloblastik anemi",
+   "text_en": "Megaloblastic anemia (vitamin B12 and folate deficiency)",
+   "levels": [
+    "TT",
+    "K",
+    "İ"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H212",
+   "no": 212,
+   "text_tr": "Mekanik bel ağrısı",
+   "text_en": "Mechanical low back pain",
+   "levels": [
+    "TT",
+    "K"
+   ],
+   "system": "Kas-İskelet",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H213",
+   "no": 213,
+   "text_tr": "Meme hastalıkları ve tümörleri",
+   "text_en": "Breast diseases and breast cancer",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H214",
+   "no": 214,
+   "text_tr": "Meniere hastalığı",
+   "text_en": "Ménière disease",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Duyu",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H215",
+   "no": 215,
+   "text_tr": "Meningokokal hastalıklar",
+   "text_en": "Meningococcal disease",
+   "levels": [
+    "A",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H216",
+   "no": 216,
+   "text_tr": "Merkezi sinir sistemi enfeksiyonları",
+   "text_en": "Central nervous system infections, meningitis and encephalitis",
+   "levels": [
+    "A"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H217",
+   "no": 217,
+   "text_tr": "Mesane tümörleri",
+   "text_en": "Bladder tumors",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H218",
+   "no": 218,
+   "text_tr": "Mesleksel akciğer hastalıkları",
+   "text_en": "Occupational lung diseases",
+   "levels": [
+    "ÖnT",
+    "K",
+    "İ"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H219",
+   "no": 219,
+   "text_tr": "Metabolik sendrom",
+   "text_en": "Metabolic syndrome",
+   "levels": [
+    "T",
+    "K",
+    "İ"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H220",
+   "no": 220,
+   "text_tr": "Migren",
+   "text_en": "Migraine",
+   "levels": [
+    "T",
+    "A",
+    "K",
+    "İ"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H221",
+   "no": 221,
+   "text_tr": "Miyeloproliferatif hastalıklar",
+   "text_en": "Myeloproliferative neoplasms",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Hematopoetik",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H222",
+   "no": 222,
+   "text_tr": "Miyokardit/kardiyomiyopati",
+   "text_en": "Myocarditis and cardiomyopathies",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Dolaşım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H223",
+   "no": 223,
+   "text_tr": "Moniliyazis",
+   "text_en": "Candidiasis (moniliasis)",
+   "levels": [
+    "TT",
+    "K"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H224",
+   "no": 224,
+   "text_tr": "Multipl skleroz",
+   "text_en": "Multiple sclerosis",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H225",
+   "no": 225,
+   "text_tr": "Myastenia gravis ve kolinerjik kriz",
+   "text_en": "Myasthenia gravis and cholinergic crisis",
+   "levels": [
+    "A"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H226",
+   "no": 226,
+   "text_tr": "Nefrotik sendrom",
+   "text_en": "Nephrotic syndrome",
+   "levels": [
+    "T"
+   ],
+   "system": "Boşaltım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H227",
+   "no": 227,
+   "text_tr": "Nöral tüp defektleri",
+   "text_en": "Neural tube defects",
+   "levels": [
+    "T",
+    "K"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H228",
+   "no": 228,
+   "text_tr": "Nörojenik mesane",
+   "text_en": "Neurogenic bladder",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H229",
+   "no": 229,
+   "text_tr": "Nörokutanöz hastalıklar",
+   "text_en": "Neurocutaneous syndromes",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H230",
+   "no": 230,
+   "text_tr": "Obezite",
+   "text_en": "Obesity",
+   "levels": [
+    "T",
+    "K",
+    "İ"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H231",
+   "no": 231,
+   "text_tr": "Obsesif-kompulsif bozukluk",
+   "text_en": "Obsessive-compulsive disorder",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H232",
+   "no": 232,
+   "text_tr": "Obstrüktif üropati",
+   "text_en": "Obstructive uropathy and urinary tract obstruction",
+   "levels": [
+    "A"
+   ],
+   "system": "Ürogenital-Boşaltım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H233",
+   "no": 233,
+   "text_tr": "Omurga şekil bozuklukları",
+   "text_en": "Spinal deformities (scoliosis, kyphosis)",
+   "levels": [
+    "T",
+    "K"
+   ],
+   "system": "Kas-İskelet",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H234",
+   "no": 234,
+   "text_tr": "Omurga yaralanmaları",
+   "text_en": "Spinal injuries and spinal cord trauma",
+   "levels": [
+    "A"
+   ],
+   "system": "Kas-İskelet",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H235",
+   "no": 235,
+   "text_tr": "Onkolojik aciller",
+   "text_en": "Oncological emergencies",
+   "levels": [
+    "A"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H236",
+   "no": 236,
+   "text_tr": "Optik nevrit",
+   "text_en": "Optic neuritis",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Duyu",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H237",
+   "no": 237,
+   "text_tr": "Osteoartrit",
+   "text_en": "Osteoarthritis",
+   "levels": [
+    "TT",
+    "K",
+    "İ"
+   ],
+   "system": "Kas-İskelet",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H238",
+   "no": 238,
+   "text_tr": "Osteomyelit",
+   "text_en": "Osteomyelitis",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Kas-İskelet",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H239",
+   "no": 239,
+   "text_tr": "Osteoporoz",
+   "text_en": "Osteoporosis",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H240",
+   "no": 240,
+   "text_tr": "Otitis eksterna",
+   "text_en": "Otitis externa",
+   "levels": [
+    "TT",
+    "K"
+   ],
+   "system": "Duyu",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H241",
+   "no": 241,
+   "text_tr": "Otitis media",
+   "text_en": "Otitis media",
+   "levels": [
+    "TT",
+    "K"
+   ],
+   "system": "Duyu",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H242",
+   "no": 242,
+   "text_tr": "Otizm spektrum bozukluğu",
+   "text_en": "Autism spectrum disorder",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H243",
+   "no": 243,
+   "text_tr": "Otoskleroz",
+   "text_en": "Otosclerosis",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Duyu",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H244",
+   "no": 244,
+   "text_tr": "Over tümörleri",
+   "text_en": "Ovarian tumors",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H245",
+   "no": 245,
+   "text_tr": "Panik bozukluk",
+   "text_en": "Panic disorder",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H246",
+   "no": 246,
+   "text_tr": "Parkinson hastalığı",
+   "text_en": "Parkinson disease",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H247",
+   "no": 247,
+   "text_tr": "Pelvik Ağrı sendromu",
+   "text_en": "Pelvic pain syndrome",
+   "levels": [
+    "ÖnT",
+    "İ"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H248",
+   "no": 248,
+   "text_tr": "Pelvik Enflamatuvar hastalık",
+   "text_en": "Pelvic inflammatory disease",
+   "levels": [
+    "T",
+    "K"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H249",
+   "no": 249,
+   "text_tr": "Peptik hastalıklar (ülser, gastrit)",
+   "text_en": "Peptic ulcer disease and gastritis",
+   "levels": [
+    "TT",
+    "K",
+    "İ"
+   ],
+   "system": "Gastrointestinal",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H250",
+   "no": 250,
+   "text_tr": "Perianal abse",
+   "text_en": "Perianal abscess",
+   "levels": [
+    "T"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H251",
+   "no": 251,
+   "text_tr": "Periferik arter hastalığı",
+   "text_en": "Peripheral arterial disease",
+   "levels": [
+    "ÖnT",
+    "A"
+   ],
+   "system": "Dolaşım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H252",
+   "no": 252,
+   "text_tr": "Periferik nöropati",
+   "text_en": "Peripheral neuropathy",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H253",
+   "no": 253,
+   "text_tr": "Perikard hastalıkları",
+   "text_en": "Pericardial diseases and pericarditis",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Dolaşım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H254",
+   "no": 254,
+   "text_tr": "Peritonit",
+   "text_en": "Peritonitis",
+   "levels": [
+    "A"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H255",
+   "no": 255,
+   "text_tr": "Pilor stenozu",
+   "text_en": "Pyloric stenosis",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H256",
+   "no": 256,
+   "text_tr": "Plevral hastalıklar",
+   "text_en": "Pleural diseases and pleural effusion",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Solunum",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H257",
+   "no": 257,
+   "text_tr": "Pnömoniler",
+   "text_en": "Pneumonia",
+   "levels": [
+    "TT",
+    "K"
+   ],
+   "system": "Solunum",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H258",
+   "no": 258,
+   "text_tr": "Pnömotoraks",
+   "text_en": "Pneumothorax",
+   "levels": [
+    "A"
+   ],
+   "system": "Solunum",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H259",
+   "no": 259,
+   "text_tr": "Polikistik Over sendromu",
+   "text_en": "Polycystic ovary syndrome",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H260",
+   "no": 260,
+   "text_tr": "Polimiyaljiya romatika",
+   "text_en": "Polymyalgia rheumatica",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Kas-İskelet",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H261",
+   "no": 261,
+   "text_tr": "Polimiyozit ve dermatomiyozit",
+   "text_en": "Polymyositis and dermatomyositis",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H262",
+   "no": 262,
+   "text_tr": "Poliomyelit",
+   "text_en": "Poliomyelitis",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H263",
+   "no": 263,
+   "text_tr": "Polisitemi",
+   "text_en": "Polycythemia",
+   "levels": [
+    "T"
+   ],
+   "system": "Hematopoetik",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H264",
+   "no": 264,
+   "text_tr": "Portal hipertansiyon",
+   "text_en": "Portal hypertension",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H265",
+   "no": 265,
+   "text_tr": "Prematürelik",
+   "text_en": "Prematurity and the preterm infant",
+   "levels": [
+    "T",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H266",
+   "no": 266,
+   "text_tr": "Premenstrüel sendrom",
+   "text_en": "Premenstrual syndrome",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H267",
+   "no": 267,
+   "text_tr": "Primer immün yetmezlikler",
+   "text_en": "Primary immunodeficiencies",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H268",
+   "no": 268,
+   "text_tr": "Prostat kanseri",
+   "text_en": "Prostate cancer",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H269",
+   "no": 269,
+   "text_tr": "Psöriasis, liken planus, Pitriazis rosea",
+   "text_en": "Psoriasis, lichen planus and pityriasis rosea",
+   "levels": [
+    "T"
+   ],
+   "system": "Deri-Yumuşak Doku",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H270",
+   "no": 270,
+   "text_tr": "Pulmoner emboli",
+   "text_en": "Pulmonary embolism",
+   "levels": [
+    "A",
+    "K",
+    "İ"
+   ],
+   "system": "Solunum-Dolaşım",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H271",
+   "no": 271,
+   "text_tr": "Pulmoner hipertansiyon",
+   "text_en": "Pulmonary hypertension",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Solunum-Dolaşım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H272",
+   "no": 272,
+   "text_tr": "Reaktif dermatozlar (eritema nodosum, eritema multiforme)",
+   "text_en": "Reactive dermatoses: erythema nodosum and erythema multiforme",
+   "levels": [
+    "T"
+   ],
+   "system": "Deri-Yumuşak Doku",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H273",
+   "no": 273,
+   "text_tr": "Reynaud hastalığı",
+   "text_en": "Raynaud phenomenon",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H274",
+   "no": 274,
+   "text_tr": "Riskli gebelik",
+   "text_en": "High-risk pregnancy",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H275",
+   "no": 275,
+   "text_tr": "Romatoid artrit",
+   "text_en": "Rheumatoid arthritis",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H276",
+   "no": 276,
+   "text_tr": "Sarkoidoz",
+   "text_en": "Sarcoidosis",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H277",
+   "no": 277,
+   "text_tr": "Sekonder hipertansiyon",
+   "text_en": "Secondary hypertension",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H278",
+   "no": 278,
+   "text_tr": "Sepsis",
+   "text_en": "Sepsis and septic shock",
+   "levels": [
+    "A"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H279",
+   "no": 279,
+   "text_tr": "Septum deviasyonu",
+   "text_en": "Nasal septal deviation",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Solunum",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H280",
+   "no": 280,
+   "text_tr": "Serebral palsi",
+   "text_en": "Cerebral palsy",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H281",
+   "no": 281,
+   "text_tr": "Serviks tümörleri",
+   "text_en": "Cervical tumors and cervical cancer",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H282",
+   "no": 282,
+   "text_tr": "Sıcak çarpması",
+   "text_en": "Heat stroke",
+   "levels": [
+    "A"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H283",
+   "no": 283,
+   "text_tr": "Sıtma",
+   "text_en": "Malaria",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H284",
+   "no": 284,
+   "text_tr": "Sıvı ve elektrolit denge bozuklukları",
+   "text_en": "Fluid and electrolyte imbalances",
+   "levels": [
+    "T",
+    "A",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H285",
+   "no": 285,
+   "text_tr": "Sistemik lupus eritematosus",
+   "text_en": "Systemic lupus erythematosus",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H286",
+   "no": 286,
+   "text_tr": "Sjögren sendromu",
+   "text_en": "Sjögren syndrome",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H287",
+   "no": 287,
+   "text_tr": "Skleroderma",
+   "text_en": "Scleroderma and systemic sclerosis",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H288",
+   "no": 288,
+   "text_tr": "Solunum yetmezliği",
+   "text_en": "Respiratory failure",
+   "levels": [
+    "A"
+   ],
+   "system": "Solunum",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H289",
+   "no": 289,
+   "text_tr": "Sorunlu doğum eylemi",
+   "text_en": "Abnormal labor and dystocia",
+   "levels": [
+    "A"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H290",
+   "no": 290,
+   "text_tr": "Sosyal anksiyete bozukluğu",
+   "text_en": "Social anxiety disorder",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H291",
+   "no": 291,
+   "text_tr": "Spinal Kord Bası sendromu",
+   "text_en": "Spinal cord compression syndrome",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H292",
+   "no": 292,
+   "text_tr": "Spondiloartropatiler",
+   "text_en": "Spondyloarthropathies and ankylosing spondylitis",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Kas-İskelet",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H293",
+   "no": 293,
+   "text_tr": "Stomatit",
+   "text_en": "Stomatitis",
+   "levels": [
+    "TT"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H294",
+   "no": 294,
+   "text_tr": "Şarbon",
+   "text_en": "Anthrax",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Deri-Yumuşak Doku",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H295",
+   "no": 295,
+   "text_tr": "Şaşılık",
+   "text_en": "Strabismus",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Duyu",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H296",
+   "no": 296,
+   "text_tr": "Şizofreni ve diğer psikotik bozukluklar",
+   "text_en": "Schizophrenia and other psychotic disorders",
+   "levels": [
+    "ÖnT",
+    "A",
+    "K"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H297",
+   "no": 297,
+   "text_tr": "Şok",
+   "text_en": "Shock",
+   "levels": [
+    "A"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H298",
+   "no": 298,
+   "text_tr": "Tenosinovitler",
+   "text_en": "Tenosynovitis",
+   "levels": [
+    "TT"
+   ],
+   "system": "Kas-İskelet",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H299",
+   "no": 299,
+   "text_tr": "Testis torsiyonu",
+   "text_en": "Testicular torsion",
+   "levels": [
+    "A"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H300",
+   "no": 300,
+   "text_tr": "Testis tümörü",
+   "text_en": "Testicular tumors",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H301",
+   "no": 301,
+   "text_tr": "Tetanoz",
+   "text_en": "Tetanus",
+   "levels": [
+    "T",
+    "A",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H302",
+   "no": 302,
+   "text_tr": "Tik bozuklukları",
+   "text_en": "Tic disorders",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H303",
+   "no": 303,
+   "text_tr": "Tiroid tümörleri",
+   "text_en": "Thyroid tumors and thyroid nodules",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Endokrin",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H304",
+   "no": 304,
+   "text_tr": "Tiroiditler",
+   "text_en": "Thyroiditis",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Endokrin",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H305",
+   "no": 305,
+   "text_tr": "Tortikolis",
+   "text_en": "Torticollis",
+   "levels": [
+    "T"
+   ],
+   "system": "Kas-İskelet",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H306",
+   "no": 306,
+   "text_tr": "Travma ve yaralanmalar",
+   "text_en": "Trauma and injuries (multitrauma)",
+   "levels": [
+    "A"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H307",
+   "no": 307,
+   "text_tr": "Tromboflebit",
+   "text_en": "Thrombophlebitis",
+   "levels": [
+    "T",
+    "K"
+   ],
+   "system": "Dolaşım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H308",
+   "no": 308,
+   "text_tr": "Tubulointerstisyel hastalıklar",
+   "text_en": "Tubulointerstitial kidney diseases",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Boşaltım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H309",
+   "no": 309,
+   "text_tr": "Uterus tümörleri",
+   "text_en": "Uterine tumors (leiomyoma, endometrial cancer)",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H310",
+   "no": 310,
+   "text_tr": "Uyku bozuklukları",
+   "text_en": "Sleep disorders",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H311",
+   "no": 311,
+   "text_tr": "Uyku-apne sendromu",
+   "text_en": "Sleep apnea syndrome",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H312",
+   "no": 312,
+   "text_tr": "Üriner sistem enfeksiyonları",
+   "text_en": "Urinary tract infections",
+   "levels": [
+    "TT",
+    "K"
+   ],
+   "system": "Ürogenital-Boşaltım",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H313",
+   "no": 313,
+   "text_tr": "Üriner sistem taş hastalığı",
+   "text_en": "Urinary stone disease (urolithiasis)",
+   "levels": [
+    "T",
+    "A",
+    "K"
+   ],
+   "system": "Ürogenital-Boşaltım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H314",
+   "no": 314,
+   "text_tr": "Ürtiker ve anjioödem",
+   "text_en": "Urticaria and angioedema",
+   "levels": [
+    "TT",
+    "A",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H315",
+   "no": 315,
+   "text_tr": "Üst gastrointestinal kanama",
+   "text_en": "Upper gastrointestinal bleeding",
+   "levels": [
+    "T",
+    "A"
+   ],
+   "system": "Gastrointestinal",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H316",
+   "no": 316,
+   "text_tr": "Üst solunum yolu enfeksiyonları",
+   "text_en": "Upper respiratory tract infections",
+   "levels": [
+    "TT",
+    "K"
+   ],
+   "system": "Solunum",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H317",
+   "no": 317,
+   "text_tr": "Üveit",
+   "text_en": "Uveitis",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Duyu",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H318",
+   "no": 318,
+   "text_tr": "Varikosel",
+   "text_en": "Varicocele",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Ürogenital",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H319",
+   "no": 319,
+   "text_tr": "Vasküler malformasyon/ hemanjiyom",
+   "text_en": "Vascular malformations and hemangioma",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Dolaşım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H320",
+   "no": 320,
+   "text_tr": "Vaskülit",
+   "text_en": "Vasculitis",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H321",
+   "no": 321,
+   "text_tr": "Vazovagal senkop",
+   "text_en": "Vasovagal syncope",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Dolaşım",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H322",
+   "no": 322,
+   "text_tr": "Vestibuler nörit",
+   "text_en": "Vestibular neuritis",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Duyu",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H323",
+   "no": 323,
+   "text_tr": "Vitiligo",
+   "text_en": "Vitiligo",
+   "levels": [
+    "T"
+   ],
+   "system": "Deri-Yumuşak Doku",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H324",
+   "no": 324,
+   "text_tr": "Wilson hastalığı",
+   "text_en": "Wilson disease",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H325",
+   "no": 325,
+   "text_tr": "Yabancı cisim ilişkili problemler",
+   "text_en": "Foreign body related problems (aspiration, ingestion)",
+   "levels": [
+    "T",
+    "A",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H326",
+   "no": 326,
+   "text_tr": "Yanıklar",
+   "text_en": "Burns",
+   "levels": [
+    "TT",
+    "A"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H327",
+   "no": 327,
+   "text_tr": "Yarık damak, yarık dudak",
+   "text_en": "Cleft lip and cleft palate",
+   "levels": [
+    "T"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H328",
+   "no": 328,
+   "text_tr": "Yaygın anksiyete bozukluğu",
+   "text_en": "Generalized anxiety disorder",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H329",
+   "no": 329,
+   "text_tr": "Yaygın damar içi pıhtılaşması",
+   "text_en": "Disseminated intravascular coagulation",
+   "levels": [
+    "A"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H330",
+   "no": 330,
+   "text_tr": "Yeme bozuklukları",
+   "text_en": "Eating disorders (anorexia nervosa, bulimia)",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H331",
+   "no": 331,
+   "text_tr": "Yenidoğan sarılığı",
+   "text_en": "Neonatal jaundice and hyperbilirubinemia",
+   "levels": [
+    "T",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": true
+  },
+  {
+   "code": "UCEP2020-H332",
+   "no": 332,
+   "text_tr": "Yenidoğanda gastrointestinal sistem malformasyonları",
+   "text_en": "Gastrointestinal malformations of the newborn",
+   "levels": [
+    "A"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H333",
+   "no": 333,
+   "text_tr": "Yenidoğanda konjonktivit",
+   "text_en": "Neonatal conjunctivitis",
+   "levels": [
+    "TT",
+    "K"
+   ],
+   "system": "Duyu",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H334",
+   "no": 334,
+   "text_tr": "Yenidoğanda konvulsiyon",
+   "text_en": "Neonatal seizures",
+   "levels": [
+    "A",
+    "K"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H335",
+   "no": 335,
+   "text_tr": "Yenidoğanda metabolik bozukluklar",
+   "text_en": "Metabolic disorders of the newborn",
+   "levels": [
+    "ÖnT",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H336",
+   "no": 336,
+   "text_tr": "Yenidoğanda nekrotizan enterokolit",
+   "text_en": "Necrotizing enterocolitis in the newborn",
+   "levels": [
+    "A"
+   ],
+   "system": "Gastrointestinal",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H337",
+   "no": 337,
+   "text_tr": "Yenidoğanda sepsis ve menenjit",
+   "text_en": "Neonatal sepsis and meningitis",
+   "levels": [
+    "A"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H338",
+   "no": 338,
+   "text_tr": "Yenidoğanda solunum güçlüğü",
+   "text_en": "Respiratory distress in the newborn",
+   "levels": [
+    "A"
+   ],
+   "system": "Solunum",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H339",
+   "no": 339,
+   "text_tr": "Yenidoğanın hemorajik hastalıkları",
+   "text_en": "Hemorrhagic disease of the newborn",
+   "levels": [
+    "A"
+   ],
+   "system": "Hematopoetik",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H340",
+   "no": 340,
+   "text_tr": "Yıkıcı bozukluklar, dürtü kontrol ve davranım bozuklukları",
+   "text_en": "Disruptive, impulse-control and conduct disorders",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H341",
+   "no": 341,
+   "text_tr": "Zehirlenmeler",
+   "text_en": "Poisoning",
+   "levels": [
+    "A",
+    "K"
+   ],
+   "system": "Multisistem",
+   "marked": false
+  },
+  {
+   "code": "UCEP2020-H342",
+   "no": 342,
+   "text_tr": "Zihinsel yetersizlik",
+   "text_en": "Intellectual disability",
+   "levels": [
+    "ÖnT"
+   ],
+   "system": "Sinir-Davranış",
+   "marked": false
+  }
+ ]
+}

@@ -1,0 +1,4 @@
+# Optional extras. The platform runs without them (documented fallbacks).
+sentence-transformers>=3.1    # neural embeddings; otherwise local TF-IDF + LSA
+langgraph>=0.2.28             # CURATOR chat orchestration; otherwise sequential runner
+PyMuPDF>=1.24                 # scripts/ingest_curriculum.py PDF extraction

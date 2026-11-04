@@ -1,0 +1,51 @@
+# ── Python ───────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ── Environment ───────────────────────────────────────────
+.env
+*.env.local
+
+# ── Data / Embeddings ─────────────────────────────────────
+backend/data/embeddings/*.faiss
+backend/data/embeddings/*.json
+backend/data/pdfs/
+
+# ── Node ──────────────────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# ── IDE ───────────────────────────────────────────────────
+.idea/workspace.xml
+.idea/tasks.xml
+.DS_Store
+*.swp
+
+# ── Docker ────────────────────────────────────────────────
+*.log
+
+# ── Reports ───────────────────────────────────────────────
+eval_report.json
+
+# MİMAR local research data (never commit)
+/data/
+!backend/app/data/
+backend/data/
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm
+frontend/dist/
+backend/data/kusom_raw/
