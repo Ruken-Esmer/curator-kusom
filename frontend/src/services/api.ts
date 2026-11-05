@@ -38,11 +38,6 @@ export const chatApi = {
     }),
 }
 
-export const feedbackApi = {
-  report: (early_id: string, late_id: string, note = ''): Promise<{ link_id: string; in_queue: boolean; reports: number }> =>
-    post('/api/v1/pathway/feedback', { early_id, late_id, note }),
-}
-
 // ── Curriculum ────────────────────────────────────────────
 
 export const curriculumApi = {

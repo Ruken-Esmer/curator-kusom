@@ -24,21 +24,6 @@ export interface PathwayStep {
   reason: string
 }
 
-export interface Suggestion {
-  link_id: string
-  early_id: string
-  late_id: string
-  early: string
-  late: string
-  early_block: string
-  late_block: string
-  type: string
-  label: string
-  label_tr: string
-  topic: string
-  block_id: string
-}
-
 export interface RetrievedChunk {
   id: string
   content: string
@@ -53,7 +38,6 @@ export interface QueryResponse {
   query_type: QueryType
   citations: Citation[]
   pathway: PathwayStep[]
-  suggestions?: Suggestion[]
   retrieved_chunks: RetrievedChunk[]
   language: Language
   processing_time_ms: number

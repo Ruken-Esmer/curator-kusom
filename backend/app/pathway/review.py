@@ -40,9 +40,8 @@ def sample_goals(engine) -> list[str]:
 
 
 # Why a link is in the expert queue.  Only "rastgele" and "tam" links enter
-# the accuracy estimate; the others are checked one by one but would bias it.
-ORIGINS = {"tam": "tümü inceleniyor", "rastgele": "rastgele örnek", "örnek yol": "örnek yolda geçiyor",
-           "geri bildirim": "kullanıcı bildirdi"}
+# the accuracy estimate; sample-path links are checked one by one but would bias it.
+ORIGINS = {"tam": "tümü inceleniyor", "rastgele": "rastgele örnek", "örnek yol": "örnek yolda geçiyor"}
 ESTIMATE_ORIGINS = ("tam", "rastgele")
 CENSUS_TYPES = ("tekrar",)   # few and the riskiest ("skim this"): every one is reviewed
 
@@ -111,23 +110,6 @@ class ExpertReview:
         self.store.audit("system", "pathway.expert_sample", "sample", meta["origins"])
         return meta
 
-    # user feedback from the student screen
-    def report(self, early_id: str, late_id: str, note: str = "", reporter: str = "öğrenci") -> dict[str, Any]:
-        e = default_engine()
-        if early_id not in e.by_id or late_id not in e.by_id:
-            raise KeyError("bilinmeyen konu")
-        self.ensure_sample()
-        rec = e.link_record(early_id, late_id)
-        doc = self.store.get(self.ns + "_link", rec["link_id"])
-        if not doc:
-            doc = self.store.put(self.ns + "_link", _link_doc(rec, "geri bildirim"), id=rec["link_id"])
-        fb = self.store.put(self.ns + "_feedback", {"link": rec["link_id"], "note": note[:500], "by": reporter,
-                                                    "at": now_iso()})
-        n = len([f for f in self.store.list(self.ns + "_feedback") if f["link"] == rec["link_id"]])
-        self.store.update(self.ns + "_link", rec["link_id"], {"reports": n})
-        self.store.audit(reporter, "pathway.feedback", rec["link_id"], {"note": note[:120]})
-        return {"link_id": rec["link_id"], "in_queue": True, "reports": n, "origin": doc.get("origin")}
-
     def thresholds(self) -> dict[str, float]:
         m = self.store.get(self.ns + "_meta", "sample")
         return (m or {}).get("thresholds", DEFAULT_THRESHOLDS)
@@ -146,7 +128,9 @@ class ExpertReview:
         rows = [{**l, "origin": l.get("origin", "rastgele"), "origin_tr": ORIGINS.get(l.get("origin", "rastgele"), ""),
                  "mine": mine.get(l["id"])}
                 for l in self.store.list(self.ns + "_link")]
-        rows.sort(key=lambda r: -(r.get("reports") or 0))     # links students reported come first
+        # experts see every repetition first, then the random sample, then sample-path links
+        order = {"tam": 0, "rastgele": 1, "örnek yol": 2}
+        rows.sort(key=lambda r: order.get(r["origin"], 3))
         return rows
 
     def review_link(self, user: str, link_id: str, decision: str, wrong_kind: str = "", note: str = "") -> dict:
@@ -296,7 +280,6 @@ class ExpertReview:
                             "decided": sum(1 for l in all_links if l.get("origin", "rastgele") == o and l["id"] in final
                                            and final[l["id"]]["status"] in ("onaylandı", "reddedildi"))}
                         for o in ORIGINS},
-            "reports": self.store.count(self.ns + "_feedback"),
             "progress": {"links_total": len(all_links), "links_reviewed": reviewed_items,
                          "rejected": sum(1 for f in final.values() if f["status"] == "reddedildi"),
                          "confirmed": sum(1 for f in final.values() if f["status"] == "onaylandı"),

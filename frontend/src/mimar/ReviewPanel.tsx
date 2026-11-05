@@ -38,8 +38,7 @@ function Links({ onChange }: { onChange: () => void }) {
     <section className="m-panel">
       <header className="m-panel-head"><h3>Konu bağlantısı {i + 1} / {items.length}</h3>
         <div className="m-panel-aside"><Pill tone="brand">{TYPE[it.type]}</Pill>
-          {it.reports ? <Pill tone="bad">{it.reports} öğrenci bildirimi</Pill> : null}
-          {it.origin_tr && it.origin !== 'geri bildirim' && <Pill tone="plain">{it.origin_tr}</Pill>}
+          {it.origin_tr && <Pill tone="plain">{it.origin_tr}</Pill>}
           {it.mine && <Pill tone="ok">değerlendirildi</Pill>}</div></header>
       <div className="m-progress"><span style={{ width: `${(100 * done) / items.length}%` }} /></div>
       <span className="m-muted m-text-sm">{done} / {items.length} bağlantı değerlendirildi</span>
@@ -124,7 +123,7 @@ function Status({ s }: { s: any }) {
       <header className="m-panel-head"><h3>Yayına geçiş durumu</h3>
         <div className="m-panel-aside">{s.released ? <Pill tone="lock">öğrencilere açılabilir</Pill> : <Pill tone="warn">uzman değerlendirmesi sürüyor</Pill>}</div></header>
       <p className="m-text-sm">{s.progress.links_reviewed} / {s.progress.links_total} bağlantı değerlendirildi · {s.progress.confirmed} onaylandı · {s.progress.rejected} reddedildi (öğrenci yollarından çıkarıldı){s.progress.disagreements ? ` · ${s.progress.disagreements} uyuşmazlık` : ''}</p>
-      {s.origins && <p className="m-text-sm m-muted">Kuyruktaki bağlantılar: {Object.values(s.origins).filter((o: any) => o.total).map((o: any) => `${o.label}: ${o.decided}/${o.total}`).join(' · ')}{s.reports ? ` · öğrenci bildirimi: ${s.reports}` : ''}. Oranlar yalnız “tümü inceleniyor” ve “rastgele örnek” bağlantılarından hesaplanır; diğerleri tek tek düzeltilir.</p>}
+      {s.origins && <p className="m-text-sm m-muted">Kuyruktaki bağlantılar: {Object.values(s.origins).filter((o: any) => o.total).map((o: any) => `${o.label}: ${o.decided}/${o.total}`).join(' · ')}. Uzmanlar önce bütün tekrar önerilerini görür. Oranlar yalnız “tümü inceleniyor” ve “rastgele örnek” bağlantılarından hesaplanır; örnek yol bağlantıları tek tek düzeltilir.</p>}
       <C ok={s.conditions.links}>
         <b>Konu bağlantıları:</b> her türde uygun oranı ≥ {pct(th.link_ok_min)}; tekrar bağlantılarının tümü, diğer türlerde en az {th.min_links_per_type} rastgele bağlantı (%95 GA alt sınırı ≥ {pct(th.link_ci_lower_min)})
         <table className="m-table m-table-dense" style={{ marginTop: 6 }}><thead><tr><th>Tür</th><th className="num">Karara bağlanan</th><th className="num">Uygun oranı</th><th>%95 GA</th><th>Durum</th></tr></thead>

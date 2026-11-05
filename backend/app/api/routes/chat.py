@@ -82,15 +82,6 @@ def _pathway_answer(query: str, lang: Language) -> QueryResponse | None:
                 seen.append(s["block_id"])
                 steps.append(PathwayStep(order=len(seen), block_id=s["block_id"], block_name=s["block_name"],
                                          year=s["year"], reason=s["label_tr"]))
-    suggestions = []
-    if p is not None:
-        seen_links = set()
-        for s_ in p["steps"]:
-            lk = s_.get("link")
-            if lk and lk["link_id"] not in seen_links:
-                seen_links.add(lk["link_id"])
-                suggestions.append({**lk, "label": s_["label"], "label_tr": s_["label_tr"], "topic": s_["topic"],
-                                    "block_id": s_["block_id"]})
     return QueryResponse(answer=answer, query_type=QueryType.PATHWAY, pathway=steps, language=lang,
-                         suggestions=suggestions,
+
                          processing_time_ms=round((time.monotonic() - t0) * 1000, 1))

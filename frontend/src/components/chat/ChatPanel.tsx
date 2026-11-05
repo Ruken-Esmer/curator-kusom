@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import { Send, Trash2, Loader2, ChevronRight, Clock, Flag, Check } from 'lucide-react'
+import { Send, Trash2, Loader2, ChevronRight, Clock } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import clsx from 'clsx'
 import { useChat } from '@/hooks'
 import { useStore } from '@/store'
-import type { Citation, PathwayStep, Suggestion } from '@/types'
-import { feedbackApi } from '@/services/api'
+import type { Citation, PathwayStep } from '@/types'
 
 // ── i18n ─────────────────────────────────────────────────
 
@@ -93,48 +92,6 @@ function PathwayPanel({ steps }: { steps: PathwayStep[] }) {
   )
 }
 
-// ── Report a wrong suggestion ─────────────────────────────
-
-function FeedbackPanel({ items }: { items: Suggestion[] }) {
-  const [open, setOpen] = useState(false)
-  const [sent, setSent] = useState<Record<string, boolean>>({})
-  const [err, setErr] = useState('')
-  useEffect(() => { setOpen(false); setSent({}); setErr('') }, [items])
-  if (!items.length) return null
-  const send = async (s: Suggestion) => {
-    try { await feedbackApi.report(s.early_id, s.late_id); setSent((x) => ({ ...x, [s.link_id]: true })); setErr('') }
-    catch { setErr('Bildirim gönderilemedi, lütfen tekrar deneyin.') }
-  }
-  const n = Object.keys(sent).length
-  return (
-    <div className="px-4 py-2 border-t border-zinc-100 dark:border-zinc-800">
-      <button onClick={() => setOpen(!open)} className="flex items-center gap-1.5 text-[11px] text-zinc-500 hover:text-rose-700">
-        <Flag size={12} /> {open ? 'Bildirim listesini kapat' : 'Yanlış bir öneri mi var? Bildir'}
-        {n > 0 && <span className="ml-1 text-emerald-700">· {n} bildirim uzmanlara iletildi</span>}
-      </button>
-      {open && (
-        <div className="mt-2 max-h-56 overflow-y-auto space-y-1.5">
-          <p className="text-[11px] text-zinc-400">Bildirdiğin öneri uzman değerlendirme listesinin başına eklenir.</p>
-          {items.map((s) => (
-            <div key={s.link_id} className="flex items-center gap-2 text-[11.5px] p-1.5 rounded border border-zinc-100 dark:border-zinc-800">
-              <div className="flex-1 min-w-0">
-                <span className="text-zinc-400">{s.label_tr} · </span>
-                <span className="font-medium">{s.early}</span> <span className="text-zinc-400">[{s.early_block}]</span>
-                <span className="text-zinc-400"> → </span>
-                <span className="font-medium">{s.late}</span> <span className="text-zinc-400">[{s.late_block}]</span>
-              </div>
-              {sent[s.link_id]
-                ? <span className="flex items-center gap-1 text-emerald-700 shrink-0"><Check size={12} /> iletildi</span>
-                : <button onClick={() => send(s)} className="shrink-0 px-2 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100">Bildir</button>}
-            </div>
-          ))}
-          {err && <p className="text-[11px] text-rose-700">{err}</p>}
-        </div>
-      )}
-    </div>
-  )
-}
-
 // ── Message bubble ────────────────────────────────────────
 
 function Bubble({ role, content }: { role: string; content: string }) {
@@ -192,7 +149,6 @@ export default function ChatPanel() {
     messages, isLoading, lastCitations, lastPathway,
     lastQueryType, lastProcessingMs, sendQuery, clearChat,
   } = useChat()
-  const lastSuggestions = useStore((st) => st.lastSuggestions)
 
   const [input, setInput] = useState('')
   const endRef = useRef<HTMLDivElement>(null)
@@ -298,7 +254,6 @@ export default function ChatPanel() {
         <>
           <CitationBar citations={lastCitations} />
           <PathwayPanel steps={lastPathway} />
-          <FeedbackPanel items={lastSuggestions} />
         </>
       )}
 

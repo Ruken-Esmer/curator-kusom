@@ -32,24 +32,6 @@ class PathDecision(BaseModel):
     note: str = ""
 
 
-class Report(BaseModel):
-    early_id: str
-    late_id: str
-    note: str = ""
-
-
-# students report a suggestion without logging in; it is added to the expert queue
-feedback_router = APIRouter(prefix="/pathway", tags=["pathway-feedback"])
-
-
-@feedback_router.post("/feedback")
-def report(body: Report):
-    try:
-        return svc().report(body.early_id, body.late_id, body.note)
-    except KeyError as exc:
-        raise HTTPException(404, str(exc))
-
-
 @router.get("/options")
 def options():
     return {"link": LINK_DECISIONS, "path": PATH_DECISIONS, "wrong_kind": WRONG_KIND}
