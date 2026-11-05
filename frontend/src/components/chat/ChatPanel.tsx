@@ -98,12 +98,11 @@ function PathwayPanel({ steps }: { steps: PathwayStep[] }) {
 function FeedbackPanel({ items }: { items: Suggestion[] }) {
   const [open, setOpen] = useState(false)
   const [sent, setSent] = useState<Record<string, boolean>>({})
-  const [note, setNote] = useState<Record<string, string>>({})
   const [err, setErr] = useState('')
-  useEffect(() => { setOpen(false); setSent({}); setNote({}); setErr('') }, [items])
+  useEffect(() => { setOpen(false); setSent({}); setErr('') }, [items])
   if (!items.length) return null
   const send = async (s: Suggestion) => {
-    try { await feedbackApi.report(s.early_id, s.late_id, note[s.link_id] ?? ''); setSent((x) => ({ ...x, [s.link_id]: true })); setErr('') }
+    try { await feedbackApi.report(s.early_id, s.late_id); setSent((x) => ({ ...x, [s.link_id]: true })); setErr('') }
     catch { setErr('Bildirim gönderilemedi, lütfen tekrar deneyin.') }
   }
   const n = Object.keys(sent).length
@@ -117,14 +116,12 @@ function FeedbackPanel({ items }: { items: Suggestion[] }) {
         <div className="mt-2 max-h-56 overflow-y-auto space-y-1.5">
           <p className="text-[11px] text-zinc-400">Bildirdiğin öneri uzman değerlendirme listesinin başına eklenir.</p>
           {items.map((s) => (
-            <div key={s.link_id} className="flex items-start gap-2 text-[11.5px] p-1.5 rounded border border-zinc-100 dark:border-zinc-800">
+            <div key={s.link_id} className="flex items-center gap-2 text-[11.5px] p-1.5 rounded border border-zinc-100 dark:border-zinc-800">
               <div className="flex-1 min-w-0">
                 <span className="text-zinc-400">{s.label_tr} · </span>
                 <span className="font-medium">{s.early}</span> <span className="text-zinc-400">[{s.early_block}]</span>
                 <span className="text-zinc-400"> → </span>
                 <span className="font-medium">{s.late}</span> <span className="text-zinc-400">[{s.late_block}]</span>
-                {!sent[s.link_id] && <input value={note[s.link_id] ?? ''} onChange={(e) => setNote((x) => ({ ...x, [s.link_id]: e.target.value }))}
-                  placeholder="Neden yanlış? (isteğe bağlı)" className="mt-1 w-full px-2 py-0.5 text-[11px] rounded border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800" />}
               </div>
               {sent[s.link_id]
                 ? <span className="flex items-center gap-1 text-emerald-700 shrink-0"><Check size={12} /> iletildi</span>

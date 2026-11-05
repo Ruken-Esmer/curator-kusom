@@ -48,7 +48,6 @@ function Links({ onChange }: { onChange: () => void }) {
         <div className="m-pair-side"><small>Sonra gelen · {it.late.block} · {it.late.year}. sınıf</small>{it.late.topic}<Objs o={it.late.objectives} /></div>
       </div>
       <p className="ex-claim"><b>Sistemin önerisi:</b> {it.claim}</p>
-      {it.report_notes?.length > 0 && <p className="m-text-sm ex-report"><b>Öğrenci notu:</b> {it.report_notes.join(' · ')}</p>}
       <div className="m-choice">
         <button className={it.mine?.decision === 'uygun' ? 'is-on' : ''} onClick={() => decide('uygun')}>Uygun</button>
         <button className={it.mine?.decision === 'uygun_degil' ? 'is-on' : ''} disabled={!wrong} onClick={() => decide('uygun_degil')}

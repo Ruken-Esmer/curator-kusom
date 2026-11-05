@@ -143,12 +143,8 @@ class ExpertReview:
     def link_queue(self, user: str) -> list[dict[str, Any]]:
         self.ensure_sample()
         mine = {r["item"]: r for r in self.store.list(self.ns + "_link_review", parent=user)}
-        notes: dict[str, list[str]] = defaultdict(list)
-        for f in self.store.list(self.ns + "_feedback"):
-            if f.get("note"):
-                notes[f["link"]].append(f["note"])
         rows = [{**l, "origin": l.get("origin", "rastgele"), "origin_tr": ORIGINS.get(l.get("origin", "rastgele"), ""),
-                 "report_notes": list(dict.fromkeys(notes.get(l["id"], [])))[-3:], "mine": mine.get(l["id"])}
+                 "mine": mine.get(l["id"])}
                 for l in self.store.list(self.ns + "_link")]
         rows.sort(key=lambda r: -(r.get("reports") or 0))     # links students reported come first
         return rows
