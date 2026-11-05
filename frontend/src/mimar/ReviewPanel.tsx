@@ -37,7 +37,10 @@ function Links({ onChange }: { onChange: () => void }) {
   return (
     <section className="m-panel">
       <header className="m-panel-head"><h3>Konu bağlantısı {i + 1} / {items.length}</h3>
-        <div className="m-panel-aside"><Pill tone="brand">{TYPE[it.type]}</Pill>{it.mine && <Pill tone="ok">değerlendirildi</Pill>}</div></header>
+        <div className="m-panel-aside"><Pill tone="brand">{TYPE[it.type]}</Pill>
+          {it.reports ? <Pill tone="bad">{it.reports} öğrenci bildirimi</Pill> : null}
+          {it.origin_tr && it.origin !== 'geri bildirim' && <Pill tone="plain">{it.origin_tr}</Pill>}
+          {it.mine && <Pill tone="ok">değerlendirildi</Pill>}</div></header>
       <div className="m-progress"><span style={{ width: `${(100 * done) / items.length}%` }} /></div>
       <span className="m-muted m-text-sm">{done} / {items.length} bağlantı değerlendirildi</span>
       <div className="m-pair">
@@ -45,6 +48,7 @@ function Links({ onChange }: { onChange: () => void }) {
         <div className="m-pair-side"><small>Sonra gelen · {it.late.block} · {it.late.year}. sınıf</small>{it.late.topic}<Objs o={it.late.objectives} /></div>
       </div>
       <p className="ex-claim"><b>Sistemin önerisi:</b> {it.claim}</p>
+      {it.report_notes?.length > 0 && <p className="m-text-sm ex-report"><b>Öğrenci notu:</b> {it.report_notes.join(' · ')}</p>}
       <div className="m-choice">
         <button className={it.mine?.decision === 'uygun' ? 'is-on' : ''} onClick={() => decide('uygun')}>Uygun</button>
         <button className={it.mine?.decision === 'uygun_degil' ? 'is-on' : ''} disabled={!wrong} onClick={() => decide('uygun_degil')}
@@ -121,8 +125,9 @@ function Status({ s }: { s: any }) {
       <header className="m-panel-head"><h3>Yayına geçiş durumu</h3>
         <div className="m-panel-aside">{s.released ? <Pill tone="lock">öğrencilere açılabilir</Pill> : <Pill tone="warn">uzman değerlendirmesi sürüyor</Pill>}</div></header>
       <p className="m-text-sm">{s.progress.links_reviewed} / {s.progress.links_total} bağlantı değerlendirildi · {s.progress.confirmed} onaylandı · {s.progress.rejected} reddedildi (öğrenci yollarından çıkarıldı){s.progress.disagreements ? ` · ${s.progress.disagreements} uyuşmazlık` : ''}</p>
+      {s.origins && <p className="m-text-sm m-muted">Kuyruktaki bağlantılar: {Object.values(s.origins).filter((o: any) => o.total).map((o: any) => `${o.label}: ${o.decided}/${o.total}`).join(' · ')}{s.reports ? ` · öğrenci bildirimi: ${s.reports}` : ''}. Oranlar yalnız “tümü inceleniyor” ve “rastgele örnek” bağlantılarından hesaplanır; diğerleri tek tek düzeltilir.</p>}
       <C ok={s.conditions.links}>
-        <b>Konu bağlantıları:</b> her türde uygun oranı ≥ {pct(th.link_ok_min)}, %95 GA alt sınırı ≥ {pct(th.link_ci_lower_min)}, en az {th.min_links_per_type} bağlantı
+        <b>Konu bağlantıları:</b> her türde uygun oranı ≥ {pct(th.link_ok_min)}; tekrar bağlantılarının tümü, diğer türlerde en az {th.min_links_per_type} rastgele bağlantı (%95 GA alt sınırı ≥ {pct(th.link_ci_lower_min)})
         <table className="m-table m-table-dense" style={{ marginTop: 6 }}><thead><tr><th>Tür</th><th className="num">Karara bağlanan</th><th className="num">Uygun oranı</th><th>%95 GA</th><th>Durum</th></tr></thead>
           <tbody>{Object.entries(s.per_type).map(([t, v]: any) => <tr key={t}><td>{TYPE[t]}</td><td className="num">{v.decided} / {v.sampled}</td>
             <td className="num">{pct(v.rate)}<Bar value={v.rate} tone={v.met ? 'ok' : 'brand'} /></td><td>{v.ci95[0] === null ? '—' : `${pct(v.ci95[0])} – ${pct(v.ci95[1])}`}</td><td>{v.status}</td></tr>)}</tbody></table>

@@ -195,6 +195,14 @@ cd backend && python -m app.data.kusom.parse_timetables data/kusom_raw
   `app/data/kusom/curriculum.py` are descriptive and should be replaced with the
   official names.
 
+
+### Expert review of pathway suggestions
+
+* Every "tekrar" (repetition) link is reviewed; "temel" and "ilişkili" links are reviewed on a random sample of 30 each. Only these enter the accuracy estimate and the release gate.
+* Links behind the suggestions of the sample pathways are added to the queue and corrected one by one.
+* Students can report a wrong suggestion under the pathway ("Yanlış bir öneri mi var? Bildir"); reported links go to the top of the expert queue with the student's note.
+* After release, suggestions no expert has seen are labelled "uzman onayı yok"; reviewed ones "uzman onaylı".
+
 ## Languages
 
 Supports **English** and **Turkish**. Query language is auto-detected.

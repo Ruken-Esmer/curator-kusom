@@ -134,6 +134,7 @@ class QueryResponse(BaseModel):
     query_type: QueryType
     citations: list[Citation] = Field(default_factory=list)
     pathway: list[PathwayStep] = Field(default_factory=list)
+    suggestions: list[dict[str, Any]] = Field(default_factory=list)   # pathway links the student can report
     retrieved_chunks: list[RetrievedChunk] = Field(default_factory=list)
     language: Language
     processing_time_ms: float = 0.0

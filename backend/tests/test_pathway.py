@@ -104,3 +104,47 @@ def test_rejected_repetition_is_explained_and_shown_first():
         assert g.index(late.text) < g.index("ilk kez bu blokta") if "ilk kez bu blokta" in g else True
     finally:
         e.set_reviews(set(), set())
+
+
+def test_census_targeted_links_and_student_feedback(monkeypatch):
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.mimar.service import MimarService
+    from app.mimar.store import Store
+    import app.api.routes.mimar as M
+    svc = MimarService(Store(":memory:"))
+    monkeypatch.setattr(M, "_service", svc)
+    c = TestClient(app)
+    out = c.post("/api/v1/chat", json={"query": "Kardiyoloji stajına hazırlanmak istiyorum"}).json()
+    sug = out["suggestions"]
+    assert sug and all({"early_id", "late_id", "link_id", "type"} <= set(s) for s in sug)
+    from app.pathway.review import ExpertReview
+    rev = ExpertReview(svc.store)
+    meta = rev.ensure_sample()
+    links = svc.store.list(rev.ns + "_link")
+    tek = [l for l in links if l["type"] == "tekrar" and l["origin"] in ("tam", "rastgele")]
+    from app.pathway.planner import default_engine
+    assert len(tek) == sum(1 for l in default_engine().all_links() if l["type"] == "tekrar")   # every repetition
+    assert any(l["origin"] == "örnek yol" for l in links)
+    # a student reports a suggestion → it enters the expert queue first
+    s0 = sug[-1]
+    r = c.post("/api/v1/pathway/feedback", json={"early_id": s0["early_id"], "late_id": s0["late_id"], "note": "ilgisiz"})
+    assert r.status_code == 200 and r.json()["in_queue"]
+    summ = rev.summary()
+    assert summ["reports"] == 1
+    # reported / targeted links do not enter the accuracy estimate
+    assert summ["per_type"]["ilişkili"]["sampled"] <= 30
+
+
+def test_after_release_unreviewed_suggestions_are_labelled():
+    from app.pathway.planner import build, default_engine
+    e = default_engine()
+    p0 = build({"kind": "blok", "block": "Y3B1", "student_year": None}, e)
+    ref = [s for s in p0["steps"] if s["label"] == "once_tazele"]
+    assert ref and not any("uzman onayı yok" in s["reason"] for s in ref)
+    e.released = True
+    try:
+        p1 = build({"kind": "blok", "block": "Y3B1", "student_year": None}, e)
+        assert all("uzman onayı yok" in s["reason"] for s in p1["steps"] if s["label"] == "once_tazele")
+    finally:
+        e.released = False

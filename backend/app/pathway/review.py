@@ -39,6 +39,24 @@ def sample_goals(engine) -> list[str]:
     return KUSOM_GOALS if getattr(engine, "source", "") == "kusom" else PLACEHOLDER_GOALS
 
 
+# Why a link is in the expert queue.  Only "rastgele" and "tam" links enter
+# the accuracy estimate; the others are checked one by one but would bias it.
+ORIGINS = {"tam": "tümü inceleniyor", "rastgele": "rastgele örnek", "örnek yol": "örnek yolda geçiyor",
+           "geri bildirim": "kullanıcı bildirdi"}
+ESTIMATE_ORIGINS = ("tam", "rastgele")
+CENSUS_TYPES = ("tekrar",)   # few and the riskiest ("skim this"): every one is reviewed
+
+
+def _link_doc(l: dict[str, Any], origin: str) -> dict[str, Any]:
+    ea, la, t = l["early"], l["late"], l["type"]
+    return {"id": l["link_id"], "type": t, "origin": origin, "early_id": ea.id, "late_id": la.id,
+            "claim": CLAIM[t].format(early=ea.text, eb=ea.block_id, ey=ea.year, late=la.text, lb=la.block_id, ly=la.year),
+            "early": {"topic": ea.text, "block": f"{ea.block_id} · {ea.block_name}", "year": ea.year,
+                      "objectives": ea.objectives[:4]},
+            "late": {"topic": la.text, "block": f"{la.block_id} · {la.block_name}", "year": la.year,
+                     "objectives": la.objectives[:4]}}
+
+
 class ExpertReview:
     def __init__(self, store: Store):
         self.store = store
@@ -49,39 +67,66 @@ class ExpertReview:
     # samples
     def ensure_sample(self, per_type: int = 30, seed: int = 20261104) -> dict[str, Any]:
         cur = self.store.get(self.ns + "_meta", "sample")
-        if cur:
+        if cur and cur.get("version", 1) >= 2:
             return cur
         e = default_engine()
         rng = random.Random(seed)
+        have = {l["id"] for l in self.store.list(self.ns + "_link")} if cur else set()
         by_type: dict[str, list] = defaultdict(list)
         for l in e.all_links():
             by_type[l["type"]].append(l)
-        links = []
+        new = []
         for t in ("tekrar", "temel", "ilişkili"):
             pool = sorted(by_type[t], key=lambda l: l["link_id"])
-            chosen = pool if len(pool) <= per_type else rng.sample(pool, per_type)
-            for l in chosen:
-                ea, la = l["early"], l["late"]
-                links.append({"id": l["link_id"], "type": t, "early_id": ea.id, "late_id": la.id,
-                              "claim": CLAIM[t].format(early=ea.text, eb=ea.block_id, ey=ea.year,
-                                                       late=la.text, lb=la.block_id, ly=la.year),
-                              "early": {"topic": ea.text, "block": f"{ea.block_id} · {ea.block_name}", "year": ea.year,
-                                        "objectives": ea.objectives[:4]},
-                              "late": {"topic": la.text, "block": f"{la.block_id} · {la.block_name}", "year": la.year,
-                                       "objectives": la.objectives[:4]}})
-        rng.shuffle(links)
-        self.store.put_many(self.ns + "_link", links)
-        paths = []
-        for i, g in enumerate(sample_goals(e), start=1):
-            parsed = parse_request(g, e.blocks, e.aliases)
-            if build(parsed, e):
-                paths.append({"id": f"P{i:02d}", "goal": g, "parsed": parsed})
-        self.store.put_many(self.ns + "_path", paths)
-        meta = self.store.put(self.ns + "_meta", {"created": now_iso(), "seed": seed,
-                                          "links": dict(Counter(l["type"] for l in links)), "paths": len(paths),
-                                          "thresholds": DEFAULT_THRESHOLDS, "source": e.source}, id="sample")
-        self.store.audit("system", "pathway.expert_sample", "sample", meta["links"])
+            if t in CENSUS_TYPES:
+                chosen, origin = pool, "tam"
+            else:
+                chosen, origin = (pool if len(pool) <= per_type else rng.sample(pool, per_type)), "rastgele"
+            new += [_link_doc(l, origin) for l in chosen if l["link_id"] not in have]
+        rng.shuffle(new)
+        have |= {d["id"] for d in new}
+        # sample pathways, and every link their suggestions rest on
+        paths = None if cur else []
+        if not cur:
+            for i, g in enumerate(sample_goals(e), start=1):
+                parsed = parse_request(g, e.blocks, e.aliases)
+                if build(parsed, e):
+                    paths.append({"id": f"P{i:02d}", "goal": g, "parsed": parsed})
+        for p in (paths if paths is not None else self.store.list(self.ns + "_path")):
+            for st in (build(p["parsed"], e) or {"steps": []})["steps"]:
+                lk = st.get("link")
+                if lk and lk["link_id"] not in have:
+                    new.append(_link_doc(e.link_record(lk["early_id"], lk["late_id"]), "örnek yol"))
+                    have.add(lk["link_id"])
+        self.store.put_many(self.ns + "_link", new)
+        if paths:
+            self.store.put_many(self.ns + "_path", paths)
+        counts = Counter(l["origin"] for l in self.store.list(self.ns + "_link"))
+        meta = {"created": now_iso(), "seed": seed, "version": 2, "source": e.source,
+                "links": dict(Counter(l["type"] for l in self.store.list(self.ns + "_link")
+                                      if l.get("origin", "rastgele") in ESTIMATE_ORIGINS)),
+                "origins": dict(counts), "paths": self.store.count(self.ns + "_path"),
+                "thresholds": (cur or {}).get("thresholds", DEFAULT_THRESHOLDS)}
+        meta = self.store.put(self.ns + "_meta", meta, id="sample")
+        self.store.audit("system", "pathway.expert_sample", "sample", meta["origins"])
         return meta
+
+    # user feedback from the student screen
+    def report(self, early_id: str, late_id: str, note: str = "", reporter: str = "öğrenci") -> dict[str, Any]:
+        e = default_engine()
+        if early_id not in e.by_id or late_id not in e.by_id:
+            raise KeyError("bilinmeyen konu")
+        self.ensure_sample()
+        rec = e.link_record(early_id, late_id)
+        doc = self.store.get(self.ns + "_link", rec["link_id"])
+        if not doc:
+            doc = self.store.put(self.ns + "_link", _link_doc(rec, "geri bildirim"), id=rec["link_id"])
+        fb = self.store.put(self.ns + "_feedback", {"link": rec["link_id"], "note": note[:500], "by": reporter,
+                                                    "at": now_iso()})
+        n = len([f for f in self.store.list(self.ns + "_feedback") if f["link"] == rec["link_id"]])
+        self.store.update(self.ns + "_link", rec["link_id"], {"reports": n})
+        self.store.audit(reporter, "pathway.feedback", rec["link_id"], {"note": note[:120]})
+        return {"link_id": rec["link_id"], "in_queue": True, "reports": n, "origin": doc.get("origin")}
 
     def thresholds(self) -> dict[str, float]:
         m = self.store.get(self.ns + "_meta", "sample")
@@ -98,7 +143,15 @@ class ExpertReview:
     def link_queue(self, user: str) -> list[dict[str, Any]]:
         self.ensure_sample()
         mine = {r["item"]: r for r in self.store.list(self.ns + "_link_review", parent=user)}
-        return [{**l, "mine": mine.get(l["id"])} for l in self.store.list(self.ns + "_link")]
+        notes: dict[str, list[str]] = defaultdict(list)
+        for f in self.store.list(self.ns + "_feedback"):
+            if f.get("note"):
+                notes[f["link"]].append(f["note"])
+        rows = [{**l, "origin": l.get("origin", "rastgele"), "origin_tr": ORIGINS.get(l.get("origin", "rastgele"), ""),
+                 "report_notes": list(dict.fromkeys(notes.get(l["id"], [])))[-3:], "mine": mine.get(l["id"])}
+                for l in self.store.list(self.ns + "_link")]
+        rows.sort(key=lambda r: -(r.get("reports") or 0))     # links students reported come first
+        return rows
 
     def review_link(self, user: str, link_id: str, decision: str, wrong_kind: str = "", note: str = "") -> dict:
         if decision not in LINK_DECISIONS:
@@ -178,7 +231,8 @@ class ExpertReview:
     def summary(self) -> dict[str, Any]:
         self.ensure_sample()
         th = self.thresholds()
-        links = {l["id"]: l for l in self.store.list(self.ns + "_link")}
+        all_links = self.store.list(self.ns + "_link")
+        links = {l["id"]: l for l in all_links if l.get("origin", "rastgele") in ESTIMATE_ORIGINS}
         final = self._final_links()
         per_type = {}
         for t in ("tekrar", "temel", "ilişkili"):
@@ -188,15 +242,23 @@ class ExpertReview:
             ok = sum(1 for d in dec if d["status"] == "onaylandı")
             lo, hi = binomial_ci(ok, len(dec))
             rate = ok / len(dec) if dec else None
-            enough = len(dec) >= th["min_links_per_type"]
-            status = ("kanıt yetersiz: müfredatta bu türden yalnız %d bağlantı var" % len(ids)
-                      if len(ids) < th["min_links_per_type"] else
-                      "değerlendirme sürüyor" if not enough else
-                      "eşik sağlandı" if (rate is not None and rate >= th["link_ok_min"] and lo is not None and lo >= th["link_ci_lower_min"])
-                      else "eşik sağlanmadı")
+            census = t in CENSUS_TYPES and all(links[i].get("origin") == "tam" for i in ids)
+            ci_ok = lo is not None and lo >= th["link_ci_lower_min"]
+            if census:   # every link of this type is reviewed: the rate is exact, no interval needed
+                enough = bool(ids) and len(dec) == len(ids)
+                passed = enough and rate is not None and rate >= th["link_ok_min"]
+                status = ("bu türde bağlantı yok" if not ids else
+                          f"tümü inceleniyor ({len(dec)}/{len(ids)})" if not enough else
+                          "eşik sağlandı" if passed else "eşik sağlanmadı")
+            else:
+                enough = len(dec) >= th["min_links_per_type"]
+                passed = enough and rate is not None and rate >= th["link_ok_min"] and ci_ok
+                status = ("kanıt yetersiz: müfredatta bu türden yalnız %d bağlantı var" % len(ids)
+                          if len(ids) < th["min_links_per_type"] else
+                          "değerlendirme sürüyor" if not enough else
+                          "eşik sağlandı" if passed else "eşik sağlanmadı")
             per_type[t] = {"sampled": len(ids), "decided": len(dec), "ok": ok, "rate": rate, "ci95": [lo, hi],
-                           "enough": enough, "status": status,
-                           "met": bool(enough and rate is not None and rate >= th["link_ok_min"] and lo is not None and lo >= th["link_ci_lower_min"])}
+                           "enough": enough, "status": status, "census": census, "met": bool(passed)}
         tek = [final[i] for i, l in links.items() if l["type"] == "tekrar" and i in final and final[i]["status"] in ("onaylandı", "reddedildi")]
         crit = sum(1 for d in tek if d["status"] == "reddedildi" and d["wrong_kind"] == "aslinda_yeni")
         crit_rate = crit / len(tek) if tek else None
@@ -234,7 +296,12 @@ class ExpertReview:
             "critical": {"count": crit, "of": len(tek), "rate": crit_rate},
             "agreement": {"experts": experts, **{k: ac.get(k) for k in ("n", "percent", "kappa", "ac1")}},
             "paths": {"sampled": n_paths, "reviewed": len(path_final), "ok_rate": path_rate},
-            "progress": {"links_total": len(links), "links_reviewed": reviewed_items,
+            "origins": {o: {"label": ORIGINS[o], "total": sum(1 for l in all_links if l.get("origin", "rastgele") == o),
+                            "decided": sum(1 for l in all_links if l.get("origin", "rastgele") == o and l["id"] in final
+                                           and final[l["id"]]["status"] in ("onaylandı", "reddedildi"))}
+                        for o in ORIGINS},
+            "reports": self.store.count(self.ns + "_feedback"),
+            "progress": {"links_total": len(all_links), "links_reviewed": reviewed_items,
                          "rejected": sum(1 for f in final.values() if f["status"] == "reddedildi"),
                          "confirmed": sum(1 for f in final.values() if f["status"] == "onaylandı"),
                          "disagreements": sum(1 for f in final.values() if f["status"] == "uyuşmazlık")},

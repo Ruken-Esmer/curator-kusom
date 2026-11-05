@@ -95,6 +95,7 @@ class PathwayEngine:
         cfg.concept.min_df = 2
         cfg.concept.max_df_ratio = 0.05
         self.analysis = OverlapAnalysis(los, cfg)
+        self.released = False                                    # set from the expert-review gate
         self.strength: dict[frozenset, float] = {}              # shared distinctive words + agreeing methods
         self.rejected: set[frozenset] = set()                   # expert-rejected links
         self.validated: set[frozenset] = set()                  # expert-confirmed links
@@ -133,7 +134,12 @@ class PathwayEngine:
         return frozenset((a, b)) not in self.rejected
 
     def _mark(self, a: str, b: str) -> str:
-        return " (uzman onaylı)" if frozenset((a, b)) in self.validated else ""
+        key = frozenset((a, b))
+        if key in self.validated:
+            return " (uzman onaylı)"
+        if self.released:          # after release, say plainly which suggestions no expert has seen
+            return " (uzman onayı yok)"
+        return ""
 
     def link_type(self, a: str, b: str) -> str:
         early, late = sorted((self.by_id[a], self.by_id[b]), key=lambda x: x.seq)
@@ -223,9 +229,19 @@ class PathwayEngine:
                         "hızlı gözden geçirme yeterli olabilir." + self._mark(it.id, p.id)), prev_same
 
     def _step(self, it: Item, label: str, reason: str, refs: list[Item]) -> dict[str, Any]:
-        return {"item_id": it.id, "label": label, "label_tr": LABEL_TR[label], "topic": it.text,
-                "block_id": it.block_id, "block_name": it.block_name, "year": it.year, "reason": reason,
-                "sources": it.sources + [r.sources[0] for r in refs[:2]]}
+        st = {"item_id": it.id, "label": label, "label_tr": LABEL_TR[label], "topic": it.text,
+              "block_id": it.block_id, "block_name": it.block_name, "year": it.year, "reason": reason,
+              "sources": it.sources + [r.sources[0] for r in refs[:2]]}
+        if refs:   # the link this suggestion rests on, so it can be reviewed or reported
+            a, b = sorted((it, refs[0]), key=lambda x: x.seq)
+            st["link"] = {"early_id": a.id, "late_id": b.id, "link_id": f"{a.id}>{b.id}",
+                          "early": a.text, "late": b.text, "early_block": a.block_id, "late_block": b.block_id,
+                          "type": self.link_type(a.id, b.id)}
+        return st
+
+    def link_record(self, early_id: str, late_id: str) -> dict[str, Any]:
+        a, b = sorted((self.by_id[early_id], self.by_id[late_id]), key=lambda x: x.seq)
+        return {"link_id": f"{a.id}>{b.id}", "type": self.link_type(a.id, b.id), "early": a, "late": b}
 
     def _refresh_for(self, targets: list[Item], limit: int = 12) -> list[dict[str, Any]]:
         """Earlier content the targets build on: earlier occurrences of the same content at a basic level, and…"""

@@ -45,6 +45,7 @@ export function useChat() {
         queryType: res.query_type,
         citations: res.citations,
         pathway: res.pathway,
+        suggestions: res.suggestions,
         processingMs: res.processing_time_ms,
       })
     } catch (err) {

@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import type {
   ChatMessage, Citation, CurriculumTree,
-  Language, PathwayStep, QueryType,
+  Language, PathwayStep, QueryType, Suggestion,
 } from '@/types'
 
 interface AppStore {
@@ -15,6 +15,7 @@ interface AppStore {
   lastQueryType: QueryType | null
   lastCitations: Citation[]
   lastPathway: PathwayStep[]
+  lastSuggestions: Suggestion[]
   lastProcessingMs: number
   addMessage: (m: ChatMessage) => void
   setLoading: (v: boolean) => void
@@ -22,6 +23,7 @@ interface AppStore {
     queryType: QueryType
     citations: Citation[]
     pathway: PathwayStep[]
+    suggestions?: Suggestion[]
     processingMs: number
   }) => void
   clearChat: () => void
@@ -52,14 +54,16 @@ export const useStore = create<AppStore>((set) => ({
   lastQueryType: null,
   lastCitations: [],
   lastPathway: [],
+  lastSuggestions: [],
   lastProcessingMs: 0,
   addMessage: (m) => set((s) => ({ messages: [...s.messages, m] })),
   setLoading: (isLoading) => set({ isLoading }),
-  setLastResult: ({ queryType, citations, pathway, processingMs }) =>
+  setLastResult: ({ queryType, citations, pathway, suggestions, processingMs }) =>
     set({
       lastQueryType: queryType,
       lastCitations: citations,
       lastPathway: pathway,
+      lastSuggestions: suggestions ?? [],
       lastProcessingMs: processingMs,
     }),
   clearChat: () =>
@@ -68,6 +72,7 @@ export const useStore = create<AppStore>((set) => ({
       lastQueryType: null,
       lastCitations: [],
       lastPathway: [],
+      lastSuggestions: [],
     }),
 
   // Curriculum
