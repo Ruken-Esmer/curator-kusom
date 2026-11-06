@@ -14,7 +14,7 @@ from app.mimar.analysis import split_key
 from app.mimar.service import MimarService
 
 BLOCKS = ["MSKL 303", "MSKL 503", "IMED 410"]
-DECISION = "CDCC-ÖRNEK"
+DECISION = "KK-ÖRNEK"
 
 USERS = [
     ("teknik", "Teknik sorumlu (örnek)", ["technical"]),
@@ -188,8 +188,15 @@ def run(svc: MimarService, admin: dict) -> dict[str, Any]:
         svc.validation_adjudicate(U["dogrulayici3"], pool["id"], c["code"],
                                   {"support": "yes" if ok else "no", "meaningful": "yes" if ok else "no", "category_ok": "yes"})
     as2a = svc.as2a_results(admin, pool["id"], B=500)
+    # same data plus the permitted course content
+    run_ext = svc.run_analysis(U["teknik"], ds["id"], cfg["id"], with_materials=True, label="Ders içerikleriyle")
+    ext = svc.generate_mimar_report(U["teknik"], run_ext["id"], "extended")
+    svc.lock_report(U["teknik"], ext["id"])
+    core_keys = {f["key"] for f in svc.store.list("finding", parent=core["id"])}
+    ext_f = svc.store.list("finding", parent=ext["id"])
+    kulearn = {"extended_findings": len(ext_f), "new_findings": sum(1 for f in ext_f if f["key"] not in core_keys)}
     summary["ip2"] = {"core": core["id"], "expert": exp["id"], "pool": pool["id"], "entries": len(entries),
-                      "main": as2a.get("main"), "shared": as2a.get("shared_findings")}
+                      "main": as2a.get("main"), "shared": as2a.get("shared_findings"), "kulearn": kulearn}
 
     # İP4 · coordinators judge the findings
     s5 = svc.create_as5_sample(U["teknik"], core["id"], n_max=60)
@@ -202,6 +209,15 @@ def run(svc: MimarService, admin: dict) -> dict[str, Any]:
     summary["ip4"] = {"sample": s5["id"], "items": len(items)}
 
     # İP3 + İP5 · committee decision applied to a new version, expected effects registered first
+    from app.mimar.prototype import add_record
+    add_record(svc, U["uzman1"], "ucep_check", {"key": "UCEP2020-H237", "ok": True, "example": True,
+                                                "note": "Osteoartrit = Osteoarthritis, karşılık doğru"})
+    for no, text, status in (
+        (f"{DECISION}-01", "MSKL 503'e osteoartritli hastanın birinci basamakta uzun süreli izlemi için öğrenme hedefi eklensin.", "onaylandı"),
+        (f"{DECISION}-02", "IMED 410 artritlerde ayırıcı tanı dersi, 3. sınıftakini tekrarlamak yerine vaka temelli işlensin.", "onaylandı"),
+        (f"{DECISION}-03", "NSAİİ farmakolojisi 5. sınıfta reçete ve yan etki yönetimine odaklansın.", "ertelendi"),
+    ):
+        add_record(svc, U["teknik"], "decision", {"key": no, "text": text, "status": status, "example": True})
     t1 = svc.new_version(U["teknik"], ds["id"], "T1", "Kurul kararı sonrası (örnek karar)")
     new_uid = "MSKL503:izlem-oa"
     svc.apply_changes(U["teknik"], t1["id"], [
@@ -227,7 +243,7 @@ def run(svc: MimarService, admin: dict) -> dict[str, Any]:
         svc.decide_alert(U["etki"], cs["id"], a["id"], verified=any(c in (new_uid, oa["ddx"]) for c in a.get("cause", [])),
                          rationale="örnek karar")
     ev = svc.evaluate_changeset(U["etki"], cs["id"])
-    summary["ip5"] = {"changeset": cs["id"], "alerts": len(rep["alerts"]), "diff": {k: len(v) for k, v in rep["diff"].items()},
+    summary["ip5"] = {"changeset": cs["id"], "t1": t1["id"], "alerts": len(rep["alerts"]), "diff": {k: len(v) for k, v in rep["diff"].items()},
                       "missed_expected": ev.get("missed_expected"), "total_expected": ev.get("total_expected")}
     summary["oa"] = oa
     summary["users"] = {k: v["token"] for k, v in U.items()}

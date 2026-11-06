@@ -118,3 +118,22 @@ def test_osteoarthritis_runs_through_the_whole_protocol(tmp_path):
     # the new follow-up objective gets its UÇEP link but no links to the osteoarthritis sessions
     assert s["ip5"]["total_expected"] == 4 and s["ip5"]["missed_expected"] >= 2
     assert svc.store.verify_audit()["valid"]
+
+
+def test_prototype_screens_have_their_data(tmp_path):
+    from app.mimar.osteo_run import run
+    from app.mimar.prototype import add_record, view
+    from app.mimar.service import MimarService
+    from app.mimar.store import Store
+    svc = MimarService(Store(str(tmp_path / "m.sqlite3")))
+    admin = svc.ensure_admin("t")
+    run(svc, admin)
+    v = view(svc)
+    assert {"data", "compare", "expert", "committee", "whole", "impact", "faculties"} <= set(v)
+    # the osteoarthritis case discussion is dropped by quality control and is shown as such, not hidden
+    assert any(r.get("excluded") and "Management of Osteoarthritis" in r["text"] for r in v["data"]["oa_rows"])
+    assert v["committee"]["t1_followup"] and not v["committee"]["t0_followup"]
+    assert all(r["example"] for r in v["committee"]["decisions"])
+    assert v["committee"]["focus_groups"] == [] and v["faculties"]["visits"] == []
+    add_record(svc, admin, "visit", {"key": "Örnek Fakülte", "note": "deneme"})
+    assert len(view(svc)["faculties"]["visits"]) == 1

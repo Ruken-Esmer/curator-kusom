@@ -6,7 +6,7 @@ type Mode = 'konu' | 'curator' | 'mimar' | 'uzman'
 const TABS: { id: Mode; tr: string; en: string }[] = [
   { id: 'konu', tr: 'Konu incelemesi', en: 'Topic review' },
   { id: 'curator', tr: 'Serbest soru', en: 'Ask' },
-  { id: 'uzman', tr: 'Uzman incelemesi', en: 'Expert review' },
+  { id: 'uzman', tr: 'Öğrenme yolları', en: 'Learning paths' },
   { id: 'mimar', tr: 'MİMAR projesi', en: 'MİMAR project' },
 ]
 

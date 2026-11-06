@@ -212,7 +212,7 @@ export default function ReviewPanel() {
   if (!ok) return (
     <div className="h-full overflow-y-auto">
       <div className="max-w-md mx-auto px-6 pt-16">
-        <h1 className="text-2xl font-semibold mb-2">Uzman incelemesi</h1>
+        <h1 className="text-2xl font-semibold mb-2">Öğrenme yolları</h1>
         <p className="text-[15px] text-zinc-600 mb-6">Bu bölüm öğrenme yolu önerilerini değerlendiren öğretim üyeleri içindir. Size iletilen erişim anahtarıyla giriş yapın.</p>
         <form onSubmit={(e) => { e.preventDefault(); setToken(tok); setOk(true) }} className="flex flex-col gap-3">
           <input type="password" aria-label="Erişim anahtarı" placeholder="Erişim anahtarı" value={tok} onChange={(e) => setTok(e.target.value)} autoFocus
@@ -228,7 +228,7 @@ export default function ReviewPanel() {
   return (
     <div className="h-full overflow-y-auto">
       <div className="max-w-3xl mx-auto px-6 py-8">
-        <h1 className="text-2xl font-semibold">Uzman incelemesi</h1>
+        <h1 className="text-2xl font-semibold">Öğrenme yolları</h1>
         <p className="text-[15px] text-zinc-600 mb-5">Her bağlantı için iki konu arasında önerilen ilişkinin doğru olup olmadığını işaretleyin. Kaydettiğinizde sıradaki bağlantıya geçilir.</p>
         <div className="flex gap-6 mb-6 border-b border-zinc-300" role="tablist">
           {TABS.map(([k, l]) => (

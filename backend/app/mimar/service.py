@@ -88,7 +88,7 @@ class MimarService:
         existing = self.store.list("user", username=username)
         if existing:
             return existing[0]
-        u = self.store.put("user", {"username": username, "display_name": "Project administrator",
+        u = self.store.put("user", {"username": username, "display_name": "Proje yöneticisi",
                                     "roles": [Role.ADMIN.value], "token_hash": hash_token(token), "active": True},
                            id=username)
         self._audit(None, "user.bootstrap_admin", username)

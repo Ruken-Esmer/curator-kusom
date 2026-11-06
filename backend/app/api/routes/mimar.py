@@ -892,3 +892,31 @@ def demo_osteo(user: dict = Depends(current_user), svc: MimarService = Depends(g
         raise HTTPException(409, "KUSOM verisi yüklü değil")
     from app.mimar.osteo_run import run
     return call(run, svc, user)
+
+
+# prototype screens
+@router.get("/prototype")
+def prototype_view(user: dict = Depends(current_user), svc: MimarService = Depends(get_service)):
+    from app.mimar.prototype import view
+    v = view(svc)
+    if v is None:
+        raise HTTPException(404, "Örnek henüz kurulmadı")
+    return v
+
+
+class RecordIn(BaseModel):
+    kind: str
+    key: str = ""
+    text: str = ""
+    ok: bool | None = None
+    status: str = ""
+    note: str = ""
+
+
+@router.post("/prototype/records")
+def prototype_record(body: RecordIn, user: dict = Depends(current_user), svc: MimarService = Depends(get_service)):
+    from app.mimar.prototype import add_record
+    try:
+        return add_record(svc, user, body.kind, body.model_dump(exclude={"kind"}))
+    except ValueError as e:
+        raise HTTPException(400, str(e))
