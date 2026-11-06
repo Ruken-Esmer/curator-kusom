@@ -2,7 +2,7 @@
 
 export type Language = 'en' | 'tr'
 
-export type QueryType = 'factual' | 'relational' | 'pathway' | 'advisory' | 'unknown'
+export type QueryType = 'factual' | 'relational' | 'pathway' | 'advisory' | 'audit' | 'unknown'
 
 export interface ChatMessage {
   role: 'user' | 'assistant'

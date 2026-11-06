@@ -23,6 +23,7 @@ class QueryType(str, Enum):
     RELATIONAL = "relational"    # "How does anatomy connect to physiology?"
     PATHWAY = "pathway"          # "What should I study before cardiology?"
     ADVISORY = "advisory"        # "What should I review for Year 4?"
+    AUDIT = "audit"              # "Osteoartrit hangi sınıflarda öğretiliyor?"
     UNKNOWN = "unknown"
 
 

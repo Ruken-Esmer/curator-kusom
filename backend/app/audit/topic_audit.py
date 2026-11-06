@@ -1,0 +1,275 @@
+"""Topic audit for accreditation reviewers: where a disease is taught, its objectives,
+recurring sessions and the UÇEP-2020 competencies it should cover."""
+from __future__ import annotations
+
+import re
+from itertools import combinations
+from typing import Any
+
+from app.data.kusom import curriculum as kusom
+from app.data.ucep.ucep_list import load as load_ucep
+
+# Topic profiles.  "direct" finds sessions about the disease itself; "related"
+# finds supporting sessions by the role they play.  Patterns are written by
+# hand and shown to the reviewer, so every match can be checked.
+PROFILES: dict[str, dict[str, Any]] = {
+    "UCEP2020-H237": {
+        "names": ["osteoartrit", "osteoarthritis", "osteoartroz", "osteoarthrosis", "gonartroz", "koksartroz",
+                  "dejeneratif eklem"],
+        "direct": [r"osteoarthrit", r"osteoarthros", r"gonarthros", r"coxarthros"],
+        "related": {
+            "temel bilim": [r"histology of cartilage", r"cartilage tissue", r"bones and joints of the lower limb",
+                            r"lower limb bones"],
+            "tanı": [r"approach to the patient with joint pain", r"degenerative .*joint", r"non-neoplastic bone and joint",
+                     r"differential diagnosis of arthritis", r"examination of the (knee|hip)",
+                     r"physical examination skills: (knee|hip)", r"joint aspiration"],
+            "tedavi": [r"nsaids", r"prescription for analgesics", r"prescribe exercise"],
+        },
+    },
+}
+
+# What each UÇEP learning level asks of a graduate, and the words that show it in a session or objective.
+LEVELS = {
+    "ÖnT": ("Ön tanı koyup sevk edebilme", r"diagnos|approach to|examination|differential|radiolog|patholog|aspiration"),
+    "T": ("Tanı koyabilme, tedavi hakkında bilgi sahibi olma", r"diagnos|approach to|examination|differential|radiolog|patholog|aspiration"),
+    "TT": ("Tanı koyabilme ve tedavi edebilme", None),   # split into the two rows below
+    "A": ("Acil durumu tanıyıp ilk tedavisini yapabilme", r"emergenc|acute|urgent"),
+    "K": ("Korunma önlemlerini uygulayabilme", r"prevent|risk factor|protect|weight|obes"),
+    "İ": ("Birinci basamakta uzun süreli izlem", r"follow.?up|monitor|long.?term|rehabilit|chronic care"),
+}
+TT_ROWS = [("TT-tanı", "Tanı koyabilme", LEVELS["T"][1]),
+           ("TT-tedavi", "Tedavi edebilme", r"management|treatment|therap|nsaid|analges|prescri|arthroplast|joint failure|surger")]
+# a match only through a general session (e.g. exercise prescription) supports, but does not prove, the competency
+INDIRECT = {"K": r"exercise"}
+
+PHASE_TR = {"temel": "temel bilim", "hastalık": "hastalık düzeyi", "klinik": "klinik düzey"}
+
+
+def _block_names() -> dict[str, str]:
+    return {b["code"]: b["name_tr"] for y in kusom.kusom_curriculum() for b in y["blocks"]}
+
+
+def find_topic(text: str) -> dict[str, Any] | None:
+    """The UÇEP core disease a question is about (longest name wins: 'osteoartrit' before 'artrit')."""
+    low = text.replace("İ", "i").replace("I", "ı").lower()
+    best = None
+    for it in load_ucep()["items"]:
+        names = [it["text_tr"].lower(), it["text_en"].lower()] + PROFILES.get(it["code"], {}).get("names", [])
+        for n in names:
+            n = n.split(" (")[0].strip()
+            if len(n) >= 4 and re.search(rf"(?<![a-zçğıöşü]){re.escape(n)}", low):
+                if best is None or len(n) > best[0]:
+                    best = (len(n), it)
+    return best[1] if best else None
+
+
+def _profile(item: dict[str, Any]) -> dict[str, Any]:
+    if item["code"] in PROFILES:
+        return PROFILES[item["code"]]
+    stem = re.escape(item["text_en"].split(" (")[0].split(" and ")[0].lower())
+    return {"direct": [stem], "related": {}}
+
+
+def sessions(item: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
+    prof, names = _profile(item), _block_names()
+    direct, related = [], []
+    for t in kusom.load()["topics"]:
+        text = t["title"] + " " + " ".join(t["objectives"])
+        row = {"block": t["block"], "block_name": names.get(t["block"], t["block"]), "year": t["year"],
+               "phase": kusom.phase_of(t["year"]), "title": t["title"], "kind": t["kind"], "date": t["first_date"],
+               "fields": [f.title() for f in t["fields"][:2]], "objectives": t["objectives"]}
+        if any(re.search(p, text, re.I) for p in prof["direct"]):
+            direct.append({**row, "role": "doğrudan"})
+            continue
+        for role, pats in prof["related"].items():
+            if any(re.search(p, t["title"], re.I) for p in pats):
+                related.append({**row, "role": role})
+                break
+    key = lambda r: (r["year"], r["date"] or "", r["title"])
+    return {"direct": sorted(direct, key=key), "related": sorted(related, key=key)}
+
+
+def where_taught(item: dict[str, Any]) -> dict[str, Any]:
+    s = sessions(item)
+    years = sorted({r["year"] for r in s["direct"]})
+    return {"topic": item, "direct": s["direct"], "related": s["related"], "years": years,
+            "blocks": sorted({(r["year"], r["block"], r["block_name"]) for r in s["direct"]})}
+
+
+def objectives(item: dict[str, Any]) -> dict[str, Any]:
+    s = sessions(item)
+    rows = [{"objective": o, **{k: r[k] for k in ("block", "block_name", "year", "title")}}
+            for r in s["direct"] + s["related"] for o in r["objectives"]]
+    lo_blocks = sorted({t["block"] for t in kusom.load()["topics"] if t["objectives"]})
+    no_lo = sorted({r["block"] for r in s["direct"] if not r["objectives"]})
+    return {"topic": item, "objectives": rows, "blocks_with_objective_docs": lo_blocks,
+            "teaching_blocks_without_objectives": no_lo, "sessions": s["direct"]}
+
+
+REASONING = r"approach to|differential diagnosis"
+
+
+def _relation(a: dict[str, Any], b: dict[str, Any]) -> tuple[str, str]:
+    rank = {"temel": 0, "hastalık": 1, "klinik": 2}
+    if a["block"] != b["block"] and re.search(REASONING, a["title"], re.I) and re.search(REASONING, b["title"], re.I):
+        return "olası tekrar", (f"İkisi de aynı klinik akıl yürütme sorusunu (ayırıcı tanı) ele alıyor; "
+                                f"{b['year']}. sınıftaki oturumun {a['year']}. sınıftakinden ne kadar ileri gittiği kontrol edilmeli.")
+    if a["block"] == b["block"]:
+        if a["kind"] != b["kind"]:
+            return "pekiştirme", f"Aynı blokta {a['kind']} ve {b['kind']} olarak iki kez; bilinçli pekiştirme olabilir, tedavi/tanı kısmı örtüşebilir."
+        return "olası tekrar", "Aynı blokta aynı türde iki oturum; içerik örtüşmesi kontrol edilmeli."
+    if rank[b["phase"]] > rank[a["phase"]]:
+        return "derinleşme", f"{a['year']}. sınıfta {PHASE_TR[a['phase']]}, {b['year']}. sınıfta {PHASE_TR[b['phase']]}; beklenen sarmal yapı."
+    if a["year"] == b["year"] and a["phase"] == "klinik":
+        return "olası tekrar", "Aynı yılın iki stajında; rotasyon sırasına göre öğrenci ikisini de alıyor."
+    return "olası tekrar", "Aynı düzeyde farklı bloklarda; içerik örtüşmesi kontrol edilmeli."
+
+
+def repetitions(item: dict[str, Any]) -> dict[str, Any]:
+    s = sessions(item)
+    pairs = []
+    for a, b in combinations(s["direct"], 2):
+        pairs.append((a, b))
+    # two clinical-reasoning sessions on the same question in different blocks
+    reasoning = [r for r in s["related"] if r["role"] == "tanı" and re.search(REASONING, r["title"], re.I)]
+    for a, b in combinations(reasoning, 2):
+        if a["block"] != b["block"]:
+            pairs.append((a, b))
+    out = []
+    for a, b in pairs:
+        a, b = sorted((a, b), key=lambda r: (r["year"], r["date"] or ""))
+        rel, why = _relation(a, b)
+        shared = [o for o in a["objectives"] if o in b["objectives"]]
+        out.append({"early": a, "late": b, "relation": rel, "why": why, "shared_objectives": shared})
+    return {"topic": item, "pairs": out, "objective_level_possible": any(r["objectives"] for r in s["direct"])}
+
+
+def ucep_alignment(item: dict[str, Any]) -> dict[str, Any]:
+    s = sessions(item)
+    pool = [r for r in s["direct"] + s["related"] if r["phase"] != "temel"]
+    rows = []
+    levels = []
+    for lv in item["levels"]:
+        if lv == "TT":
+            levels += [(code, label, rx, None) for code, label, rx in TT_ROWS]
+        else:
+            levels.append((lv, LEVELS[lv][0], LEVELS[lv][1], INDIRECT.get(lv)))
+    for code, label, rx, indirect in levels:
+        text = lambda r: r["title"] + " " + " ".join(r["objectives"])
+        hits = [r for r in pool if re.search(rx, text(r), re.I)]
+        weak = [r for r in pool if indirect and r not in hits and re.search(indirect, text(r), re.I)]
+        in_lo = any(re.search(rx, o, re.I) for r in hits for o in r["objectives"])
+        status = ("hedefte var" if in_lo else "ders başlığında var" if hits else
+                  "dolaylı" if weak else "karşılığı bulunamadı")
+        rows.append({"level": code, "expected": label, "status": status,
+                     "sessions": [f"{r['block']} ({r['year']}. sınıf): {r['title']}" for r in (hits or weak)][:4]})
+    return {"topic": item, "rows": rows,
+            "missing": [r for r in rows if r["status"] in ("karşılığı bulunamadı", "dolaylı")]}
+
+
+# Chat answers (Turkish markdown)
+
+def _d(iso: str | None) -> str:
+    return f"{iso[8:10]}.{iso[5:7]}.{iso[:4]}" if iso else "—"
+
+
+def _item_label(it: dict[str, Any]) -> str:
+    return f"{it['text_tr']} (UÇEP-2020 madde {it['no']}, düzey {'-'.join(it['levels'])})"
+
+
+def answer_where(item: dict[str, Any]) -> str:
+    w = where_taught(item)
+    if not w["direct"]:
+        return f"**{_item_label(item)}** için ders programlarında doğrudan bir oturum bulunamadı."
+    lines = [f"**{item['text_tr']}**, 2025–2026 programında **{', '.join(f'{y}. sınıf' for y in w['years'])}** düzeyinde doğrudan işleniyor.", "",
+             "| Sınıf | Blok / staj | Oturum | Tür | Tarih | Anabilim dalı |", "|---|---|---|---|---|---|"]
+    for r in w["direct"]:
+        lines.append(f"| {r['year']} | {r['block']} · {r['block_name']} | {r['title']} | {r['kind']} | {_d(r['date'])} | {', '.join(r['fields']) or '—'} |")
+    if w["related"]:
+        lines += ["", "**Destekleyici oturumlar** (anahtar kavramla bulundu; doğrulanmalı):", "",
+                  "| Sınıf | Blok / staj | Oturum | Rolü |", "|---|---|---|---|"]
+        for r in w["related"]:
+            lines.append(f"| {r['year']} | {r['block']} | {r['title']} | {r['role']} |")
+    lines += ["", "_Kaynak: KUSOM 2025–2026 ders programları (2.–5. sınıf). 1. ve 6. sınıf programları sistemde yok._"]
+    return "\n".join(lines)
+
+
+def answer_objectives(item: dict[str, Any]) -> str:
+    o = objectives(item)
+    if o["objectives"]:
+        lines = [f"**{item['text_tr']}** ile ilgili yazılı öğrenim hedefleri:", "",
+                 "| Sınıf | Blok | Oturum | Öğrenim hedefi |", "|---|---|---|---|"]
+        lines += [f"| {r['year']} | {r['block']} | {r['title']} | {r['objective']} |" for r in o["objectives"]]
+        return "\n".join(lines)
+    lines = [f"Sistemdeki öğrenim hedefi belgelerinde **{item['text_tr'].lower()} ile ilgili yazılı bir hedef yok.**", "",
+             f"Hedef belgeleri yalnızca {', '.join(o['blocks_with_objective_docs'])} blokları için paylaşıldı. "
+             f"{item['text_tr']} ise {', '.join(o['teaching_blocks_without_objectives'])} bloklarında işleniyor ve bu bloklar için hedef belgesi yok.", "",
+             "Hedeflerin yerine, konunun işlendiği oturumların başlıkları:", "",
+             "| Sınıf | Blok | Oturum başlığı | Tür |", "|---|---|---|---|"]
+    lines += [f"| {r['year']} | {r['block']} | {r['title']} | {r['kind']} |" for r in o["sessions"]]
+    lines += ["", "_Bu bloklar için hedef belgeleri eklendiğinde hedefler burada listelenir._"]
+    return "\n".join(lines)
+
+
+def answer_repetitions(item: dict[str, Any]) -> str:
+    r = repetitions(item)
+    if not r["pairs"]:
+        return f"**{item['text_tr']}** için tekrar eden oturum bulunamadı."
+    n = {k: sum(1 for p in r["pairs"] if p["relation"] == k) for k in ("olası tekrar", "pekiştirme", "derinleşme")}
+    lead = ("**Hedef düzeyinde:** tekrar eden hedef gösterilemiyor, çünkü bu oturumlar için yazılı öğrenim hedefi yok. "
+            if not r["objective_level_possible"] else "")
+    lead += (f"**Oturum düzeyinde:** {n['olası tekrar']} olası tekrar, {n['pekiştirme']} pekiştirme ve "
+             f"{n['derinleşme']} derinleşme (beklenen sarmal) var.")
+    lines = [lead, "", f"**{item['text_tr']}** konusunun birden fazla yerde geçtiği oturumlar, yan yana:", "",
+             "| Önce: sınıf · blok | Oturum | Sonra: sınıf · blok | Oturum | Değerlendirme |", "|---|---|---|---|---|"]
+    for p in r["pairs"]:
+        a, b = p["early"], p["late"]
+        lines.append(f"| {a['year']}. sınıf · {a['block']} | {a['title']} ({a['kind']}) | {b['year']}. sınıf · {b['block']} | "
+                     f"{b['title']} ({b['kind']}) | **{p['relation']}**: {p['why']} |")
+    lines += ["", "_Olası tekrarlar ve pekiştirmeler, ilgili anabilim dallarıyla ders içerikleri üzerinden doğrulanmalı._"]
+    return "\n".join(lines)
+
+
+def answer_ucep(item: dict[str, Any]) -> str:
+    u = ucep_alignment(item)
+    no_lo = all(r["status"] != "hedefte var" for r in u["rows"])
+    miss = [r["expected"].lower() for r in u["missing"]]
+    lead = (f"**Kısa cevap:** UÇEP'in beklediği {len(u['rows'])} yeterliğin hiçbirinin yazılı öğrenim hedeflerinde karşılığı yok, "
+            "çünkü konunun işlendiği bloklar için hedef belgesi bulunmuyor. Ders başlıklarına bakıldığında "
+            + (f"**{', '.join(miss)}** için karşılık bulunamadı ya da yalnız dolaylı." if miss else "hepsinin karşılığı var.")
+            if no_lo else
+            (f"**Kısa cevap:** {', '.join(miss)} için karşılık yok." if miss else "**Kısa cevap:** Hepsinin karşılığı var."))
+    lines = [lead, "", f"**{_item_label(item)}** için UÇEP'in beklediği yeterlikler ve müfredattaki karşılıkları:", "",
+             "| UÇEP düzeyi | Beklenen | Müfredatta | Nerede |", "|---|---|---|---|"]
+    for r in u["rows"]:
+        lines.append(f"| {r['level']} | {r['expected']} | **{r['status']}** | {'; '.join(r['sessions']) or '—'} |")
+    lines += ["", "_Not: Bu bloklarda yazılı öğrenim hedefi olmadığı için eşleştirme oturum başlıklarına dayanıyor; "
+                  "\"ders başlığında var\" konunun işlendiğini, ama hedefin UÇEP düzeyinde yazıldığını göstermez. "
+                  "UÇEP'in semptom ve temel hekimlik uygulamaları listeleri henüz sistemde değil._"]
+    return "\n".join(lines)
+
+
+QUESTION_PATTERNS = [
+    ("ucep", r"uçep|ucep|ulusal çekirdek"),
+    ("repetition", r"tekrar"),
+    ("objectives", r"(öğrenme|öğrenim) hedef|hedefleri"),
+    ("where", r"hangi (sınıf|blok|staj|yıl|dönem)|nerede|öğretiliyor|işleniyor"),
+]
+
+
+def chat_answer(query: str, history_texts: list[str]) -> str | None:
+    """Answer an accreditation question about a UÇEP disease; the topic may come from an earlier question."""
+    low = query.lower()
+    kind = next((k for k, rx in QUESTION_PATTERNS if re.search(rx, low)), None)
+    if not kind:
+        return None
+    item = find_topic(query)
+    if item is None:
+        for h in reversed(history_texts):
+            item = find_topic(h)
+            if item:
+                break
+    if item is None:
+        return None
+    return {"where": answer_where, "objectives": answer_objectives, "repetition": answer_repetitions,
+            "ucep": answer_ucep}[kind](item)

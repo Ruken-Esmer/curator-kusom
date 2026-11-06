@@ -26,6 +26,9 @@ async def chat(request: QueryRequest) -> QueryResponse:
     Language is auto-detected from the query text.
     """
     lang = _detect_language(request.query, request.language)
+    au = _audit_answer(request, lang)
+    if au is not None:
+        return au
     pw = _pathway_answer(request.query, lang)
     if pw is not None:
         return pw
@@ -51,6 +54,19 @@ async def chat(request: QueryRequest) -> QueryResponse:
 
 #  Learning pathways (shown directly; quality assured by expert review
 #  during development — see app.pathway.review)
+
+def _audit_answer(request: QueryRequest, lang: Language) -> QueryResponse | None:
+    """Accreditation-style questions about a UÇEP disease (where taught, objectives, repetitions, UÇEP fit)."""
+    from app.audit.topic_audit import chat_answer
+    from app.data.curriculum.source import active_source
+    if active_source() != "kusom":
+        return None
+    history = [m.content for m in request.conversation_history if m.role == "user"][-6:]
+    answer = chat_answer(request.query, history)
+    if answer is None:
+        return None
+    return QueryResponse(answer=answer, query_type=QueryType.AUDIT, language=lang)
+
 
 def _pathway_answer(query: str, lang: Language) -> QueryResponse | None:
     from app.api.routes.mimar import get_service

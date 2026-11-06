@@ -18,6 +18,7 @@ const SAMPLES = {
     'Explain the difference between Year 2 and Year 3 organ systems.',
   ],
   tr: [
+    'Osteoartrit hangi sınıflarda, hangi bloklarda veya stajlarda öğretiliyor?',
     'Kardiyovasküler blok öncesinde ne çalışmalıyım?',
     'Anatomi 6 yıl boyunca nasıl gelişiyor?',
     'Diyabet müfredatta nerede kapsanıyor ve ön koşullar neler?',
@@ -131,6 +132,15 @@ function Bubble({ role, content }: { role: string; content: string }) {
               ol: ({ children }) => <ol className="list-decimal pl-4 mb-2">{children}</ol>,
               ul: ({ children }) => <ul className="list-disc pl-4 mb-2">{children}</ul>,
               li: ({ children }) => <li className="mb-0.5">{children}</li>,
+              table: ({ children }) => (
+                <div className="overflow-x-auto my-2">
+                  <table className="w-full text-[12.5px] border-collapse bg-white dark:bg-zinc-900 rounded">{children}</table>
+                </div>
+              ),
+              th: ({ children }) => (
+                <th className="text-left font-semibold px-2 py-1.5 border-b-2 border-[#7A1F2B]/40 bg-zinc-50 dark:bg-zinc-800 align-bottom">{children}</th>
+              ),
+              td: ({ children }) => <td className="px-2 py-1.5 border-b border-zinc-200 dark:border-zinc-700 align-top">{children}</td>,
             }}
           >
             {content}
@@ -179,7 +189,7 @@ export default function ChatPanel() {
           <div className="flex items-center gap-3">
             {lastQueryType && lastQueryType !== 'unknown' && (
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 font-mono capitalize">
-                {lastQueryType}
+                {({ audit: language === 'tr' ? 'akreditasyon' : 'accreditation', pathway: language === 'tr' ? 'öğrenme yolu' : 'pathway' } as Record<string, string>)[lastQueryType] ?? lastQueryType}
               </span>
             )}
             {lastProcessingMs > 0 && (
