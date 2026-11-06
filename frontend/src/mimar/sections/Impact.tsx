@@ -13,6 +13,13 @@ function Changeset({ cs }: { cs: any }) {
   const [exp, setExp] = useState('[\n  {"type": "removed_link", "entity": "LO-A|LO-B"}\n]')
   const [ev, setEv] = useState<any>(null)
   const rep = d.data?.report
+  // session titles for both versions, so alerts read as text rather than ids
+  const names = useLoad(async () => {
+    const m: Record<string, string> = {}
+    for (const id of [cs.t0, cs.t1]) for (const r of await api.get(`/datasets/${id}/los?limit=5000`)) m[r.uid] = `${r.year}. sınıf · ${r.course} · ${r.text}`
+    return m
+  }, [cs.id])
+  const label = (k: string) => k.split('|').map((u) => <div key={u}>{names.data?.[u] ?? u}</div>)
   const canExpect = hasRole(user, 'coordinator', 'impact_evaluator')
   return (
     <Panel title={cs.description || `Değişiklik ${cs.id}`} aside={<><Pill tone={cs.kind === 'real' ? 'brand' : 'plain'}>{cs.kind === 'real' ? 'gerçek değişiklik' : 'kontrollü'}</Pill>{cs.expected_locked ? <Pill tone="lock">beklenen etkiler kilitli ({cs.expected_count})</Pill> : <Pill tone="warn">beklenen etkiler açık</Pill>}</>}>
@@ -32,12 +39,13 @@ function Changeset({ cs }: { cs: any }) {
         <>
           <p className="m-text-sm">Fark: {rep.diff.added.length} eklenen · {rep.diff.removed.length} kaldırılan · {rep.diff.modified.length} metni değişen · {rep.diff.relinked.length} yeniden ilişkilendirilen hedef. Yalnız sıralama kayması nedeniyle değişen {rep.rank_shift_only.length} çift uyarı sayılmadı.</p>
           <Table dense cols={[{ key: 'id', label: 'Uyarı' }, { key: 'type', label: 'Tür', render: (a) => TYPE[a.type] ?? a.type },
-            { key: 'entity', label: 'Öge' }, { key: 'cause', label: 'Kaynak değişiklik', render: (a) => a.cause.join(', ') },
+            { key: 'entity', label: 'Öge', render: (a) => label(a.entity) }, { key: 'cause', label: 'Kaynak değişiklik', render: (a) => label(a.cause.join('|')) },
             ...(canExpect ? [{ key: 'v', label: 'Kanıtla değerlendir', render: (a: any) => <span className="m-row">
               <Button kind="quiet" onClick={() => act.run(() => api.post(`/changesets/${cs.id}/alerts/${a.id}`, { verified: true }))}>doğru</Button>
               <Button kind="quiet" onClick={() => act.run(() => api.post(`/changesets/${cs.id}/alerts/${a.id}`, { verified: false }))}>gereksiz</Button></span> }] : [])]}
             rows={rep.alerts} empty="Uyarı yok." />
           {canExpect && <Button busy={act.busy} onClick={async () => setEv(await act.run(() => api.post(`/changesets/${cs.id}/evaluate`)))}>Beklenen etkilerle karşılaştır</Button>}
+          {!ev && cs.evaluation && <Note tone="info">{cs.evaluation.verified_alerts}/{cs.evaluation.total_alerts} uyarı doğrulandı · {cs.evaluation.missed_expected}/{cs.evaluation.total_expected} beklenen etki sistemce gösterilmedi.</Note>}
           {ev && <Note tone="info">{ev.verified_alerts}/{ev.total_alerts} uyarı doğrulandı · {ev.missed_expected}/{ev.total_expected} beklenen etki kaçırıldı. {ev.note}</Note>}
         </>
       )}

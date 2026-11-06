@@ -878,3 +878,17 @@ def demo_summary(user: dict = Depends(current_user), svc: MimarService = Depends
     if "admin" not in user["roles"]:
         s = {k: v for k, v in s.items() if k != "users"}
     return s
+
+
+@router.post("/demo/osteoartrit")
+def demo_osteo(user: dict = Depends(current_user), svc: MimarService = Depends(get_service)):
+    """Whole protocol once on real KUSOM MSK sessions; people and their decisions are examples."""
+    if not (settings.app_env == "development" or os.getenv("MIMAR_ENABLE_DEMO") == "1"):
+        raise HTTPException(403, "demo is disabled outside development")
+    if "admin" not in user["roles"]:
+        raise HTTPException(403, "admin only")
+    from app.data.kusom import curriculum as loader
+    if not loader.available():
+        raise HTTPException(409, "KUSOM verisi yüklü değil")
+    from app.mimar.osteo_run import run
+    return call(run, svc, user)

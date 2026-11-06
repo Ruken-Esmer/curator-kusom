@@ -56,10 +56,10 @@ function Login() {
     setErr(null); setToken(t)
     try { setUser(await api.get('/me')) } catch (e: any) { setToken(''); setErr(e.message) }
   }
-  const runDemo = async () => {
+  const runDemo = async (path = '/demo/run?quick=true') => {
     setBusy(true); setErr(null); setToken(tok)
     try {
-      const s = await api.post('/demo/run?quick=true')
+      const s = await api.post(path)
       setDemo(s.users)
       await login(tok)
     } catch (e: any) { setErr(e.message); setToken('') } finally { setBusy(false) }
@@ -75,7 +75,9 @@ function Login() {
           </Field>
           <div className="m-row">
             <Button type="submit" kind="primary" disabled={!tok}>Giriş yap</Button>
-            <Button onClick={runDemo} busy={busy} disabled={!tok}
+            <Button onClick={() => runDemo('/demo/osteoartrit')} busy={busy} disabled={!tok}
+              title="Yönetici anahtarı gerekir; gerçek KUSOM MSKL oturumlarıyla tüm aşamaları örnek kişilerle çalıştırır">Osteoartrit örneğini kur</Button>
+            <Button onClick={() => runDemo()} busy={busy} disabled={!tok}
               title="Yönetici anahtarı gerekir; sentetik veriyle tüm aşamaları simüle eder">Sentetik demoyu kur</Button>
           </div>
         </form>
@@ -84,7 +86,7 @@ function Login() {
           <Note tone="info">
             Demo kuruldu. Bir role geçmek için seçin:
             <div className="m-demo-users">
-              {Object.entries(demo).filter(([u]) => !u.startsWith('coord') || u === 'coord01').map(([u, t]) =>
+              {Object.entries(demo).filter(([u]) => !/^(coord|koordinator)/.test(u) || u === 'coord01' || u === 'koordinator01').map(([u, t]) =>
                 <Button key={u} kind="secondary" onClick={() => login(t)}>{u}</Button>)}
             </div>
           </Note>

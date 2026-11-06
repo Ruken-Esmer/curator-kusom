@@ -103,3 +103,18 @@ def test_osteoarthritis_scenario_through_work_packages(monkeypatch):
     assert d["wp1"]["expert_pair_rank"] is None
     assert d["wp4"]["titles"] > d["wp1"]["titles"] and d["wp4"]["redundancy"] > 0
     assert d["wp4"]["diseases_with_profile"] == 1
+
+
+def test_osteoarthritis_runs_through_the_whole_protocol(tmp_path):
+    from app.mimar.osteo_run import run
+    from app.mimar.service import MimarService
+    from app.mimar.store import Store
+    svc = MimarService(Store(str(tmp_path / "m.sqlite3")))
+    admin = svc.ensure_admin("t")
+    s = run(svc, admin)
+    assert s["ip1"]["qc"]["rows_received"] == 230 and s["ip1"]["plan_lock"]
+    assert s["ip2"]["entries"] > 4
+    assert s["ip4"]["items"] > 0
+    # the new follow-up objective gets its UÇEP link but no links to the osteoarthritis sessions
+    assert s["ip5"]["total_expected"] == 4 and s["ip5"]["missed_expected"] >= 2
+    assert svc.store.verify_audit()["valid"]
