@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { api } from './api'
-import { Button, Field, Note, Pill } from './ui'
+import { Note, Pill } from './ui'
 import './mimar.css'
 
 const EX_LOS = `MSK-A-01 | 2 | MSK Anatomi | Describe the muscles of the rotator cuff and their innervation.
@@ -42,6 +42,8 @@ const parseMat = (t: string) => t.split('\n').map((l) => l.trim()).filter(Boolea
 
 function Output({ o }: { o: any }) {
   const ic = o.input_check
+  const main = (o.findings ?? []).filter((f: any) => f.category !== 'gap_ucep')
+  const gaps = (o.findings ?? []).filter((f: any) => f.category === 'gap_ucep')
   return (
     <div className="pg-out">
       <p className="ms-summary">{o.summary}</p>
@@ -52,10 +54,10 @@ function Output({ o }: { o: any }) {
         </details>
       )}
 
-      {o.findings?.length > 0 && <>
+      {main.length > 0 && <>
         <h4>Önerilen düzenlemeler (öncelik sırasıyla)</h4>
         <div className="ms-cards">
-          {o.findings.map((f: any, i: number) => (
+          {main.map((f: any, i: number) => (
             <article key={i} className="ms-card">
               <div className="ms-card-head">
                 <Pill tone={PRI[f.priority.level]}>{f.priority.level} öncelik</Pill>
@@ -76,6 +78,14 @@ function Output({ o }: { o: any }) {
         </div>
       </>}
 
+      {gaps.length > 0 && (
+        <details className="m-details" style={{ marginTop: 12 }}>
+          <summary>UÇEP’te olup bu hedeflerde açık karşılığı bulunmayan {gaps.length} madde</summary>
+          <p className="m-text-sm m-muted">Yalnız bir kısım blok seçildiyse bu liste doğal olarak uzundur; UÇEP karşılaştırması tüm program seçildiğinde anlamlıdır.</p>
+          <ul className="pg-list pg-small">{gaps.map((f: any, i: number) => <li key={i}>{f.statement}</li>)}</ul>
+        </details>
+      )}
+
       {o.impact && <>
         <h4>Öneriler uygulanırsa</h4>
         <p className="m-text-sm">Kaldırılan: {o.impact.applied.removed_objectives.join(', ') || '—'} · Eklenen: {o.impact.applied.added_objectives.join(', ') || '—'} · Hedef sayısı {o.impact.objectives_before_after[0]} → {o.impact.objectives_before_after[1]}</p>
@@ -87,6 +97,8 @@ function Output({ o }: { o: any }) {
         {o.impact.warning && <Note tone="warn">{o.impact.warning}</Note>}
       </>}
 
+      <details className="m-details" style={{ marginTop: 16 }}>
+        <summary>Ayrıntılı sonuçlar: örtüşen hedefler, sorun sayılmayan tekrarlar, UÇEP karşılıkları</summary>
       {o.overlaps?.length > 0 && <>
         <h4>Örtüşen hedefler</h4>
         <ol className="pg-pairs">
@@ -124,132 +136,138 @@ function Output({ o }: { o: any }) {
 
       {o.material && <p className="m-text-sm">Ders materyali: {o.material.objectives_with_material} hedefin materyali kullanıldı, {o.material.new_candidates} ek aday bulundu.</p>}
 
+      </details>
       {o.reliability && <p className="m-muted m-text-sm ms-rel">{o.reliability.method_agreement} {o.reliability.stability} {o.reliability.note} ({o.seconds} sn)</p>}
     </div>
   )
 }
 
+
+// ── page ─────────────────────────────────────────────────
+
 type KBlock = { id: string; code: string; year: number; name: string; topics: number; objectives: number }
-
-function KusomPicker({ onLoad }: { onLoad: (text: string, info: string, rows: any[]) => void }) {
-  const [blocks, setBlocks] = useState<KBlock[]>([])
-  const [sel, setSel] = useState<string[]>([])
-  const [busy, setBusy] = useState(false)
-  useEffect(() => { api.get('/kusom/blocks').then((r) => setBlocks(r.blocks ?? [])).catch(() => setBlocks([])) }, [])
-  if (!blocks.length) return null
-  const years = Array.from(new Set(blocks.map((b) => b.year)))
-  const toggle = (id: string) => setSel((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]))
-  const load = async () => {
-    setBusy(true)
-    try {
-      const r = await api.get(`/kusom/los?blocks=${sel.join(',')}`)
-      const text = r.rows.map((x: any) => `${x.uid} | ${x.year} | ${x.course} | ${x.text}`).join('\n')
-      const nObj = r.rows.filter((x: any) => x.from === 'öğrenim hedefi').length
-      onLoad(text, `${r.rows.length} satır yüklendi: ${nObj} öğrenim hedefi, ${r.rows.length - nObj} ders başlığı${r.truncated ? ' (ilk 3000 satır)' : ''}.`, r.rows)
-    } finally { setBusy(false) }
-  }
-  return (
-    <div className="ms-kusom">
-      <div className="ms-kusom-h">KUSOM 2025–2026 programından yükle</div>
-      {years.map((y) => (
-        <div key={y} className="ms-kusom-row">
-          <span className="ms-kusom-y">{y}. sınıf</span>
-          {blocks.filter((b) => b.year === y).map((b) => (
-            <button key={b.id} type="button" title={`${b.name} · ${b.topics} konu${b.objectives ? ` · ${b.objectives} öğrenim hedefi` : ''}`}
-              className={`ms-chip${sel.includes(b.id) ? ' on' : ''}${b.objectives ? ' lo' : ''}`} onClick={() => toggle(b.id)}>
-              {b.code}
-            </button>
-          ))}
-        </div>
-      ))}
-      <div className="m-row">
-        <Button disabled={!sel.length} busy={busy} onClick={load}>Seçili blokları yükle</Button>
-        <span className="m-muted m-text-sm">Altı çizili bloklarda yazılı öğrenim hedefi var; diğerlerinde ders başlıkları kullanılır.</span>
-      </div>
-    </div>
-  )
-}
-
-type Turn = { id: number; nLos: number; nU: number; nM: number; preview: any[]; at: string; out?: any; err?: string }
+const ACCENT = '#7A1F2B'
+const Step = ({ n, title, children }: { n: number; title: string; children: any }) => (
+  <div className="flex gap-4">
+    <span className="shrink-0 w-7 h-7 rounded-full text-sm font-semibold flex items-center justify-center text-white" style={{ background: ACCENT }}>{n}</span>
+    <div className="flex-1 min-w-0"><p className="font-medium mb-2">{title}</p>{children}</div>
+  </div>
+)
 
 export default function MimarAnalyze() {
-  const [los, setLos] = useState('')
-  const [ucep, setUcep] = useState('')
-  const [mat, setMat] = useState('')
-  const [turns, setTurns] = useState<Turn[]>([])
-  const [busy, setBusy] = useState(false)
-  const [loaded, setLoaded] = useState('')
-  const [kusom, setKusom] = useState<{ text: string; rows: any[] } | null>(null)
-  const end = useRef<HTMLDivElement>(null)
-  useEffect(() => { end.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }) }, [turns])
+  const [blocks, setBlocks] = useState<KBlock[]>([])
+  const [sel, setSel] = useState<string[]>([])
+  const [withUcep, setWithUcep] = useState(false)
+  const [own, setOwn] = useState({ los: '', ucep: '', mat: '' })
+  const [busy, setBusy] = useState('')
+  const [out, setOut] = useState<any>(null)
+  const [info, setInfo] = useState('')
+  const [err, setErr] = useState<string | null>(null)
+  const res = useRef<HTMLDivElement>(null)
+  useEffect(() => { api.get('/kusom/blocks').then((r) => setBlocks(r.blocks ?? [])).catch(() => setBlocks([])) }, [])
+  useEffect(() => { if (out) res.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }, [out])
+
+  const years = Array.from(new Set(blocks.map((b) => b.year)))
+  const toggle = (id: string) => setSel((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]))
+  const useOwn = own.los.trim().length > 0
+  const ready = useOwn || sel.length > 0
 
   const run = async () => {
-    // rows loaded from the KUSOM data keep their session and session type, unless the text was edited
-    const lr = kusom && kusom.text === los ? kusom.rows : parseLos(los)
-    const body = { los: lr, ucep: parseUcep(ucep), material: parseMat(mat) }
-    const id = Date.now()
-    setTurns((t) => [...t, { id, nLos: body.los.length, nU: body.ucep.length, nM: body.material.length, preview: body.los.slice(0, 3),
-      at: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }) }])
-    setBusy(true)
+    setErr(null); setOut(null)
     try {
-      const out = await api.post('/analyze', body)
-      setTurns((t) => t.map((x) => (x.id === id ? { ...x, out } : x)))
-    } catch (e: any) {
-      setTurns((t) => t.map((x) => (x.id === id ? { ...x, err: e.message } : x)))
-    } finally { setBusy(false) }
+      let los: any[]; let ucep: any[] = []
+      if (useOwn) {
+        los = parseLos(own.los); ucep = parseUcep(own.ucep)
+      } else {
+        setBusy('Öğrenim hedefleri yükleniyor…')
+        const r = await api.get(`/kusom/los?blocks=${sel.join(',')}`)
+        los = r.rows
+        const nObj = los.filter((x: any) => x.from === 'öğrenim hedefi').length
+        setInfo(`${sel.map((id) => blocks.find((b) => b.id === id)?.code).join(', ')} · ${nObj} öğrenim hedefi, ${los.length - nObj} ders başlığı${r.truncated ? ' (ilk 3000 satır)' : ''}`)
+        if (withUcep) ucep = (await api.get('/ucep2020')).rows
+      }
+      if (useOwn) setInfo(`${los.length} hedef (kendi girdiniz)`)
+      setBusy('Hedefler karşılaştırılıyor… (bir iki dakika sürebilir)')
+      setOut(await api.post('/analyze', { los, ucep, material: useOwn ? parseMat(own.mat) : [] }))
+    } catch (e: any) { setErr(e.message) } finally { setBusy('') }
   }
 
   return (
-    <div className="mimar ms-root">
-      <main className="m-main">
-        <div className="m-page ms-page">
-          <div className="pg-grid">
-            <section className="m-panel pg-input">
-              <h3 className="pg-h">Girdi</h3>
-              <KusomPicker onLoad={(t, info, rows) => { setLos(t); setLoaded(info); setKusom({ text: t, rows }) }} />
-              {loaded && <p className="m-text-sm ms-loaded">{loaded}</p>}
-              <Field label="Öğrenme hedefleri" hint="Her satıra bir hedef: kimlik | sınıf | ders | hedef metni">
-                <textarea className="m-input pg-ta" rows={12} value={los} onChange={(e) => setLos(e.target.value)}
-                  placeholder="MSK-A-01 | 2 | MSK Anatomi | Describe the muscles of the rotator cuff…" />
-              </Field>
-              <div className="m-row ms-ucep-row">
-                <Button onClick={async () => {
-                  const r = await api.get('/ucep2020')
-                  setUcep(r.rows.map((x: any) => `${x.code} | ${x.text_tr} | ${x.text_en}`).join('\n'))
-                }}>UÇEP 2020 çekirdek hastalıklarını yükle (342 madde)</Button>
-              </div>
-              <Field label="UÇEP maddeleri (isteğe bağlı)" hint="kod | Türkçe metin | İngilizce karşılık">
-                <textarea className="m-input pg-ta" rows={3} value={ucep} onChange={(e) => setUcep(e.target.value)} />
-              </Field>
-              <Field label="Ders materyali (isteğe bağlı)" hint="hedef kimliği | slayt veya ders notu metni">
-                <textarea className="m-input pg-ta" rows={2} value={mat} onChange={(e) => setMat(e.target.value)} />
-              </Field>
-              <div className="m-row">
-                <Button onClick={() => { setLos(EX_LOS); setUcep(EX_UCEP); setMat(EX_MAT) }}>Örnek veriyi doldur</Button>
-                <Button kind="primary" busy={busy} disabled={!los.trim()} onClick={run}>Analiz et</Button>
-              </div>
-            </section>
-            <section className="pg-thread" aria-live="polite">
-              <h3 className="pg-h">Çıktı</h3>
-              {turns.length === 0 && <p className="m-empty pg-empty">Öğrenme hedeflerini girip “Analiz et”e bastığınızda sonuç burada görünecek.</p>}
-              {turns.map((t) => (
-                <div key={t.id} className="pg-turn">
-                  <div className="pg-msg pg-user">
-                    <div className="pg-who">Girdi · {t.at}</div>
-                    <p><b>{t.nLos} öğrenme hedefi</b>{t.nU ? `, ${t.nU} UÇEP maddesi` : ''}{t.nM ? `, ${t.nM} materyal notu` : ''}</p>
-                    <ul className="pg-list pg-small">{t.preview.map((l) => <li key={l.uid}>{l.uid}: {l.text}</li>)}{t.nLos > 3 && <li className="m-muted">… ve {t.nLos - 3} hedef daha</li>}</ul>
+    <div className="h-full overflow-y-auto bg-zinc-50/50">
+      <div className="max-w-3xl mx-auto px-6 py-8">
+        <h1 className="font-serif text-2xl tracking-tight">Müfredat analizi</h1>
+        <p className="text-sm text-zinc-500 mb-6">Seçtiğiniz blokların öğrenim hedeflerini birbiriyle ve UÇEP ile karşılaştırır; gereksiz tekrarları ve eksikleri öneri olarak listeler. Karar komitenindir.</p>
+
+        <div className="rounded-2xl border border-zinc-200 bg-white p-6 flex flex-col gap-6">
+          <Step n={1} title="İncelenecek blokları seçin">
+            {blocks.length === 0 ? <p className="text-sm text-zinc-400">Blok listesi yüklenemedi.</p> : (
+              <div className="flex flex-col gap-2">
+                {years.map((y) => (
+                  <div key={y} className="flex items-baseline gap-2 flex-wrap">
+                    <span className="w-14 shrink-0 text-xs text-zinc-500">{y}. sınıf</span>
+                    {blocks.filter((b) => b.year === y).map((b) => (
+                      <button key={b.id} type="button" onClick={() => toggle(b.id)} disabled={useOwn}
+                        title={`${b.name} · ${b.topics} konu${b.objectives ? ` · ${b.objectives} öğrenim hedefi` : ''}`}
+                        className={`ms-chip px-2.5 py-1 rounded-full text-xs border transition-colors disabled:opacity-40 ${sel.includes(b.id)
+                          ? 'border-[#7A1F2B] bg-[#7A1F2B] text-white' : 'border-zinc-200 text-zinc-700 hover:border-zinc-400'}`}>
+                        {b.code}{b.objectives ? ' •' : ''}
+                      </button>
+                    ))}
                   </div>
-                  <div className="pg-msg pg-system">
-                    <div className="pg-who">MİMAR</div>
-                    {t.err ? <Note tone="error">{t.err}</Note> : t.out ? <Output o={t.out} /> : <p className="m-muted"><span className="m-spinner" /> Analiz ediliyor…</p>}
-                  </div>
-                </div>
-              ))}
-              <div ref={end} />
-            </section>
-          </div>
+                ))}
+                <p className="text-xs text-zinc-400 mt-1">• işaretli bloklarda yazılı öğrenim hedefi var; diğerlerinde ders başlıkları kullanılır.</p>
+              </div>
+            )}
+          </Step>
+
+          <Step n={2} title="UÇEP ile karşılaştırılsın mı?">
+            <label className="flex items-center gap-2 text-sm text-zinc-700">
+              <input type="checkbox" checked={withUcep} onChange={(e) => setWithUcep(e.target.checked)} disabled={useOwn} className="accent-[#7A1F2B]" />
+              UÇEP-2020 çekirdek hastalıklarıyla karşılaştır (342 madde)
+            </label>
+            <p className="text-xs text-zinc-400 mt-1">Tüm programı ya da bir sınıfın tamamını seçtiğinizde anlamlıdır; tek blokta çoğu madde doğal olarak “eksik” çıkar.</p>
+          </Step>
+
+          <Step n={3} title="Analizi başlatın">
+            <button onClick={run} disabled={!ready || !!busy}
+              className="px-5 py-2.5 rounded-xl text-white text-sm font-medium disabled:opacity-40" style={{ background: ACCENT }}>
+              {busy ? 'Çalışıyor…' : 'Analiz et'}
+            </button>
+            {busy && <p className="text-sm text-zinc-500 mt-2"><span className="inline-block w-3 h-3 mr-2 rounded-full border-2 border-zinc-300 border-t-[#7A1F2B] animate-spin align-[-1px]" />{busy}</p>}
+            {!ready && !busy && <p className="text-xs text-zinc-400 mt-2">Önce en az bir blok seçin.</p>}
+          </Step>
         </div>
-      </main>
+
+        <details className="mt-4 rounded-2xl border border-zinc-200 bg-white px-5 py-3">
+          <summary className="cursor-pointer text-sm text-zinc-600">Kendi hedeflerinizi yapıştırmak isterseniz</summary>
+          <div className="flex flex-col gap-3 mt-3 text-sm">
+            <p className="text-xs text-zinc-500">Bu alan doluysa yukarıdaki blok seçimi yerine bu hedefler analiz edilir.</p>
+            <label>Öğrenim hedefleri <span className="text-zinc-400">— her satıra: kimlik | sınıf | ders | hedef metni</span>
+              <textarea rows={6} value={own.los} onChange={(e) => setOwn({ ...own, los: e.target.value })}
+                className="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 font-mono text-xs" placeholder="MSK-A-01 | 2 | MSK Anatomi | Describe the muscles of the rotator cuff…" /></label>
+            <label>UÇEP maddeleri <span className="text-zinc-400">(isteğe bağlı) — kod | Türkçe | İngilizce</span>
+              <textarea rows={2} value={own.ucep} onChange={(e) => setOwn({ ...own, ucep: e.target.value })} className="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 font-mono text-xs" /></label>
+            <label>Ders materyali <span className="text-zinc-400">(isteğe bağlı) — hedef kimliği | metin</span>
+              <textarea rows={2} value={own.mat} onChange={(e) => setOwn({ ...own, mat: e.target.value })} className="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 font-mono text-xs" /></label>
+            <div className="flex gap-3">
+              <button className="text-xs underline text-zinc-600" onClick={() => setOwn({ los: EX_LOS, ucep: EX_UCEP, mat: EX_MAT })}>Örnek veriyi doldur</button>
+              {useOwn && <button className="text-xs underline text-zinc-600" onClick={() => setOwn({ los: '', ucep: '', mat: '' })}>Temizle</button>}
+            </div>
+          </div>
+        </details>
+
+        {err && <p role="alert" className="mt-4 text-sm text-red-700 bg-red-50 rounded-lg px-3 py-2">{err}</p>}
+
+        {out && (
+          <div ref={res} className="mt-6 scroll-mt-4">
+            <h2 className="font-serif text-xl mb-1">Sonuç</h2>
+            <p className="text-xs text-zinc-500 mb-3">{info}</p>
+            <div className="mimar rounded-2xl border border-zinc-200 bg-white p-5" style={{ display: 'block', height: 'auto', overflow: 'visible', background: '#fff' }}>
+              <Output o={out} />
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
