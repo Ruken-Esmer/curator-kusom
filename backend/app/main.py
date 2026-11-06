@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import chat, curriculum, graph, health, mimar, pathway
+from app.api.routes import audit, chat, curriculum, graph, health, mimar, pathway
 from app.core.config import get_settings
 from app.core.logging import logger, setup_logging
 from app.graph.client import neo4j_client
@@ -73,3 +73,4 @@ app.include_router(curriculum.router, prefix="/api/v1", tags=["curriculum"])
 app.include_router(graph.router,      prefix="/api/v1", tags=["graph"])
 app.include_router(mimar.router,      prefix="/api/v1")
 app.include_router(pathway.router,    prefix="/api/v1")
+app.include_router(audit.router,      prefix="/api/v1")

@@ -1,19 +1,20 @@
 import { useStore } from '@/store'
 import type { Language } from '@/types'
 
-type Mode = 'curator' | 'mimar' | 'uzman'
+type Mode = 'konu' | 'curator' | 'mimar' | 'uzman'
 
 const TABS: { id: Mode; tr: string; en: string }[] = [
-  { id: 'curator', tr: 'Sorgu', en: 'Query' },
+  { id: 'konu', tr: 'Konu incelemesi', en: 'Topic review' },
+  { id: 'curator', tr: 'Serbest soru', en: 'Ask' },
   { id: 'uzman', tr: 'Uzman incelemesi', en: 'Expert review' },
   { id: 'mimar', tr: 'Müfredat analizi', en: 'Curriculum analysis' },
 ]
 
-export default function Header({ mode = 'curator', onModeChange }: { mode?: Mode; onModeChange?: (m: Mode) => void }) {
+export default function Header({ mode = 'konu', onModeChange }: { mode?: Mode; onModeChange?: (m: Mode) => void }) {
   const { language, setLanguage } = useStore()
 
   return (
-    <header className="shrink-0 border-t-4 border-[#7A1F2B] border-b border-b-zinc-200 bg-white">
+    <header className="app-header shrink-0 border-t-4 border-[#7A1F2B] border-b border-b-zinc-200 bg-white">
       <div className="h-12 flex items-stretch justify-between px-6">
         <div className="flex items-center gap-3">
           <span className="text-[15px] font-bold tracking-wide text-[#7A1F2B]">CURATOR</span>

@@ -61,3 +61,20 @@ def test_scenario_in_chat_with_follow_up_questions(monkeypatch):
         hist += [{"role": "user", "content": q}, {"role": "assistant", "content": out["answer"]}]
     assert "MSKL 303" in answers[0] and "yazılı bir hedef yok" in answers[1]
     assert "olası tekrar" in answers[2] and "izlem" in answers[3]
+
+
+def test_topic_report_answers_the_four_questions_at_once(monkeypatch):
+    from fastapi.testclient import TestClient
+    import app.api.routes.audit as audit_routes
+    from app.main import app
+    monkeypatch.setattr(audit_routes, "active_source", lambda: "kusom")
+    c = TestClient(app)
+    r = c.get("/api/v1/audit/report", params={"q": "Osteoartrit"}).json()
+    assert r["topic"]["no"] == 237 and r["topic"]["curated"]
+    assert r["where"]["years"] == [3, 5]
+    assert r["objectives"]["items"] == [] and r["objectives"]["missing_docs"] == ["MSKL 303", "MSKL 503"]
+    assert r["repetitions"]["counts"]["olası tekrar"] == 1
+    assert {x["level"]: x["status"] for x in r["ucep"]["rows"]}["İ"] == "karşılığı bulunamadı"
+    assert c.get("/api/v1/audit/report", params={"q": "diyabet"}).json()["topic"]["name"].startswith("Diabetes")
+    assert c.get("/api/v1/audit/report", params={"q": "yok böyle bir konu"}).status_code == 404
+    assert any(t["name"] == "Osteoartrit" for t in c.get("/api/v1/audit/topics").json())

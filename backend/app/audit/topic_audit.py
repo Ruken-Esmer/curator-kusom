@@ -49,12 +49,21 @@ def _block_names() -> dict[str, str]:
     return {b["code"]: b["name_tr"] for y in kusom.kusom_curriculum() for b in y["blocks"]}
 
 
+# everyday Turkish names that differ from the UÇEP wording
+ALIASES = {"diyabet": "diabetes mellitus", "şeker hastalığı": "diabetes mellitus", "kalp krizi": "akut koroner",
+           "miyokard enfarktüsü": "akut koroner", "felç": "inme", "verem": "tüberküloz", "gut": "gut hastalığı"}
+
+
 def find_topic(text: str) -> dict[str, Any] | None:
     """The UÇEP core disease a question is about (longest name wins: 'osteoartrit' before 'artrit')."""
     low = text.replace("İ", "i").replace("I", "ı").lower()
+    for k, v in ALIASES.items():
+        if re.search(rf"(?<![a-zçğıöşü]){k}(?![a-zçğıöşü])", low):
+            low += " " + v
     best = None
     for it in load_ucep()["items"]:
         names = [it["text_tr"].lower(), it["text_en"].lower()] + PROFILES.get(it["code"], {}).get("names", [])
+        names += [n.split(" ve ")[0] for n in names] + [n.split(" and ")[0] for n in names]
         for n in names:
             n = n.split(" (")[0].strip()
             if len(n) >= 4 and re.search(rf"(?<![a-zçğıöşü]){re.escape(n)}", low):
@@ -282,3 +291,46 @@ def chat_answer(query: str, history_texts: list[str]) -> str | None:
         return None
     return {"where": answer_where, "objectives": answer_objectives, "repetition": answer_repetitions,
             "ucep": answer_ucep}[kind](item)
+
+
+def _session(r: dict[str, Any]) -> dict[str, Any]:
+    return {k: r[k] for k in ("year", "block", "block_name", "title", "kind", "date", "fields", "role")}
+
+
+def topic_report(item: dict[str, Any]) -> dict[str, Any]:
+    """The four accreditation questions about one topic, answered together for the report page."""
+    w, o, r, u = where_taught(item), objectives(item), repetitions(item), ucep_alignment(item)
+    n = {k: sum(1 for p in r["pairs"] if p["relation"] == k) for k in ("olası tekrar", "pekiştirme", "derinleşme")}
+    unmet = [x for x in u["rows"] if x["status"] == "karşılığı bulunamadı"]
+    indirect = [x for x in u["rows"] if x["status"] == "dolaylı"]
+    return {
+        "topic": {"code": item["code"], "no": item["no"], "name": item["text_tr"], "name_en": item["text_en"],
+                  "curated": item["code"] in PROFILES,
+                  "levels": item["levels"]},
+        "summary": {
+            "where": (_years(w["years"]) + " işleniyor") if w["years"] else "Ayrı bir oturum bulunamadı",
+            "objectives": f"{len(o['objectives'])} yazılı hedef" if o["objectives"] else "Yazılı hedef yok",
+            "repetitions": (f"{n['olası tekrar']} olası tekrar" if r["pairs"] else "Tekrar bulunamadı"),
+            "ucep": (f"{len(unmet)} beklenti karşılanmıyor" if unmet else
+                     f"{len(indirect)} beklenti yalnız dolaylı" if indirect else "Beklentilerin karşılığı var"),
+        },
+        "where": {"years": w["years"], "direct": [_session(x) for x in w["direct"]],
+                  "related": [_session(x) for x in w["related"]]},
+        "objectives": {"items": o["objectives"], "docs_for": o["blocks_with_objective_docs"],
+                       "missing_docs": o["teaching_blocks_without_objectives"],
+                       "sessions": [_session(x) for x in o["sessions"]]},
+        "repetitions": {"by_objective": r["objective_level_possible"], "counts": n,
+                        "pairs": [{"early": _session(p["early"]), "late": _session(p["late"]), "relation": p["relation"],
+                                   "why": p["why"], "shared_objectives": p["shared_objectives"]} for p in r["pairs"]]},
+        "ucep": {"rows": u["rows"], "in_objectives": any(x["status"] == "hedefte var" for x in u["rows"])},
+        "source": "KUSOM 2025–2026 ders programları, 2.–5. sınıf",
+    }
+
+
+def topic_names() -> list[dict[str, Any]]:
+    """Core diseases that have at least one session of their own, for the topic picker."""
+    out = []
+    for it in load_ucep()["items"]:
+        if sessions(it)["direct"]:
+            out.append({"code": it["code"], "name": it["text_tr"], "levels": it["levels"]})
+    return out

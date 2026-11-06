@@ -41,3 +41,13 @@
     font-family: 'JetBrains Mono', monospace;
   }
 }
+
+/* printing a topic report: drop the app chrome and let the page grow */
+@media print {
+  .app-header { display: none !important; }
+  h2 { break-after: avoid; }
+  tr { break-inside: avoid; }
+  .h-screen, .h-full { height: auto !important; overflow: visible !important; }
+  details > *:not(summary) { display: block !important; }
+  @page { margin: 14mm 10mm; }
+}
