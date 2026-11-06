@@ -132,18 +132,38 @@ _ROUTINE = frozenset(tokenize("describe explain define identify list discuss kno
                                "important basic general relation related main"))
 
 
+# words that name a process rather than an entity; two objectives that differ only by
+# these ("regulation of calcium" / "control of serum calcium") teach the same thing
+_PROCESS = frozenset(tokenize("regulation regulate regulates control controls controlled maintenance maintain "
+                               "homeostasis serum plasma level levels"))
+
+
 def _parallel(texts: list[str]) -> list[str]:
-    """Objectives written on one template that differ by a specific entity ("filtered load of Na+" / "of K+";…"""
+    """Objectives written on one template that differ by a specific entity ("filtered load of Na+" / "of K+";
+    "male" / "female genital system"). Returns the distinguishing word of each, or [] if they are not of this kind."""
     sets = [{t for t in tokenize(x) if t not in _ROUTINE} | set(re.findall(r"\b(?:na|k|ca|cl|mg)\+?(?=\W|$)", x.lower()))
             for x in texts]
     own = []
     for i, st in enumerate(sets):
         others = set().union(*(sets[:i] + sets[i + 1:])) if len(sets) > 1 else set()
-        u = st - others
-        if not u:
-            return []
-        own.append(sorted(u)[0])
-    return own
+        own.append(st - others)
+    content = [u - _PROCESS for u in own]
+    # same objective in other words: one side differs only by a process word and the other by at most one more
+    if any(not u for u in own) or (any(not c for c in content) and max(len(c) for c in content) <= 1):
+        return []
+    return [sorted(c or u)[0] for u, c in zip(own, content)]
+
+
+_CLINICAL = re.compile(r"\b(examination|patient|patients|clinical|case|bedside|during .* (exam|assessment))\b", re.I)
+
+
+def _clinical_step(items: list[LORecord]) -> bool:
+    """A basic-science objective taken up again, at least two years later, inside a clinical task
+    ("rotator cuff innervation" → "identify ... during shoulder examination") is spiral teaching."""
+    if len(items) != 2:
+        return False
+    x, y = sorted(items, key=lambda r: r.year)
+    return y.year - x.year >= 2 and bool(_CLINICAL.search(y.text)) and not _CLINICAL.search(x.text)
 
 
 def integrated_analysis(lo_rows: list[dict], ucep_rows: list[dict] | None = None,
@@ -229,13 +249,17 @@ def integrated_analysis(lo_rows: list[dict], ucep_rows: list[dict] | None = None
     # a lecture and its own laboratory / dissection session in the same block
     # restate the same objective on purpose: reinforcement, not redundancy
     PRACTICAL = {"laboratuvar", "diseksiyon", "beceri"}
-    reinforcements, parallels, kept = [], [], []
+    reinforcements, parallels, kept, clinical_steps = [], [], [], []
     for c in cards:
         us = c.pop("_los") if c["category"] == "redundancy" else c.pop("_los") and []
         kinds = {los[u].discipline for u in us}
         courses = {los[u].course for u in us}
         if us and len(courses) == 1 and kinds & PRACTICAL and kinds - PRACTICAL:
             reinforcements.append({"course": next(iter(courses)), "objectives": [los[u].text for u in us][:3]})
+        elif us and _clinical_step([los[u] for u in us]):
+            x, y = sorted((los[u] for u in us), key=lambda r: r.year)[:2]
+            clinical_steps.append({"pair": f"{x.uid} → {y.uid}", "years": [x.year, y.year],
+                                   "levels": [BLOOM_TR[bloom_level(x.text)], "klinik uygulama"]})
         elif us and _parallel([los[u].text for u in us]):
             parallels.append({"objectives": [f"{los[u].text} ({los[u].course})" for u in us][:4],
                               "differ_by": _parallel([los[u].text for u in us])})
@@ -283,8 +307,9 @@ def integrated_analysis(lo_rows: list[dict], ucep_rows: list[dict] | None = None
     summary = f"{len(rows)} öğrenme hedefi incelendi. "
     summary += (("Bulunanlar: " + ", ".join(found) + "." + (f" Bunların {len(high)} tanesi yüksek öncelikli." if high else ""))
                 if found else "Gereksiz tekrar ya da eksik bulunmadı.")
-    if gen["spiral_progressions"]:
-        summary += f" {len(gen['spiral_progressions'])} tekrar, sonraki sınıfta düzey yükseldiği için sorun sayılmadı."
+    n_spiral = len(gen["spiral_progressions"]) + len(clinical_steps)
+    if n_spiral:
+        summary += f" {n_spiral} tekrar, sonraki sınıfta daha ileri düzeyde ya da klinik bağlamda ele alındığı için sorun sayılmadı."
 
     out.update({
         "summary": summary,
@@ -293,7 +318,7 @@ def integrated_analysis(lo_rows: list[dict], ucep_rows: list[dict] | None = None
         "reinforcements": reinforcements[:max_items],
         "parallel": parallels[:max_items],
         "not_problems": [{"pair": s["pair"].replace("|", " → "), "years": s["years"],
-                          "levels": [BLOOM_TR[b] for b in s["bloom"]]} for s in gen["spiral_progressions"]],
+                          "levels": [BLOOM_TR[b] for b in s["bloom"]]} for s in gen["spiral_progressions"]] + clinical_steps,
         "ucep": [{"code": u["code"], "text": u["text_tr"], "status": u["status"],
                   "closest": u["candidates"][0]["lo"] if u["candidates"] else None} for u in umap],
         "material": material_note,

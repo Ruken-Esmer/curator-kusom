@@ -121,3 +121,28 @@ def test_same_year_clerkships_are_not_assumed_to_come_first():
     assert not any(s["label"] == TEKRAR and "IMED410" in s["reason"] for s in p["steps"])
     assert any("rotasyon" in s["reason"] for s in p["steps"])
     assert not any(s["label"] == "once_tazele" and s["block_id"] in {"IMED410", "SURG401", "OBGY404"} for s in p["steps"])
+
+
+def test_process_synonyms_do_not_make_a_template():
+    from app.mimar.report import _parallel
+    # "regulation" / "control of serum" calcium: same objective, not two entities
+    assert _parallel(["Explain the regulation of calcium by parathyroid hormone and vitamin D.",
+                      "Explain the control of serum calcium by parathyroid hormone and vitamin D."]) == []
+
+
+def test_sample_msk_objectives():
+    from app.mimar.report import integrated_analysis
+    rows = [dict(uid=u, year=y, course=c, text=t, activity=u, source="örnek") for u, y, c, t in [
+        ("MSK-A-01", 2, "MSK Anatomi", "Describe the muscles of the rotator cuff and their innervation."),
+        ("MSK-O-07", 5, "Ortopedi Stajı", "Identify the rotator cuff muscles and their nerve supply during shoulder examination."),
+        ("MSK-F-04", 2, "Hareket Fizyolojisi", "Explain the regulation of calcium by parathyroid hormone and vitamin D."),
+        ("MSK-P-02", 3, "MSK Patoloji", "Explain the control of serum calcium by parathyroid hormone and vitamin D."),
+        ("MSK-H-06", 3, "MSK Farmakoloji", "Explain the mechanism of action and adverse effects of NSAIDs."),
+        ("MSK-RH-02", 5, "Romatoloji Stajı", "Describe the adverse effects and mechanism of action of NSAIDs."),
+        ("MSK-P-05", 3, "MSK Patoloji", "Explain the pathogenesis of osteoporosis and bone loss."),
+    ]]
+    out = integrated_analysis(rows)
+    red = [{o["uid"] for o in f["objectives"]} for f in out["findings"] if f["category"] == "redundancy"]
+    assert {"MSK-F-04", "MSK-P-02"} in red and {"MSK-H-06", "MSK-RH-02"} in red
+    assert {"MSK-A-01", "MSK-O-07"} not in red
+    assert any(p["pair"] == "MSK-A-01 → MSK-O-07" for p in out["not_problems"])

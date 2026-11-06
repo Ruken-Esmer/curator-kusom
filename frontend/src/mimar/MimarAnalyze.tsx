@@ -78,13 +78,18 @@ function Output({ o }: { o: any }) {
         </div>
       </>}
 
-      {gaps.length > 0 && (
-        <details className="m-details" style={{ marginTop: 12 }}>
-          <summary>UÇEP’te olup bu hedeflerde açık karşılığı bulunmayan {gaps.length} madde</summary>
-          <p className="m-text-sm m-muted">Yalnız bir kısım blok seçildiyse bu liste doğal olarak uzundur; UÇEP karşılaştırması tüm program seçildiğinde anlamlıdır.</p>
-          <ul className="pg-list pg-small">{gaps.map((f: any, i: number) => <li key={i}>{f.statement}</li>)}</ul>
-        </details>
-      )}
+      {gaps.length > 0 && <>
+        <h4>UÇEP-2020’de olup hedeflerde karşılığı bulunamayan maddeler ({gaps.length})</h4>
+        {gaps.length > 20 && <p className="m-text-sm m-muted">Liste uzun, çünkü yalnızca bazı bloklar seçildi. UÇEP karşılaştırması tüm program seçildiğinde anlamlı olur.</p>}
+        <ul className="pg-list">{gaps.slice(0, 5).map((f: any, i: number) => (
+          <li key={i}><Pill tone={PRI[f.priority.level]}>{f.priority.level} öncelik</Pill> {f.statement} <span className="m-muted">Öneri: {f.proposal.text}</span></li>))}</ul>
+        {gaps.length > 5 && (
+          <details className="m-details">
+            <summary>Diğer {gaps.length - 5} madde</summary>
+            <ul className="pg-list pg-small">{gaps.slice(5).map((f: any, i: number) => <li key={i}>{f.statement}</li>)}</ul>
+          </details>
+        )}
+      </>}
 
       {o.impact && <>
         <h4>Öneriler uygulanırsa</h4>
