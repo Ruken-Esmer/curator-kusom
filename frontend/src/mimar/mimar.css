@@ -248,3 +248,6 @@ details.m-details summary { cursor: pointer; color: var(--brand); font-weight: 6
 .ex-objs { margin: 6px 0 0; padding-left: 16px; font-size: 12px; color: #5d5650; line-height: 1.4; }
 .ex-objs li { margin: 1px 0; }
 
+
+.m-rail-sub { padding-top: 5px; padding-bottom: 5px; font-size: 13px; color: #B9C0CE; }
+.m-rail-months { display: block; font-size: 11px; color: #8790A3; }

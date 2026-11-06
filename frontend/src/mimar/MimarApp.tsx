@@ -16,19 +16,27 @@ import StatsSection from './sections/Stats'
 import AuditSection from './sections/Audit'
 import PeopleSection from './sections/People'
 import Playground from './sections/Playground'
+import { ProjectHome, WorkPackagePage } from './sections/WorkPackages'
+import MimarAnalyze from './MimarAnalyze'
+import { WORK_PACKAGES, type WorkPackage } from './workPackages'
 
 type Item = { id: Section; label: string; step?: string; doneKey?: (o: any) => boolean; lockKey?: (o: any) => string | null }
 
-const STUDY: Item[] = [
-  { id: 'data', label: 'Veri ve kalite kontrolü', step: '1', doneKey: (o) => o?.frozen_datasets > 0, lockKey: (o) => o?.frozen_datasets ? `${o.frozen_datasets} sürüm donduruldu` : null },
-  { id: 'analysis', label: 'AS1 · Örtüşme analizi', step: '2', doneKey: (o) => o?.analyses > 0 },
-  { id: 'plan', label: 'AS1 · Ön kayıt ve örneklem', step: '3', doneKey: (o) => o?.plans_locked > 0, lockKey: (o) => o?.plans_locked ? 'plan kilitli' : null },
-  { id: 'findings', label: 'AS2 · Raporlar', step: '4', doneKey: (o) => o?.reports > 0 },
-  { id: 'validation', label: 'AS2 · Kör doğrulama', step: '5', doneKey: (o) => o?.pools > 0 },
-  { id: 'as5', label: 'AS5 · Koordinatör değerlendirmesi', step: '6' },
-  { id: 'impact', label: 'AS6 · Değişiklik etkisi', step: '7', doneKey: (o) => o?.changesets > 0 },
+// the study is organised by the six work packages of the application; each lists the screens it uses
+const PACKAGES: { wp: WorkPackage['id']; items: Item[] }[] = [
+  { wp: 'wp1', items: [
+    { id: 'data', label: 'Veri ve kalite kontrolü', lockKey: (o) => o?.frozen_datasets ? 'donduruldu' : null },
+    { id: 'analysis', label: 'Örtüşme analizi' },
+    { id: 'plan', label: 'Ön kayıt ve kilitli örneklem', lockKey: (o) => o?.plans_locked ? 'kilitli' : null },
+  ] },
+  { wp: 'wp2', items: [{ id: 'findings', label: 'Raporlar' }, { id: 'validation', label: 'Kör doğrulama' }] },
+  { wp: 'wp3', items: [] },
+  { wp: 'wp4', items: [{ id: 'scan', label: 'Müfredat taraması' }, { id: 'as5', label: 'Koordinatör değerlendirmesi' }] },
+  { wp: 'wp5', items: [{ id: 'impact', label: 'Değişiklik etkisi' }] },
+  { wp: 'wp6', items: [] },
 ]
 const WORK: Item[] = [
+  { id: 'overview', label: 'Sonuçlar ve denetim zinciri' },
   { id: 'playground', label: 'Deneme alanı' },
   { id: 'review', label: 'İnceleme görevlerim' },
   { id: 'stats', label: 'Güç ve uyum hesapları' },
@@ -109,6 +117,9 @@ export default function MimarApp() {
   ))
 
   const view = {
+    home: <ProjectHome overview={o} />, scan: <MimarAnalyze />,
+    wp1: <WorkPackagePage id="wp1" overview={o} />, wp2: <WorkPackagePage id="wp2" overview={o} />, wp3: <WorkPackagePage id="wp3" overview={o} />,
+    wp4: <WorkPackagePage id="wp4" overview={o} />, wp5: <WorkPackagePage id="wp5" overview={o} />, wp6: <WorkPackagePage id="wp6" overview={o} />,
     overview: <Overview overview={o} />, data: <DataSection />, analysis: <AnalysisSection />, plan: <PlanSection />,
     review: <ReviewSection />, findings: <FindingsSection />, validation: <ValidationSection />, as5: <AS5Section />,
     impact: <ImpactSection />, playground: <Playground />, stats: <StatsSection />, audit: <AuditSection />, people: <PeopleSection />,
@@ -122,12 +133,30 @@ export default function MimarApp() {
           <p>KUSOM · uzman denetimli müfredat analizi (araştırma prototipi)</p>
         </div>
         <nav aria-label="MİMAR bölümleri">
-          <button className={`m-rail-item ${section === 'overview' ? 'is-active' : ''}`} onClick={() => go('overview')}>
-            <span className="m-rail-step is-plain">◎</span><span>Genel durum</span><span />
+          <button className={`m-rail-item ${section === 'home' ? 'is-active' : ''}`} onClick={() => go('home')}>
+            <span className="m-rail-step is-plain">◎</span><span>Proje özeti</span><span />
           </button>
-          {isStaff && <div className="m-rail-group">Araştırma akışı</div>}
-          {isStaff ? rail(STUDY) : null}
-          <div className="m-rail-group">Çalışma alanı</div>
+          {isStaff && <div className="m-rail-group">İş paketleri</div>}
+          {isStaff && PACKAGES.map(({ wp, items }) => {
+            const w = WORK_PACKAGES.find((x) => x.id === wp)!
+            const open = section === wp || items.some((i) => i.id === section)
+            return (
+              <div key={wp}>
+                <button className={`m-rail-item ${section === wp ? 'is-active' : ''}`} onClick={() => go(wp)} aria-current={section === wp ? 'page' : undefined}>
+                  <span className="m-rail-step">{w.no}</span>
+                  <span>{w.short}<span className="m-rail-months">{w.months[0]}–{w.months[1]}. ay</span></span>
+                  <span />
+                </button>
+                {open && items.map((it) => (
+                  <button key={it.id} className={`m-rail-item m-rail-sub ${section === it.id ? 'is-active' : ''}`} onClick={() => go(it.id)}
+                    aria-current={section === it.id ? 'page' : undefined}>
+                    <span /><span>{it.label}</span><span className="m-rail-lock">{it.lockKey?.(o) ? '🔒' : ''}</span>
+                  </button>
+                ))}
+              </div>
+            )
+          })}
+          <div className="m-rail-group">Araçlar</div>
           {rail(isStaff ? WORK : WORK.filter((w) => ['playground', 'review', 'stats'].includes(w.id)).concat(
             hasRole(user, 'expert') ? [{ id: 'findings', label: 'Uzman raporu' }] :
             hasRole(user, 'standardizer', 'validator', 'adjudicator') ? [{ id: 'validation', label: 'Kör doğrulama' }] :

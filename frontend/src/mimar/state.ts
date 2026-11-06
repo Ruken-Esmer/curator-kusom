@@ -3,6 +3,7 @@ import { create } from 'zustand'
 export type Section =
   | 'overview' | 'data' | 'analysis' | 'plan' | 'review' | 'findings'
   | 'validation' | 'as5' | 'impact' | 'stats' | 'audit' | 'people' | 'playground'
+  | 'home' | 'scan' | 'wp1' | 'wp2' | 'wp3' | 'wp4' | 'wp5' | 'wp6'
 
 interface MimarState {
   user: any | null
@@ -18,7 +19,7 @@ interface MimarState {
 export const useMimar = create<MimarState>((set) => ({
   user: null,
   setUser: (user) => set({ user }),
-  section: 'overview',
+  section: 'home',
   go: (section) => set({ section }),
   analysisId: null,
   setAnalysisId: (analysisId) => set({ analysisId }),

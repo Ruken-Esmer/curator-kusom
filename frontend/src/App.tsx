@@ -3,7 +3,6 @@ import Header from '@/components/ui/Header'
 import ChatPanel from '@/components/chat/ChatPanel'
 import TopicReport from '@/components/audit/TopicReport'
 import MimarApp from '@/mimar/MimarApp'
-import MimarAnalyze from '@/mimar/MimarAnalyze'
 import ReviewPanel from '@/mimar/ReviewPanel'
 
 export type AppMode = 'konu' | 'curator' | 'mimar' | 'uzman'
@@ -14,8 +13,6 @@ export default function App() {
       : window.location.hash.startsWith('#mimar') ? 'mimar'
       : window.location.hash === '#uzman' ? 'uzman'
       : window.location.hash === '#soru' ? 'curator' : 'konu')
-  // the research-protocol workspace stays available for the study team at #mimar-yonetim, but is not linked
-  const protocolWorkspace = typeof window !== 'undefined' && window.location.hash === '#mimar-yonetim'
 
   const switchMode = (m: AppMode) => {
     setMode(m)
@@ -30,7 +27,7 @@ export default function App() {
       ) : mode === 'uzman' ? (
         <div className="flex-1 min-h-0"><ReviewPanel /></div>
       ) : mode === 'mimar' ? (
-        <div className="flex-1 min-h-0">{protocolWorkspace ? <MimarApp /> : <MimarAnalyze />}</div>
+        <div className="flex-1 min-h-0"><MimarApp /></div>
       ) : (
         <main className="flex-1 min-h-0">
           <ChatPanel />
