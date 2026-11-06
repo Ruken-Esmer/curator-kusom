@@ -1,290 +1,240 @@
 import { useEffect, useRef, useState } from 'react'
-import { Send, Trash2, Loader2, ChevronRight, Clock } from 'lucide-react'
+import { ArrowUp, Loader2, ChevronRight, RotateCcw } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import clsx from 'clsx'
 import { useChat } from '@/hooks'
 import { useStore } from '@/store'
 import type { Citation, PathwayStep } from '@/types'
 
-// ── i18n ─────────────────────────────────────────────────
+// ── content ──────────────────────────────────────────────
 
-const SAMPLES = {
-  en: [
-    'What should I study before the Cardiovascular block?',
-    'How does anatomy build through the 6 years?',
-    'Where is diabetes covered and what are its prerequisites?',
-    'What competencies does Year 4 develop?',
-    'Explain the difference between Year 2 and Year 3 organ systems.',
-  ],
-  tr: [
-    'Osteoartrit hangi sınıflarda, hangi bloklarda veya stajlarda öğretiliyor?',
-    'Kardiyovasküler blok öncesinde ne çalışmalıyım?',
-    'Anatomi 6 yıl boyunca nasıl gelişiyor?',
-    'Diyabet müfredatta nerede kapsanıyor ve ön koşullar neler?',
-    '4. yıl hangi yetkinlikleri geliştiriyor?',
-    'Nöroloji rotasyonu için ön koşullar nelerdir?',
-  ],
+// guided example: the four questions an accreditation reviewer asks, in order
+const SCENARIO = {
+  tr: {
+    title: 'Örnek inceleme: Osteoartrit',
+    desc: 'Akreditasyon değerlendiricisinin sorduğu dört soru. Sırayla tıklayın.',
+    steps: [
+      { label: 'Nerede öğretiliyor?', q: 'Osteoartrit hangi sınıflarda, hangi bloklarda veya stajlarda öğretiliyor?' },
+      { label: 'Öğrenme hedefleri', q: 'Osteoartritle ilgili öğrenme hedefleri neler?' },
+      { label: 'Tekrarlar', q: 'Tekrar eden hedefler var mı? Varsa bu hedefleri, bulundukları sınıf ve blok/staj bilgileriyle yan yana göster.' },
+      { label: 'UÇEP uyumu', q: 'UÇEP’te osteoartrit için beklenen bilgi ve beceriler arasında, müfredatımızdaki öğrenme hedeflerinde karşılığı bulunmayanlar var mı?' },
+    ],
+  },
+  en: {
+    title: 'Example review: Osteoarthritis',
+    desc: 'The four questions an accreditation reviewer asks. Click them in order.',
+    steps: [
+      { label: 'Where is it taught?', q: 'Osteoartrit hangi sınıflarda, hangi bloklarda veya stajlarda öğretiliyor?' },
+      { label: 'Learning objectives', q: 'Osteoartritle ilgili öğrenme hedefleri neler?' },
+      { label: 'Repetitions', q: 'Tekrar eden hedefler var mı? Varsa bu hedefleri, bulundukları sınıf ve blok/staj bilgileriyle yan yana göster.' },
+      { label: 'UÇEP alignment', q: 'UÇEP’te osteoartrit için beklenen bilgi ve beceriler arasında, müfredatımızdaki öğrenme hedeflerinde karşılığı bulunmayanlar var mı?' },
+    ],
+  },
+}
+
+const OTHER = {
+  tr: ['Diyabet müfredatta nerede işleniyor?', 'Kardiyovasküler blok öncesinde ne çalışmalıyım?'],
+  en: ['Where is diabetes covered in the curriculum?', 'What should I study before the Cardiovascular block?'],
 }
 
 const L = {
-  welcome:     { en: 'Welcome to CURATOR', tr: "CURATOR'a Hoş Geldiniz" },
-  welcomeDesc: {
-    en: 'Navigate the KU School of Medicine curriculum through natural language. Ask about learning pathways, prerequisites, topics, or competencies.',
-    tr: 'Doğal dil ile KU Tıp Fakültesi müfredatını keşfedin. Öğrenme yolları, ön koşullar, konular veya yetkinlikler hakkında sorun.',
-  },
-  samples:     { en: 'Try a sample query', tr: 'Örnek sorgu deneyin' },
-  placeholder: { en: 'Ask about the curriculum…', tr: 'Müfredat hakkında sorun…' },
-  citations:   { en: 'Sources', tr: 'Kaynaklar' },
-  pathway:     { en: 'Learning pathway', tr: 'Öğrenme yolu' },
-  queryType:   { en: 'Query type', tr: 'Sorgu türü' },
-  ms:          { en: 'ms', tr: 'ms' },
+  heading:     { tr: 'Müfredat hakkında ne öğrenmek istersiniz?', en: 'What would you like to know about the curriculum?' },
+  sub:         { tr: 'Cevaplar KUSOM 2025–2026 ders programlarına ve UÇEP-2020’ye dayanır.', en: 'Answers are based on the KUSOM 2025–2026 schedules and UÇEP-2020.' },
+  placeholder: { tr: 'Sorunuzu yazın…', en: 'Type your question…' },
+  other:       { tr: 'Başka örnekler', en: 'Other examples' },
+  next:        { tr: 'Sıradaki soru', en: 'Next question' },
+  newChat:     { tr: 'Yeni soru', en: 'New question' },
+  sources:     { tr: 'Kaynak bloklar', en: 'Source blocks' },
+  pathway:     { tr: 'Önerilen sıra', en: 'Suggested order' },
+  loading:     { tr: 'Müfredat taranıyor…', en: 'Searching the curriculum…' },
 }
 
-// ── Citation panel ────────────────────────────────────────
+const ACCENT = '#7A1F2B'
 
-function CitationBar({ citations }: { citations: Citation[] }) {
-  const { language } = useStore()
-  if (!citations.length) return null
+// ── pieces ───────────────────────────────────────────────
 
+function Answer({ content }: { content: string }) {
   return (
-    <div className="px-4 py-2 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900">
-      <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 mb-1.5">
-        {L.citations[language]}
-      </p>
-      <div className="flex flex-wrap gap-1.5">
-        {citations.map((c) => (
-          <span
-            key={c.block_id}
-            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono bg-teal-50 text-teal-700 dark:bg-teal-900/30 dark:text-teal-300 border border-teal-200 dark:border-teal-800"
-          >
-            <span className="font-semibold">{c.block_id}</span>
-            <span className="text-teal-500">{c.block_name}</span>
-          </span>
-        ))}
-      </div>
-    </div>
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      components={{
+        p: ({ children }) => <p className="mb-3 last:mb-0">{children}</p>,
+        strong: ({ children }) => <strong className="font-semibold text-zinc-900 dark:text-white">{children}</strong>,
+        em: ({ children }) => <em className="not-italic text-zinc-500 text-[13px]">{children}</em>,
+        ol: ({ children }) => <ol className="list-decimal pl-5 mb-3">{children}</ol>,
+        ul: ({ children }) => <ul className="list-disc pl-5 mb-3">{children}</ul>,
+        li: ({ children }) => <li className="mb-1">{children}</li>,
+        code: ({ children }) => <code className="font-mono text-xs bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded">{children}</code>,
+        table: ({ children }) => (
+          <div className="overflow-x-auto my-3 rounded-lg border border-zinc-200 dark:border-zinc-700">
+            <table className="w-full text-[13px] border-collapse">{children}</table>
+          </div>
+        ),
+        th: ({ children }) => <th className="text-left font-medium text-zinc-500 px-3 py-2 bg-zinc-50 dark:bg-zinc-800/60 border-b border-zinc-200 dark:border-zinc-700 align-bottom">{children}</th>,
+        td: ({ children }) => <td className="px-3 py-2 border-b border-zinc-100 dark:border-zinc-800 align-top">{children}</td>,
+      }}
+    >
+      {content}
+    </ReactMarkdown>
   )
 }
 
-// ── Pathway panel ─────────────────────────────────────────
-
-function PathwayPanel({ steps }: { steps: PathwayStep[] }) {
+function Extras({ citations, steps }: { citations: Citation[]; steps: PathwayStep[] }) {
   const { language } = useStore()
-  if (!steps.length) return null
-
+  if (!citations.length && !steps.length) return null
   return (
-    <div className="px-4 py-3 border-t border-zinc-100 dark:border-zinc-800">
-      <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 mb-2">
-        {L.pathway[language]}
-      </p>
-      <ol className="flex items-center gap-1 flex-wrap">
-        {steps.map((s, i) => (
-          <li key={s.order} className="flex items-center gap-1">
-            <span className="flex items-center gap-1 px-2 py-0.5 rounded text-[10px] bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-              <span className="font-mono font-semibold">{s.block_id || String(s.order)}</span>
-              {s.block_name && <span className="text-blue-500">{s.block_name.slice(0, 20)}</span>}
+    <div className="mt-3 flex flex-col gap-2 text-xs">
+      {steps.length > 0 && (
+        <div className="flex items-center gap-1 flex-wrap">
+          <span className="text-zinc-400 mr-1">{L.pathway[language]}:</span>
+          {steps.map((s, i) => (
+            <span key={s.order} className="flex items-center gap-1">
+              <span className="px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800">{s.block_id || s.order}</span>
+              {i < steps.length - 1 && <ChevronRight size={12} className="text-zinc-300" />}
             </span>
-            {i < steps.length - 1 && <ChevronRight size={12} className="text-zinc-300 shrink-0" />}
-          </li>
-        ))}
-      </ol>
+          ))}
+        </div>
+      )}
+      {citations.length > 0 && (
+        <div className="flex items-center gap-1 flex-wrap">
+          <span className="text-zinc-400 mr-1">{L.sources[language]}:</span>
+          {citations.map((c) => (
+            <span key={c.block_id} title={c.block_name} className="px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800">{c.block_id}</span>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
 
-// ── Message bubble ────────────────────────────────────────
-
-function Bubble({ role, content }: { role: string; content: string }) {
-  const isUser = role === 'user'
+function InputBox({ onSend, disabled, big }: { onSend: (q: string) => void; disabled: boolean; big?: boolean }) {
+  const { language } = useStore()
+  const [value, setValue] = useState('')
+  const send = () => { if (value.trim()) { onSend(value); setValue('') } }
   return (
-    <div className={clsx('flex gap-3', isUser && 'flex-row-reverse')}>
-      <div
-        className={clsx(
-          'shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-semibold',
-          isUser
-            ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300'
-            : 'bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300',
-        )}
-      >
-        {isUser ? 'U' : 'C'}
-      </div>
-      <div
-        className={clsx(
-          'max-w-[78%] px-4 py-3 rounded-xl text-sm leading-relaxed',
-          isUser
-            ? 'bg-blue-50 dark:bg-blue-900/20 rounded-tr-sm'
-            : 'bg-zinc-100 dark:bg-zinc-800 rounded-tl-sm',
-        )}
-      >
-        {isUser ? (
-          <p className="whitespace-pre-wrap">{content}</p>
-        ) : (
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            components={{
-              code: ({ children }) => (
-                <code className="font-mono text-xs bg-zinc-200 dark:bg-zinc-700 px-1 py-0.5 rounded">
-                  {children}
-                </code>
-              ),
-              p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
-              ol: ({ children }) => <ol className="list-decimal pl-4 mb-2">{children}</ol>,
-              ul: ({ children }) => <ul className="list-disc pl-4 mb-2">{children}</ul>,
-              li: ({ children }) => <li className="mb-0.5">{children}</li>,
-              table: ({ children }) => (
-                <div className="overflow-x-auto my-2">
-                  <table className="w-full text-[12.5px] border-collapse bg-white dark:bg-zinc-900 rounded">{children}</table>
-                </div>
-              ),
-              th: ({ children }) => (
-                <th className="text-left font-semibold px-2 py-1.5 border-b-2 border-[#7A1F2B]/40 bg-zinc-50 dark:bg-zinc-800 align-bottom">{children}</th>
-              ),
-              td: ({ children }) => <td className="px-2 py-1.5 border-b border-zinc-200 dark:border-zinc-700 align-top">{children}</td>,
-            }}
-          >
-            {content}
-          </ReactMarkdown>
-        )}
-      </div>
+    <div className={`flex items-center gap-2 rounded-2xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 shadow-sm focus-within:border-[#7A1F2B] ${big ? 'px-4 py-3' : 'px-3 py-2'}`}>
+      <input
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), send())}
+        placeholder={L.placeholder[language]}
+        disabled={disabled}
+        aria-label={L.placeholder[language]}
+        className={`flex-1 bg-transparent focus:outline-none placeholder-zinc-400 ${big ? 'text-base' : 'text-sm'}`}
+      />
+      <button onClick={send} disabled={disabled || !value.trim()} aria-label="Gönder"
+        className="w-8 h-8 rounded-full flex items-center justify-center text-white disabled:opacity-30 transition-opacity"
+        style={{ background: ACCENT }}>
+        <ArrowUp size={16} />
+      </button>
     </div>
   )
 }
 
-// ── Main Chat Panel ───────────────────────────────────────
+// ── main ─────────────────────────────────────────────────
 
 export default function ChatPanel() {
   const { language } = useStore()
-  const {
-    messages, isLoading, lastCitations, lastPathway,
-    lastQueryType, lastProcessingMs, sendQuery, clearChat,
-  } = useChat()
-
-  const [input, setInput] = useState('')
+  const { messages, isLoading, lastCitations, lastPathway, sendQuery, clearChat } = useChat()
   const endRef = useRef<HTMLDivElement>(null)
+  const sc = SCENARIO[language]
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (isLoading) { endRef.current?.scrollIntoView({ behavior: 'smooth' }); return }
+    // after an answer arrives, bring the question that produced it to the top
+    const qs = document.querySelectorAll('[data-role="user"]')
+    qs[qs.length - 1]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }, [messages, isLoading])
 
-  const submit = () => {
-    if (!input.trim()) return
-    sendQuery(input)
-    setInput('')
+  // where we are in the guided example
+  const lastUser = [...messages].reverse().find((m) => m.role === 'user')?.content
+  const stepIdx = sc.steps.findIndex((s) => s.q === lastUser)
+  const next = stepIdx >= 0 && stepIdx < sc.steps.length - 1 && !isLoading ? sc.steps[stepIdx + 1] : null
+  const lastAssistant = messages.length - 1 - [...messages].reverse().findIndex((m) => m.role === 'assistant')
+
+  if (messages.length === 0) {
+    return (
+      <div className="h-full overflow-y-auto">
+        <div className="max-w-2xl mx-auto px-6 pt-[12vh] pb-12">
+          <h1 className="font-serif text-3xl text-center tracking-tight mb-2">{L.heading[language]}</h1>
+          <p className="text-sm text-zinc-500 text-center mb-8">{L.sub[language]}</p>
+          <InputBox onSend={sendQuery} disabled={isLoading} big />
+
+          <div className="mt-10 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5">
+            <p className="font-medium">{sc.title}</p>
+            <p className="text-sm text-zinc-500 mb-4">{sc.desc}</p>
+            <ol className="flex flex-col gap-2">
+              {sc.steps.map((s, i) => (
+                <li key={s.q}>
+                  <button onClick={() => sendQuery(s.q)}
+                    className="w-full text-left flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-[#F7EEEF] dark:hover:bg-zinc-800 transition-colors group">
+                    <span className="shrink-0 w-6 h-6 rounded-full text-xs font-semibold flex items-center justify-center text-white" style={{ background: ACCENT }}>{i + 1}</span>
+                    <span className="flex-1">
+                      <span className="block text-sm font-medium">{s.label}</span>
+                      <span className="block text-xs text-zinc-500">{s.q}</span>
+                    </span>
+                    <ChevronRight size={16} className="mt-1 text-zinc-300 group-hover:text-[#7A1F2B]" />
+                  </button>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <div className="mt-6 text-center">
+            <span className="text-xs text-zinc-400 mr-2">{L.other[language]}:</span>
+            {OTHER[language].map((q) => (
+              <button key={q} onClick={() => sendQuery(q)}
+                className="text-xs text-zinc-600 dark:text-zinc-300 underline decoration-zinc-300 underline-offset-4 hover:decoration-[#7A1F2B] mx-2">
+                {q}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
     <div className="flex flex-col h-full">
-      {/* Top bar */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-200 dark:border-zinc-700 shrink-0">
-        <div>
-          <h1 className="font-serif text-lg font-medium tracking-tight">CURATOR</h1>
-          <p className="text-[10px] text-zinc-400">
-            {language === 'en'
-              ? 'AI Curriculum Intelligence'
-              : 'Yapay Zeka Müfredat Asistanı'}
-          </p>
-        </div>
-        {messages.length > 0 && (
-          <div className="flex items-center gap-3">
-            {lastQueryType && lastQueryType !== 'unknown' && (
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 font-mono capitalize">
-                {({ audit: language === 'tr' ? 'akreditasyon' : 'accreditation', pathway: language === 'tr' ? 'öğrenme yolu' : 'pathway' } as Record<string, string>)[lastQueryType] ?? lastQueryType}
-              </span>
-            )}
-            {lastProcessingMs > 0 && (
-              <span className="flex items-center gap-1 text-[10px] text-zinc-400">
-                <Clock size={10} />
-                {Math.round(lastProcessingMs)}ms
-              </span>
-            )}
-            <button
-              onClick={clearChat}
-              className="p-1.5 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 hover:text-zinc-600 transition-colors"
-              title="Clear chat"
-            >
-              <Trash2 size={14} />
+      <div className="flex-1 overflow-y-auto">
+        <div className="max-w-3xl mx-auto px-6 py-6 flex flex-col gap-6">
+          <div className="flex justify-end -mb-2">
+            <button onClick={clearChat} className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200">
+              <RotateCcw size={12} /> {L.newChat[language]}
             </button>
           </div>
-        )}
-      </div>
-
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-4">
-        {messages.length === 0 ? (
-          /* Welcome state */
-          <div className="m-auto text-center max-w-sm py-8">
-            <div className="w-12 h-12 rounded-2xl bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center mx-auto mb-4">
-              <span className="font-serif text-xl font-semibold text-teal-700 dark:text-teal-400">C</span>
-            </div>
-            <h2 className="text-base font-medium mb-2">{L.welcome[language]}</h2>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-6">
-              {L.welcomeDesc[language]}
-            </p>
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 mb-3">
-              {L.samples[language]}
-            </p>
-            <div className="flex flex-col gap-2">
-              {SAMPLES[language].map((q) => (
-                <button
-                  key={q}
-                  onClick={() => sendQuery(q)}
-                  className="text-left text-xs px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-700 hover:border-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-colors text-zinc-600 dark:text-zinc-300"
-                >
-                  {q} ↗
-                </button>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <>
-            {messages.map((m, i) => (
-              <Bubble key={i} role={m.role} content={m.content} />
-            ))}
-            {isLoading && (
-              <div className="flex gap-3">
-                <div className="shrink-0 w-7 h-7 rounded-full bg-teal-100 dark:bg-teal-900/40 flex items-center justify-center text-[11px] font-semibold text-teal-700 dark:text-teal-300">
-                  C
-                </div>
-                <div className="px-4 py-3 rounded-xl rounded-tl-sm bg-zinc-100 dark:bg-zinc-800 flex items-center gap-2">
-                  <Loader2 size={14} className="animate-spin text-zinc-400" />
-                  <span className="text-sm text-zinc-400">
-                    {language === 'en' ? 'Searching curriculum…' : 'Müfredat aranıyor…'}
-                  </span>
-                </div>
+          {messages.map((m, i) =>
+            m.role === 'user' ? (
+              <div key={i} data-role="user" className="flex justify-end scroll-mt-4">
+                <div className="max-w-[80%] px-4 py-2.5 rounded-2xl rounded-br-md text-[15px] bg-[#F7EEEF] dark:bg-zinc-800">{m.content}</div>
               </div>
-            )}
-          </>
-        )}
-        <div ref={endRef} />
+            ) : (
+              <div key={i} className="text-[15px] leading-relaxed text-zinc-800 dark:text-zinc-200">
+                <Answer content={m.content} />
+                {i === lastAssistant && <Extras citations={lastCitations} steps={lastPathway} />}
+              </div>
+            ),
+          )}
+          {isLoading && (
+            <div className="flex items-center gap-2 text-sm text-zinc-400">
+              <Loader2 size={14} className="animate-spin" /> {L.loading[language]}
+            </div>
+          )}
+          <div ref={endRef} />
+        </div>
       </div>
 
-      {/* Citations + Pathway */}
-      {messages.length > 0 && (
-        <>
-          <CitationBar citations={lastCitations} />
-          <PathwayPanel steps={lastPathway} />
-        </>
-      )}
-
-      {/* Input */}
-      <div className="px-4 py-3 border-t border-zinc-200 dark:border-zinc-700 shrink-0">
-        <div className="flex gap-2">
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), submit())}
-            placeholder={L.placeholder[language]}
-            disabled={isLoading}
-            className="flex-1 px-3 py-2 text-sm rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:outline-none focus:border-teal-500 placeholder-zinc-400 disabled:opacity-50"
-          />
-          <button
-            onClick={submit}
-            disabled={isLoading || !input.trim()}
-            className="px-3 py-2 rounded-lg bg-teal-700 hover:bg-teal-600 disabled:opacity-40 disabled:cursor-default text-white transition-colors"
-          >
-            <Send size={15} />
-          </button>
+      <div className="shrink-0 border-t border-zinc-100 dark:border-zinc-800">
+        <div className="max-w-3xl mx-auto px-6 py-3 flex flex-col gap-2">
+          {next && (
+            <button onClick={() => sendQuery(next.q)}
+              className="self-start flex items-center gap-2 text-sm px-3 py-1.5 rounded-full border border-[#7A1F2B]/30 text-[#7A1F2B] hover:bg-[#F7EEEF]">
+              <span className="text-xs text-zinc-500">{L.next[language]} ({stepIdx + 2}/4):</span>
+              {next.label}
+              <ChevronRight size={14} />
+            </button>
+          )}
+          <InputBox onSend={sendQuery} disabled={isLoading} />
         </div>
       </div>
     </div>

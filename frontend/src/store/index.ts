@@ -43,7 +43,7 @@ interface AppStore {
 
 export const useStore = create<AppStore>((set) => ({
   // Language
-  language: 'en',
+  language: 'tr',
   setLanguage: (language) => set({ language }),
 
   // Chat
