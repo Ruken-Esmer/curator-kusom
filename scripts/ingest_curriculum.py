@@ -117,7 +117,7 @@ def ingest_pdfs(pdf_dir: Path) -> list[dict]:
         text = "\n".join(page.get_text() for page in doc)
         doc.close()
 
-        # Simple chunking — split on double newlines
+        # Simple chunking: split on double newlines
         paragraphs = [p.strip() for p in text.split("\n\n") if len(p.strip()) > 80]
         stem = pdf_path.stem  # use filename as block_id hint
         for i, para in enumerate(paragraphs):
@@ -147,7 +147,7 @@ def build_indexes(extra_chunks: list[dict] | None = None) -> None:
     vector_store.save()
     logger.info("faiss.saved", path=settings.faiss_index_path)
 
-    # BM25 (no persistence — always rebuilds in memory)
+    # BM25 (no persistence: always rebuilds in memory)
     bm25_retriever.build(chunks)
     logger.info("bm25.built", n=len(chunks))
 

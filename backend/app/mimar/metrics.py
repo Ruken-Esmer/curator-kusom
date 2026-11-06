@@ -1,4 +1,4 @@
-"""MİMAR — Pre-specified statistical estimators (application §2.7)."""
+"""Pre-specified statistical estimators (application §2.7)."""
 from __future__ import annotations
 
 import math
@@ -71,7 +71,7 @@ def _r(x: float | None, d: int = 4) -> float | None:
     return None if x is None else round(float(x), d)
 
 
-#  AS1 — detection metrics
+#  AS1: detection metrics
 
 def as1_metrics(items: Sequence[dict[str, Any]], labels: dict[str, int | None],
                 lists: dict[str, Sequence[str]], ks: Sequence[int] = (10, 25, 50)) -> dict[str, Any]:
@@ -164,7 +164,7 @@ def h1_decision(test_metrics: dict[str, Any], diff: dict[str, Any], min_positive
             "positives_adequate": adequate, "verdict": verdict}
 
 
-#  AS2a — MİMAR vs expert verified-finding rates
+#  AS2a: MİMAR vs expert verified-finding rates
 
 def delta_mu(records: Sequence[dict[str, Any]], B: int = 2000, seed: int = 20260913,
              margins: Sequence[float] = (-10.0, -5.0, -15.0), primary_margin: float = -10.0,
@@ -255,7 +255,7 @@ def power_curve_h2a(ns: Iterable[int], **kw) -> list[dict[str, Any]]:
     return [power_simulation_h2a(n, **kw) for n in ns]
 
 
-#  AS5 — coordinator evaluation of whole-curriculum candidates
+#  AS5: coordinator evaluation of whole-curriculum candidates
 
 def h5_estimate(sample: Sequence[dict[str, Any]], target: float = 0.70, min_coordinators: int = 20,
                 B: int = 2000, seed: int = 20260913) -> dict[str, Any]:
@@ -301,7 +301,7 @@ def h5_estimate(sample: Sequence[dict[str, Any]], target: float = 0.70, min_coor
                         ("target_met_point_estimate" if est is not None and est > target else "target_not_met"))}
 
 
-#  AS6 — change-impact alerts
+#  AS6: change-impact alerts
 
 def h6_alert_metrics(scenarios: Sequence[dict[str, Any]], verified_target: float = 0.70,
                      missed_target: float = 0.20, B: int = 2000, seed: int = 20260913) -> dict[str, Any]:

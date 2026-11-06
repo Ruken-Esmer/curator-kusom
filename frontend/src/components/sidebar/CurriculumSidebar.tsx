@@ -10,7 +10,7 @@ const YEAR_COLOURS = [
   '#854F0B', '#3B6D11', '#533AB7',
 ]
 
-// ── Language strings ──────────────────────────────────────
+// Language strings
 
 const L = {
   curriculum:    { en: 'Curriculum', tr: 'Müfredat' },
@@ -21,7 +21,7 @@ const L = {
   weeks:         { en: 'Weeks', tr: 'Haftalar' },
 }
 
-// ── Sub-components ────────────────────────────────────────
+// Sub-components
 
 function BlockRow({
   block,
@@ -113,7 +113,7 @@ function YearRow({
   )
 }
 
-// ── Main Sidebar ──────────────────────────────────────────
+// Main Sidebar
 
 interface Props {
   onBlockQuery: (block: BlockInfo) => void

@@ -46,7 +46,7 @@ def _experts(c):
 def test_pathway_is_shown_directly_as_preview(client):
     c, _ = client
     r = c.post("/api/v1/chat", json={"query": "Kardiyoloji stajına hazırlanmak istiyorum"}).json()
-    assert r["query_type"] == "pathway" and "Önce tazele" in r["answer"] and "Önizleme" in r["answer"] and r["pathway"]
+    assert r["query_type"] == "pathway" and "Önce tazelemen gerekenler" in r["answer"] and "henüz uzman değerlendirmesinde" in r["answer"] and r["pathway"]
 
 
 def test_rejected_link_disappears_from_pathway(client):
@@ -55,15 +55,15 @@ def test_rejected_link_disappears_from_pathway(client):
     links = c.get("/api/v1/pathway/expert/links", headers=E1).json()
     target = next(l for l in links if l["late"]["block"].startswith("Y5R1") and l["early"]["topic"] == "stroke")
     before = c.post("/api/v1/chat", json={"query": "Kardiyoloji stajına hazırlanmak istiyorum"}).json()["answer"]
-    assert "- stroke [Y3B1]" in before
+    assert "- stroke (Y3B1)" in before
     assert c.post(f"/api/v1/pathway/expert/links/{target['id']}", headers=E1,
                   json={"decision": "uygun_degil", "wrong_kind": "ilgisiz", "note": "test"}).status_code == 200
     mid = c.post("/api/v1/chat", json={"query": "Kardiyoloji stajına hazırlanmak istiyorum"}).json()["answer"]
-    assert "- stroke [Y3B1]" in mid                 # one expert alone does not decide
+    assert "- stroke (Y3B1)" in mid                 # one expert alone does not decide
     assert c.post(f"/api/v1/pathway/expert/links/{target['id']}", headers=E2,
                   json={"decision": "uygun_degil", "wrong_kind": "ilgisiz", "note": "test"}).status_code == 200
     after = c.post("/api/v1/chat", json={"query": "Kardiyoloji stajına hazırlanmak istiyorum"}).json()["answer"]
-    assert "- stroke [Y3B1]" not in after
+    assert "- stroke (Y3B1)" not in after
     assert c.post(f"/api/v1/pathway/expert/links/{target['id']}", headers=E1,
                   json={"decision": "uygun_degil"}).status_code == 422          # kind required
 
@@ -100,7 +100,7 @@ def test_rejected_repetition_is_explained_and_shown_first():
         assert lab == GEREKLI and "Uzman değerlendirmesine göre" in why
         p = build({"kind": "blok", "block": late.block_id, "student_year": None}, e)
         txt = render_pathway(p, False)
-        g = txt.split("2) Gerekli")[1]
+        g = txt.split("Bu blokta yeni olanlar")[1]
         assert g.index(late.text) < g.index("ilk kez bu blokta") if "ilk kez bu blokta" in g else True
     finally:
         e.set_reviews(set(), set())

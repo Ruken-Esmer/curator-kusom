@@ -1,4 +1,4 @@
-"""MİMAR — Synthetic MSKL demo data and simulated raters."""
+"""Synthetic MSKL demo data and simulated raters."""
 from __future__ import annotations
 
 import random

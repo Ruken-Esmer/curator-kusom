@@ -320,7 +320,7 @@ def assemble(raw_dir: Path) -> dict[str, Any]:
     LECTURER_KEYS.update(topic_key(x) for r in rows for x in re.split(r"\s*(?:/|,|&| and | - |-)\s*", r["lecturer"] or "")
                          if len(x) > 6)
 
-    # one row per (block, date, hour, subject) — overview, block and group files overlap
+    # one row per (block, date, hour, subject): overview, block and group files overlap
     seen, sessions = set(), []
     for r in rows:
         r["kind"] = classify(r["subject"]) if not r["stype"] else classify(f"{r['stype']}: {r['subject']}") \

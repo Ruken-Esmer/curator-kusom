@@ -53,7 +53,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="CURATOR API",
-    description="AI-Powered Medical Curriculum Exploration Platform — KU SOM",
+    description="KUSOM müfredat sorgu ve analiz servisi",
     version="1.1.0",
     lifespan=lifespan,
 )

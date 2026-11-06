@@ -20,7 +20,7 @@
 }
 .mimar *:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 
-/* ── protocol rail ───────────────────────────────────────── */
+/* protocol rail */
 .m-rail { background: var(--ink); color: #D7DBE3; display: flex; flex-direction: column; overflow-y: auto; }
 .m-rail-brand { padding: 20px 20px 14px; border-bottom: 1px solid #2C3446; }
 .m-rail-brand h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: 0.04em; color: #fff; }
@@ -41,7 +41,7 @@
 .m-rail-user button { margin-top: 8px; background: none; border: 1px solid #4A5468; color: #D7DBE3; border-radius: 4px;
   padding: 3px 10px; font: inherit; font-size: 12px; cursor: pointer; }
 
-/* ── page ────────────────────────────────────────────────── */
+/* page */
 .m-main { overflow-y: auto; }
 .m-page { max-width: 1180px; padding: 28px 36px 64px; }
 .m-page-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; margin-bottom: 20px; }
@@ -68,7 +68,7 @@
 .m-panel-head h3 { margin: 0; font-size: 15px; font-weight: 650; }
 .m-panel-aside { color: var(--slate); font-size: 12.5px; display: flex; gap: 8px; align-items: center; }
 
-/* ── controls ────────────────────────────────────────────── */
+/* controls */
 .m-btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 4px; padding: 7px 14px; font: inherit;
   font-size: 13.5px; font-weight: 600; cursor: pointer; border: 1px solid transparent; }
 .m-btn:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -92,13 +92,13 @@ textarea.m-input { resize: vertical; min-height: 64px; }
 .m-row { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
 .m-row > .m-field { flex: 1 1 180px; }
 
-/* ── feedback ────────────────────────────────────────────── */
+/* feedback */
 .m-note { border-radius: 4px; padding: 9px 12px; font-size: 13px; margin: 10px 0; border-left: 3px solid; }
 .m-note-info { background: #EEF1F6; border-color: #7B8AA6; }
 .m-note-warn { background: var(--amber-tint); border-color: var(--amber); }
 .m-note-error { background: var(--bad-tint); border-color: var(--bad); }
 .m-note-ok { background: var(--sealed-tint); border-color: var(--sealed); }
-.m-pill { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 999px; font-size: 12px;
+.m-pill { display: inline-flex; align-items: center; gap: 4px; padding: 1px 6px; border-radius: 3px; font-size: 12px;
   font-weight: 600; background: var(--line-2); color: var(--slate); white-space: nowrap; }
 .m-pill-ok { background: var(--sealed-tint); color: var(--sealed); }
 .m-pill-warn { background: var(--amber-tint); color: var(--amber); }
@@ -133,7 +133,7 @@ textarea.m-input { resize: vertical; min-height: 64px; }
 .m-verdict h4 { margin: 0 0 4px; font-size: 15px; }
 .m-verdict p { margin: 2px 0; font-size: 13px; color: var(--slate); }
 
-/* ── blinded review card ─────────────────────────────────── */
+/* blinded review card */
 .m-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
 .m-pair-side { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; font-size: 16px; line-height: 1.55; min-height: 110px; }
 .m-pair-side small { display: block; color: var(--slate); font-size: 12px; margin-bottom: 6px; }
@@ -146,14 +146,14 @@ textarea.m-input { resize: vertical; min-height: 64px; }
 .m-progress > span { display: block; height: 100%; background: var(--brand); }
 .m-kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 3px; padding: 0 5px; font-size: 11px; color: var(--slate); }
 
-/* ── login ───────────────────────────────────────────────── */
+/* login */
 .m-login { grid-column: 1 / -1; display: grid; place-items: center; padding: 24px; overflow-y: auto; }
 .m-login-card { width: min(520px, 100%); background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 28px 30px; }
 .m-login-card h1 { margin: 0; font-size: 30px; letter-spacing: 0.04em; color: var(--brand); }
 .m-login-card p { color: var(--slate); }
 .m-demo-users { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 
-/* ── stage strip on overview (the protocol sequence) ─────── */
+/* stage strip on overview (the protocol sequence) */
 .m-strip { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: #fff; }
 .m-strip > div { padding: 14px 14px 12px; border-right: 1px solid var(--line-2); position: relative; }
 .m-strip > div:last-child { border-right: 0; }
@@ -171,7 +171,7 @@ details.m-details summary { cursor: pointer; color: var(--brand); font-weight: 6
 .m-concepts { display: flex; flex-wrap: wrap; gap: 6px; }
 .m-concepts span { border: 1px solid var(--line); border-radius: 3px; padding: 1px 7px; font-size: 12.5px; background: #fff; }
 
-/* ── playground: input ↔ system output ───────────────────── */
+/* playground: input ↔ system output */
 .pg-grid { display: grid; grid-template-columns: minmax(340px, 5fr) 7fr; gap: 18px; align-items: start; }
 @media (max-width: 1000px) { .pg-grid { grid-template-columns: 1fr; } }
 .pg-input { position: sticky; top: 12px; display: grid; gap: 12px; }
@@ -195,7 +195,7 @@ details.m-details summary { cursor: pointer; color: var(--brand); font-weight: 6
 .pg-id { display: block; font-size: 11.5px; color: var(--slate); }
 .pg-why { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; margin-top: 5px; font-size: 12px; }
 
-/* ── simple input/output screen ──────────────────────────── */
+/* simple input/output screen */
 .ms-root { grid-template-columns: 1fr; }
 .ms-page { max-width: 1400px; padding-top: 20px; }
 .ms-summary { font-size: 15px; font-weight: 600; line-height: 1.5; margin: 2px 0 8px; }
@@ -207,7 +207,7 @@ details.m-details summary { cursor: pointer; color: var(--brand); font-weight: 6
 .ms-proposal { margin: 6px 0 4px; font-size: 13px; background: var(--sealed-tint); border-radius: 4px; padding: 6px 9px; }
 .ms-rel { border-top: 1px solid var(--line-2); padding-top: 8px; margin-top: 12px; }
 
-/* ── advisor approval ────────────────────────────────────── */
+/* advisor approval */
 .adv-grid { display: grid; grid-template-columns: 320px 1fr; gap: 18px; align-items: start; }
 @media (max-width: 900px) { .adv-grid { grid-template-columns: 1fr; } }
 .adv-list { display: grid; gap: 8px; position: sticky; top: 12px; }

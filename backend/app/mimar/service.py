@@ -1,4 +1,4 @@
-"""MİMAR — Workflow service."""
+"""Workflow service."""
 from __future__ import annotations
 
 import random
@@ -322,7 +322,7 @@ class MimarService:
     def _cfg(self, config_id: str) -> AnalysisConfig:
         return AnalysisConfig.from_dict(self._get("config", config_id)["params"])
 
-    #  AS1 — analysis run, split, stability
+    #  AS1: analysis run, split, stability
     def _analysis_obj(self, analysis_id: str) -> OverlapAnalysis:
         with self._lock:
             if analysis_id not in self._cache:
@@ -755,7 +755,7 @@ class MimarService:
         return {"sample_id": sample_id, "total": total, "reviewers": per, "conflicts": len(conf),
                 "adjudicated": adj, "evaluation": s.get("evaluation")}
 
-    #  AS2 — reports, findings, pools, validation
+    #  AS2: reports, findings, pools, validation
     def generate_mimar_report(self, actor: dict, analysis_id: str, kind: str = "core", depth: int | None = None) -> dict:
         self._need(actor, "report.mimar")
         run = self._get("analysis", analysis_id)
@@ -1061,7 +1061,7 @@ class MimarService:
         return {"total_person_hours": round(sum(by.values()), 2),
                 "by_activity": {k: round(v, 2) for k, v in sorted(by.items())}, "entries": len(rows)}
 
-    #  AS5 — whole-curriculum candidate evaluation by coordinators
+    #  AS5: whole-curriculum candidate evaluation by coordinators
     def create_as5_sample(self, actor: dict, report_id: str, n_max: int = 300, seed: int = 20260913,
                           priority_top: int = 20) -> dict:
         self._need(actor, "sample.create")
@@ -1128,7 +1128,7 @@ class MimarService:
         self._audit(actor, "as5.results", sample_id, rate=res["joint_rate"])
         return res
 
-    #  AS6 — change impact
+    #  AS6: change impact
     def create_changeset(self, actor: dict, t0: str, t1: str, config_id: str, kind: str = "real",
                          description: str = "", decision_ref: str = "") -> dict:
         self._need(actor, "impact.run")

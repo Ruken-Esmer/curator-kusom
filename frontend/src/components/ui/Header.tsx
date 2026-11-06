@@ -4,39 +4,40 @@ import type { Language } from '@/types'
 type Mode = 'curator' | 'mimar' | 'uzman'
 
 const TABS: { id: Mode; tr: string; en: string }[] = [
-  { id: 'curator', tr: 'Soru sor', en: 'Ask' },
+  { id: 'curator', tr: 'Sorgu', en: 'Query' },
   { id: 'uzman', tr: 'Uzman incelemesi', en: 'Expert review' },
-  { id: 'mimar', tr: 'Araştırma', en: 'Research' },
+  { id: 'mimar', tr: 'Müfredat analizi', en: 'Curriculum analysis' },
 ]
 
 export default function Header({ mode = 'curator', onModeChange }: { mode?: Mode; onModeChange?: (m: Mode) => void }) {
   const { language, setLanguage } = useStore()
 
   return (
-    <header className="h-14 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between px-6 shrink-0 bg-white dark:bg-zinc-950">
-      <div className="flex items-baseline gap-3">
-        <span className="font-serif text-lg font-semibold tracking-tight text-[#7A1F2B]">CURATOR</span>
-        <span className="text-xs text-zinc-500 hidden md:block">
-          {language === 'tr' ? 'Koç Üniversitesi Tıp Fakültesi · Müfredat asistanı' : 'Koç University School of Medicine · Curriculum assistant'}
-        </span>
-      </div>
+    <header className="shrink-0 border-t-4 border-[#7A1F2B] border-b border-b-zinc-200 bg-white">
+      <div className="h-12 flex items-stretch justify-between px-6">
+        <div className="flex items-center gap-3">
+          <span className="text-[15px] font-bold tracking-wide text-[#7A1F2B]">CURATOR</span>
+          <span className="text-xs text-zinc-500 hidden md:block border-l border-zinc-300 pl-3">
+            {language === 'tr' ? 'Koç Üniversitesi Tıp Fakültesi' : 'Koç University School of Medicine'}
+          </span>
+        </div>
 
-      <nav className="flex items-center gap-1" aria-label="Bölümler">
-        {TABS.map((t) => (
-          <button key={t.id} onClick={() => onModeChange?.(t.id)} aria-current={mode === t.id ? 'page' : undefined}
-            className={`px-3 py-1.5 rounded-full text-sm transition-colors ${mode === t.id
-              ? 'bg-[#7A1F2B] text-white'
-              : 'text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800'}`}>
-            {t[language]}
+        <nav className="flex items-stretch gap-6" aria-label="Bölümler">
+          {TABS.map((t) => (
+            <button key={t.id} onClick={() => onModeChange?.(t.id)} aria-current={mode === t.id ? 'page' : undefined}
+              className={`text-sm border-b-2 -mb-px transition-colors ${mode === t.id
+                ? 'border-[#7A1F2B] text-zinc-900 font-semibold'
+                : 'border-transparent text-zinc-500 hover:text-zinc-800'}`}>
+              {t[language]}
+            </button>
+          ))}
+          <button onClick={() => setLanguage((language === 'tr' ? 'en' : 'tr') as Language)}
+            className="text-xs text-zinc-400 hover:text-zinc-700 self-center ml-2"
+            title={language === 'tr' ? 'English' : 'Türkçe'}>
+            {language === 'tr' ? 'English' : 'Türkçe'}
           </button>
-        ))}
-        <span className="w-px h-5 bg-zinc-200 dark:bg-zinc-700 mx-2" />
-        <button onClick={() => setLanguage((language === 'tr' ? 'en' : 'tr') as Language)}
-          className="px-2 py-1 text-xs text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200"
-          title={language === 'tr' ? 'Switch to English' : 'Türkçeye geç'}>
-          {language === 'tr' ? 'EN' : 'TR'}
-        </button>
-      </nav>
+        </nav>
+      </div>
     </header>
   )
 }

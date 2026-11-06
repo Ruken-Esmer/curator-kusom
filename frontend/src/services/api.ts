@@ -21,7 +21,7 @@ async function get<T>(path: string): Promise<T> {
   return res.json()
 }
 
-// ── Chat ─────────────────────────────────────────────────
+// Chat
 
 export const chatApi = {
   query: (
@@ -38,7 +38,7 @@ export const chatApi = {
     }),
 }
 
-// ── Curriculum ────────────────────────────────────────────
+// Curriculum
 
 export const curriculumApi = {
   getTree: (institution = 'koc_university', language: Language = 'en'): Promise<CurriculumTree> =>
@@ -51,14 +51,14 @@ export const curriculumApi = {
     get(`/api/v1/curriculum/prerequisites/${blockId}`),
 }
 
-// ── Graph ─────────────────────────────────────────────────
+// Graph
 
 export const graphApi = {
   getSubgraph: (nodeId: string, depth = 2): Promise<SubgraphData> =>
     get(`/api/v1/graph/subgraph/${nodeId}?depth=${depth}`),
 }
 
-// ── Health ────────────────────────────────────────────────
+// Health
 
 export const healthApi = {
   check: (): Promise<HealthStatus> => get('/health'),

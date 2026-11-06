@@ -1,4 +1,4 @@
-"""MİMAR — Role-based access and independence rules (application §2.3, §2.5)."""
+"""Role-based access and independence rules (application §2.3, §2.5)."""
 from __future__ import annotations
 
 import hashlib

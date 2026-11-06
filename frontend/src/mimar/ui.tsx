@@ -2,7 +2,7 @@ import { isValidElement, ReactNode, useCallback, useEffect, useState } from 'rea
 import clsx from 'clsx'
 import { useMimar } from './state'
 
-// ── data loading ──────────────────────────────────────────
+// data loading
 export function useLoad<T = any>(fn: () => Promise<T>, deps: unknown[] = []) {
   const refreshKey = useMimar((s) => s.refreshKey)
   const [data, setData] = useState<T | null>(null)
@@ -41,7 +41,7 @@ export function useAction() {
   return { busy, error, done, run, setError }
 }
 
-// ── primitives ────────────────────────────────────────────
+// primitives
 export function Button({ children, onClick, kind = 'secondary', disabled, busy, type = 'button', title }: {
   children: ReactNode; onClick?: () => void; kind?: 'primary' | 'secondary' | 'quiet' | 'danger'
   disabled?: boolean; busy?: boolean; type?: 'button' | 'submit'; title?: string

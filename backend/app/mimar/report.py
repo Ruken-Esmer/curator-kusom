@@ -1,4 +1,4 @@
-"""MİMAR — Integrated input → output analysis."""
+"""Integrated input → output analysis."""
 from __future__ import annotations
 
 import re
@@ -277,11 +277,14 @@ def integrated_analysis(lo_rows: list[dict], ucep_rows: list[dict] | None = None
 
     cats = Counter(c["category"] for c in cards)
     high = [c for c in cards if c["priority"]["level"] == "yüksek"]
-    summary = (f"{len(rows)} öğrenme hedefi incelendi. "
-               f"{cats.get('redundancy', 0)} olası gereksiz tekrar, {cats.get('gap_ucep', 0)} UÇEP karşılığı eksik madde "
-               f"ve {cats.get('integration', 0)} bütünleştirme fırsatı bulundu"
-               + (f"; bunlardan {len(high)} tanesi yüksek öncelikli." if high else ".")
-               + (f" {len(gen['spiral_progressions'])} tekrar, sonraki sınıfta düzey yükseldiği için sorun sayılmadı." if gen["spiral_progressions"] else ""))
+    found = [f"{n} {label}" for n, label in ((cats.get("redundancy", 0), "olası gereksiz tekrar"),
+                                              (cats.get("gap_ucep", 0), "UÇEP karşılığı eksik madde"),
+                                              (cats.get("integration", 0), "bütünleştirme fırsatı")) if n]
+    summary = f"{len(rows)} öğrenme hedefi incelendi. "
+    summary += (("Bulunanlar: " + ", ".join(found) + "." + (f" Bunların {len(high)} tanesi yüksek öncelikli." if high else ""))
+                if found else "Gereksiz tekrar ya da eksik bulunmadı.")
+    if gen["spiral_progressions"]:
+        summary += f" {len(gen['spiral_progressions'])} tekrar, sonraki sınıfta düzey yükseldiği için sorun sayılmadı."
 
     out.update({
         "summary": summary,

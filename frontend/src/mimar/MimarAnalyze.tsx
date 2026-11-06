@@ -50,7 +50,7 @@ function Output({ o }: { o: any }) {
       {ic.excluded.length > 0 && (
         <details className="m-details m-text-sm">
           <summary>{ic.excluded.length} girdi analize alınmadı</summary>
-          <ul className="pg-list pg-small">{ic.excluded.slice(0, 60).map((e: any, i: number) => <li key={i}>{e.uid}: {e.text} — {e.reason}</li>)}</ul>
+          <ul className="pg-list pg-small">{ic.excluded.slice(0, 60).map((e: any, i: number) => <li key={i}>{e.uid}: {e.text} ({e.reason})</li>)}</ul>
         </details>
       )}
 
@@ -68,7 +68,7 @@ function Output({ o }: { o: any }) {
               {f.objectives.length > 0 && <ul className="pg-list pg-small">{f.objectives.map((x: any) => <li key={x.uid}><b>{x.uid}</b> · {x.year}. sınıf · {x.course}: {x.text}</li>)}</ul>}
               <p className="ms-proposal"><b>Öneri:</b> {f.proposal.text}</p>
               <details className="m-details">
-                <summary>Neden ve paydaşlara sorulacaklar</summary>
+                <summary>Gerekçe ve paydaşlara sorulacaklar</summary>
                 <p className="m-text-sm">{f.rationale} Öncelik gerekçesi: {f.priority.why.join('; ')}; {f.priority.feasibility_reason}.</p>
                 <p className="m-text-sm"><b>Öğrencilere:</b> {f.questions['öğrenci']}</p>
                 <p className="m-text-sm"><b>Öğretim üyelerine:</b> {f.questions['öğretim_üyesi']}</p>
@@ -88,7 +88,7 @@ function Output({ o }: { o: any }) {
 
       {o.impact && <>
         <h4>Öneriler uygulanırsa</h4>
-        <p className="m-text-sm">Kaldırılan: {o.impact.applied.removed_objectives.join(', ') || '—'} · Eklenen: {o.impact.applied.added_objectives.join(', ') || '—'} · Hedef sayısı {o.impact.objectives_before_after[0]} → {o.impact.objectives_before_after[1]}</p>
+        <p className="m-text-sm">Kaldırılan hedefler: {o.impact.applied.removed_objectives.join(', ') || 'yok'}. Eklenen hedefler: {o.impact.applied.added_objectives.join(', ') || 'yok'}. Hedef sayısı {o.impact.objectives_before_after[0]} → {o.impact.objectives_before_after[1]}</p>
         <ul className="pg-list">
           <li>{o.impact.removed_links} tekrar bağlantısı ortadan kalkar{o.impact.new_links ? `, ${o.impact.new_links} yeni bağlantı oluşur` : ''}.</li>
           {o.impact.ucep_gained.length > 0 && <li>UÇEP karşılığı kazanan: {o.impact.ucep_gained.join(', ')}.</li>}
@@ -98,7 +98,7 @@ function Output({ o }: { o: any }) {
       </>}
 
       <details className="m-details" style={{ marginTop: 16 }}>
-        <summary>Ayrıntılı sonuçlar: örtüşen hedefler, sorun sayılmayan tekrarlar, UÇEP karşılıkları</summary>
+        <summary>Diğer sonuçlar (örtüşen hedefler, sorun sayılmayan tekrarlar, UÇEP karşılıkları)</summary>
       {o.overlaps?.length > 0 && <>
         <h4>Örtüşen hedefler</h4>
         <ol className="pg-pairs">
@@ -116,12 +116,12 @@ function Output({ o }: { o: any }) {
 
       {o.not_problems?.length > 0 && <>
         <h4>Sorun sayılmayan tekrarlar</h4>
-        <ul className="pg-list">{o.not_problems.map((s: any) => <li key={s.pair}>{s.pair}: {s.years[0]}. sınıfta {s.levels[0]}, {s.years[1]}. sınıfta {s.levels[1]} düzeyinde — konu ilerleyerek derinleşiyor.</li>)}</ul>
+        <ul className="pg-list">{o.not_problems.map((s: any) => <li key={s.pair}>{s.pair}: {s.years[0]}. sınıfta {s.levels[0]}, {s.years[1]}. sınıfta {s.levels[1]} düzeyinde; konu ilerleyerek derinleşiyor.</li>)}</ul>
       </>}
 
       {o.parallel?.length > 0 && <>
         <h4>Aynı kalıpla yazılmış ama farklı içerik öğreten hedefler</h4>
-        <ul className="pg-list">{o.parallel.map((p: any, i: number) => <li key={i}>{p.objectives.join(' / ')} — ayıran: {p.differ_by.join(', ')}</li>)}</ul>
+        <ul className="pg-list">{o.parallel.map((p: any, i: number) => <li key={i}>{p.objectives.join(' / ')} (ayıran: {p.differ_by.join(', ')})</li>)}</ul>
       </>}
 
       {o.reinforcements?.length > 0 && <>
@@ -143,14 +143,11 @@ function Output({ o }: { o: any }) {
 }
 
 
-// ── page ─────────────────────────────────────────────────
-
 type KBlock = { id: string; code: string; year: number; name: string; topics: number; objectives: number }
 const ACCENT = '#7A1F2B'
 const Step = ({ n, title, children }: { n: number; title: string; children: any }) => (
-  <div className="flex gap-4">
-    <span className="shrink-0 w-7 h-7 rounded-full text-sm font-semibold flex items-center justify-center text-white" style={{ background: ACCENT }}>{n}</span>
-    <div className="flex-1 min-w-0"><p className="font-medium mb-2">{title}</p>{children}</div>
+  <div className="py-4 border-b border-zinc-200 last:border-b-0">
+    <p className="text-[15px] font-semibold mb-2">{n}. {title}</p>{children}
   </div>
 )
 
@@ -183,72 +180,72 @@ export default function MimarAnalyze() {
         const r = await api.get(`/kusom/los?blocks=${sel.join(',')}`)
         los = r.rows
         const nObj = los.filter((x: any) => x.from === 'öğrenim hedefi').length
-        setInfo(`${sel.map((id) => blocks.find((b) => b.id === id)?.code).join(', ')} · ${nObj} öğrenim hedefi, ${los.length - nObj} ders başlığı${r.truncated ? ' (ilk 3000 satır)' : ''}`)
+        setInfo(`${sel.map((id) => blocks.find((b) => b.id === id)?.code).join(', ')}: ${nObj} öğrenim hedefi, ${los.length - nObj} oturum başlığı${r.truncated ? ' (ilk 3000 satır)' : ''}`)
         if (withUcep) ucep = (await api.get('/ucep2020')).rows
       }
       if (useOwn) setInfo(`${los.length} hedef (kendi girdiniz)`)
-      setBusy('Hedefler karşılaştırılıyor… (bir iki dakika sürebilir)')
+      setBusy('Hedefler karşılaştırılıyor…')
       setOut(await api.post('/analyze', { los, ucep, material: useOwn ? parseMat(own.mat) : [] }))
     } catch (e: any) { setErr(e.message) } finally { setBusy('') }
   }
 
   return (
-    <div className="h-full overflow-y-auto bg-zinc-50/50">
+    <div className="h-full overflow-y-auto">
       <div className="max-w-3xl mx-auto px-6 py-8">
-        <h1 className="font-serif text-2xl tracking-tight">Müfredat analizi</h1>
-        <p className="text-sm text-zinc-500 mb-6">Seçtiğiniz blokların öğrenim hedeflerini birbiriyle ve UÇEP ile karşılaştırır; gereksiz tekrarları ve eksikleri öneri olarak listeler. Karar komitenindir.</p>
+        <h1 className="text-2xl font-semibold">Müfredat analizi</h1>
+        <p className="text-[15px] text-zinc-600 mb-4">Seçilen blokların öğrenim hedefleri birbiriyle ve istenirse UÇEP-2020 ile karşılaştırılır. Olası gereksiz tekrarlar ve eksikler öneri olarak listelenir; son karar müfredat komitesinindir.</p>
 
-        <div className="rounded-2xl border border-zinc-200 bg-white p-6 flex flex-col gap-6">
-          <Step n={1} title="İncelenecek blokları seçin">
+        <div className="rounded-md border border-zinc-300 bg-white px-5">
+          <Step n={1} title="Bloklar">
             {blocks.length === 0 ? <p className="text-sm text-zinc-400">Blok listesi yüklenemedi.</p> : (
               <div className="flex flex-col gap-2">
                 {years.map((y) => (
                   <div key={y} className="flex items-baseline gap-2 flex-wrap">
-                    <span className="w-14 shrink-0 text-xs text-zinc-500">{y}. sınıf</span>
+                    <span className="w-14 shrink-0 text-xs text-zinc-600">{y}. sınıf</span>
                     {blocks.filter((b) => b.year === y).map((b) => (
                       <button key={b.id} type="button" onClick={() => toggle(b.id)} disabled={useOwn}
                         title={`${b.name} · ${b.topics} konu${b.objectives ? ` · ${b.objectives} öğrenim hedefi` : ''}`}
-                        className={`ms-chip px-2.5 py-1 rounded-full text-xs border transition-colors disabled:opacity-40 ${sel.includes(b.id)
-                          ? 'border-[#7A1F2B] bg-[#7A1F2B] text-white' : 'border-zinc-200 text-zinc-700 hover:border-zinc-400'}`}>
+                        className={`ms-chip px-2 py-0.5 rounded-sm text-xs border transition-colors disabled:opacity-40 ${sel.includes(b.id)
+                          ? 'border-[#7A1F2B] bg-[#7A1F2B] text-white' : 'border-zinc-300 text-zinc-700 hover:border-zinc-500'}`}>
                         {b.code}{b.objectives ? ' •' : ''}
                       </button>
                     ))}
                   </div>
                 ))}
-                <p className="text-xs text-zinc-400 mt-1">• işaretli bloklarda yazılı öğrenim hedefi var; diğerlerinde ders başlıkları kullanılır.</p>
+                <p className="text-xs text-zinc-500 mt-1">Nokta (•) işaretli bloklar için yazılı öğrenim hedefi belgesi var. Diğerlerinde oturum başlıkları kullanılır.</p>
               </div>
             )}
           </Step>
 
-          <Step n={2} title="UÇEP ile karşılaştırılsın mı?">
+          <Step n={2} title="UÇEP-2020 karşılaştırması">
             <label className="flex items-center gap-2 text-sm text-zinc-700">
               <input type="checkbox" checked={withUcep} onChange={(e) => setWithUcep(e.target.checked)} disabled={useOwn} className="accent-[#7A1F2B]" />
               UÇEP-2020 çekirdek hastalıklarıyla karşılaştır (342 madde)
             </label>
-            <p className="text-xs text-zinc-400 mt-1">Tüm programı ya da bir sınıfın tamamını seçtiğinizde anlamlıdır; tek blokta çoğu madde doğal olarak “eksik” çıkar.</p>
+            <p className="text-xs text-zinc-500 mt-1">Tüm program ya da bir sınıfın tamamı seçildiğinde anlamlı sonuç verir. Tek blokla yapılan karşılaştırmada maddelerin çoğu eksik görünür.</p>
           </Step>
 
-          <Step n={3} title="Analizi başlatın">
+          <Step n={3} title="Analiz">
             <button onClick={run} disabled={!ready || !!busy}
-              className="px-5 py-2.5 rounded-xl text-white text-sm font-medium disabled:opacity-40" style={{ background: ACCENT }}>
-              {busy ? 'Çalışıyor…' : 'Analiz et'}
+              className="px-5 py-1.5 rounded-md text-white text-sm font-semibold disabled:opacity-40" style={{ background: ACCENT }}>
+              {busy ? 'Analiz sürüyor…' : 'Analiz et'}
             </button>
             {busy && <p className="text-sm text-zinc-500 mt-2"><span className="inline-block w-3 h-3 mr-2 rounded-full border-2 border-zinc-300 border-t-[#7A1F2B] animate-spin align-[-1px]" />{busy}</p>}
-            {!ready && !busy && <p className="text-xs text-zinc-400 mt-2">Önce en az bir blok seçin.</p>}
+            {!ready && !busy && <p className="text-xs text-zinc-500 mt-2">En az bir blok seçin.</p>}
           </Step>
         </div>
 
-        <details className="mt-4 rounded-2xl border border-zinc-200 bg-white px-5 py-3">
-          <summary className="cursor-pointer text-sm text-zinc-600">Kendi hedeflerinizi yapıştırmak isterseniz</summary>
+        <details className="mt-4 rounded-md border border-zinc-300 bg-white px-5 py-3">
+          <summary className="cursor-pointer text-sm">Hedef listesini elle girmek için</summary>
           <div className="flex flex-col gap-3 mt-3 text-sm">
-            <p className="text-xs text-zinc-500">Bu alan doluysa yukarıdaki blok seçimi yerine bu hedefler analiz edilir.</p>
-            <label>Öğrenim hedefleri <span className="text-zinc-400">— her satıra: kimlik | sınıf | ders | hedef metni</span>
+            <p className="text-xs text-zinc-500">Bu alan doluysa blok seçimi yerine buradaki hedefler kullanılır.</p>
+            <label>Öğrenim hedefleri <span className="text-zinc-500">(her satırda: kimlik | sınıf | ders | hedef metni)</span>
               <textarea rows={6} value={own.los} onChange={(e) => setOwn({ ...own, los: e.target.value })}
-                className="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 font-mono text-xs" placeholder="MSK-A-01 | 2 | MSK Anatomi | Describe the muscles of the rotator cuff…" /></label>
-            <label>UÇEP maddeleri <span className="text-zinc-400">(isteğe bağlı) — kod | Türkçe | İngilizce</span>
-              <textarea rows={2} value={own.ucep} onChange={(e) => setOwn({ ...own, ucep: e.target.value })} className="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 font-mono text-xs" /></label>
-            <label>Ders materyali <span className="text-zinc-400">(isteğe bağlı) — hedef kimliği | metin</span>
-              <textarea rows={2} value={own.mat} onChange={(e) => setOwn({ ...own, mat: e.target.value })} className="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 font-mono text-xs" /></label>
+                className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 font-mono text-xs" placeholder="MSK-A-01 | 2 | MSK Anatomi | Describe the muscles of the rotator cuff…" /></label>
+            <label>UÇEP maddeleri <span className="text-zinc-500">(isteğe bağlı; kod | Türkçe | İngilizce)</span>
+              <textarea rows={2} value={own.ucep} onChange={(e) => setOwn({ ...own, ucep: e.target.value })} className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 font-mono text-xs" /></label>
+            <label>Ders materyali <span className="text-zinc-500">(isteğe bağlı; hedef kimliği | metin)</span>
+              <textarea rows={2} value={own.mat} onChange={(e) => setOwn({ ...own, mat: e.target.value })} className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 font-mono text-xs" /></label>
             <div className="flex gap-3">
               <button className="text-xs underline text-zinc-600" onClick={() => setOwn({ los: EX_LOS, ucep: EX_UCEP, mat: EX_MAT })}>Örnek veriyi doldur</button>
               {useOwn && <button className="text-xs underline text-zinc-600" onClick={() => setOwn({ los: '', ucep: '', mat: '' })}>Temizle</button>}
@@ -256,13 +253,13 @@ export default function MimarAnalyze() {
           </div>
         </details>
 
-        {err && <p role="alert" className="mt-4 text-sm text-red-700 bg-red-50 rounded-lg px-3 py-2">{err}</p>}
+        {err && <p role="alert" className="mt-4 text-sm text-red-800 border-l-4 border-red-700 bg-red-50 px-3 py-2">{err}</p>}
 
         {out && (
           <div ref={res} className="mt-6 scroll-mt-4">
-            <h2 className="font-serif text-xl mb-1">Sonuç</h2>
+            <h2 className="text-lg font-semibold mb-1">Sonuç</h2>
             <p className="text-xs text-zinc-500 mb-3">{info}</p>
-            <div className="mimar rounded-2xl border border-zinc-200 bg-white p-5" style={{ display: 'block', height: 'auto', overflow: 'visible', background: '#fff' }}>
+            <div className="mimar rounded-md border border-zinc-300 bg-white p-5" style={{ display: 'block', height: 'auto', overflow: 'visible', background: '#fff' }}>
               <Output o={out} />
             </div>
           </div>

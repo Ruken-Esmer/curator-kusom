@@ -1,4 +1,4 @@
-"""MİMAR — AS2 candidate findings, UÇEP correspondence, matching and blinding."""
+"""AS2 candidate findings, UÇEP correspondence, matching and blinding."""
 from __future__ import annotations
 
 import hashlib

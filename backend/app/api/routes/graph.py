@@ -1,4 +1,4 @@
-"""CURATOR — Graph visualisation endpoint."""
+"""Graph visualisation endpoint."""
 from fastapi import APIRouter, Query
 
 from app.graph.client import neo4j_client

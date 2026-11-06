@@ -1,4 +1,4 @@
-"""CURATOR — Health check."""
+"""Health check."""
 from fastapi import APIRouter
 
 from app.core.config import get_settings

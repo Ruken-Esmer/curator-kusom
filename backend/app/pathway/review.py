@@ -1,4 +1,4 @@
-"""CURATOR — expert review of the learning-pathway engine during development."""
+"""Expert review of the learning-pathway engine during development."""
 from __future__ import annotations
 
 import random
@@ -289,23 +289,22 @@ class ExpertReview:
 
 
 def render_pathway(p: dict[str, Any], released: bool) -> str:
-    head = ("_Uzman değerlendirmesinden geçmiş sürüm._" if released else
-            "_Önizleme: bu özellik henüz uzman değerlendirmesinde; öneriler kesinleşmemiştir._")
-    lines = [f"**{p['title']}**", head, ""]
-    groups = [("once_tazele", "1) Önce tazele — yeni konulara geçmeden gözden geçir"),
-              ("gerekli", "2) Gerekli — bu hedef için mutlaka çalış"),
-              ("tekrar", "3) Tekrar — daha önce aynı düzeyde gördün, hızlı gözden geçir")]
-    for key, title in groups:
+    head = ("Bu öneriler uzman değerlendirmesinden geçti." if released else
+            "Not: Bu öneriler henüz uzman değerlendirmesinde, kesinleşmiş değil.")
+    lines = [f"**{p['title']}**", "", head, ""]
+    groups = [("once_tazele", "Önce tazelemen gerekenler", "Yeni konulara geçmeden önceki yıllardan hatırlaman gerekenler."),
+              ("gerekli", "Bu blokta yeni olanlar", "Müfredatta ilk kez burada geliyor ya da burada daha ileri düzeyde işleniyor."),
+              ("tekrar", "Daha önce gördüklerin", "Benzer düzeyde daha önce işlendi. Atlama, ama hızlıca gözden geçirmen yeterli.")]
+    for key, title, sub in groups:
         steps = [s for s in p["steps"] if s["label"] == key]
         # explained items (expert decisions, earlier basic level, rotation) before plain "first time here"
         steps.sort(key=lambda s: s["reason"].startswith("Bu içerik müfredatta ilk kez"))
         if not steps:
             continue
-        lines.append(f"**{title}** ({len(steps)})")
+        lines += [f"**{title}** ({len(steps)})", sub, ""]
         for s in steps[:25]:
-            lines.append(f"- {s['topic']} [{s['block_id']}] — {s['reason']}")
+            lines.append(f"- {s['topic']} ({s['block_id']}): {s['reason']}")
         if len(steps) > 25:
-            lines.append(f"- … ve {len(steps) - 25} konu daha")
+            lines.append(f"- ve {len(steps) - 25} konu daha")
         lines.append("")
-    lines.append("_“Tekrar” atlama anlamına gelmez; konuyu hızlıca gözden geçirmen önerilir._")
-    return "\n".join(lines)
+    return "\n".join(lines).rstrip()

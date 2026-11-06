@@ -1,4 +1,4 @@
-"""MİMAR — AS6 change-impact tracking."""
+"""AS6 change-impact tracking."""
 from __future__ import annotations
 
 import random

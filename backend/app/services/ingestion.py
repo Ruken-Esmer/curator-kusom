@@ -32,7 +32,7 @@ async def ensure_indexes_ready() -> None:
         vector_store.build(chunks)
         vector_store.save()
 
-    # BM25 (always rebuild in memory — fast)
+    # BM25 (always rebuild in memory: fast)
     bm25_retriever.build(chunks)
     logger.info("ingestion.bm25_ready", n=len(chunks))
 

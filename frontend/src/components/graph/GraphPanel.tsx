@@ -16,7 +16,7 @@ function getColour(label: string) {
   return YEAR_COLOURS[label] ?? '#888'
 }
 
-// ── Simple SVG-based force layout (no external lib needed in base build) ──
+// Simple SVG-based force layout (no external lib needed in base build)
 
 function GraphCanvas({ data, nodeId }: { data: SubgraphData; nodeId: string }) {
   const svgRef = useRef<SVGSVGElement>(null)
@@ -100,7 +100,7 @@ function GraphCanvas({ data, nodeId }: { data: SubgraphData; nodeId: string }) {
   )
 }
 
-// ── Panel ─────────────────────────────────────────────────
+// Panel
 
 export default function GraphPanel() {
   const { graphNodeId, graphPanelOpen, setGraphPanelOpen } = useStore()

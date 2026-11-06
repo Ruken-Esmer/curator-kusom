@@ -1,4 +1,4 @@
-"""MİMAR — Data import and quality control (application §2.1–2.2)."""
+"""Data import and quality control (application §2.1–2.2)."""
 from __future__ import annotations
 
 import csv

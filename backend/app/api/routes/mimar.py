@@ -1,4 +1,4 @@
-"""MİMAR — REST API (prefix /api/v1/mimar)."""
+"""REST API (prefix /api/v1/mimar)."""
 from __future__ import annotations
 
 import csv

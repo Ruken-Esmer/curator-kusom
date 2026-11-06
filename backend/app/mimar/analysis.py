@@ -1,4 +1,4 @@
-"""MİMAR — AS1 overlap analysis orchestration."""
+"""AS1 overlap analysis orchestration."""
 from __future__ import annotations
 
 import hashlib

@@ -1,4 +1,4 @@
-"""MİMAR — Local research data store."""
+"""Local research data store."""
 from __future__ import annotations
 
 import hashlib

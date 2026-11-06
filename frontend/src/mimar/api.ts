@@ -1,4 +1,4 @@
-// MİMAR API client — every call carries the user's bearer token.
+// MİMAR API client: every call carries the user's bearer token.
 const BASE = (import.meta.env.VITE_API_URL as string | undefined) ?? ''
 const PREFIX = `${BASE}/api/v1/mimar`
 

@@ -112,17 +112,17 @@ REASONING = r"approach to|differential diagnosis"
 def _relation(a: dict[str, Any], b: dict[str, Any]) -> tuple[str, str]:
     rank = {"temel": 0, "hastalık": 1, "klinik": 2}
     if a["block"] != b["block"] and re.search(REASONING, a["title"], re.I) and re.search(REASONING, b["title"], re.I):
-        return "olası tekrar", (f"İkisi de aynı klinik akıl yürütme sorusunu (ayırıcı tanı) ele alıyor; "
-                                f"{b['year']}. sınıftaki oturumun {a['year']}. sınıftakinden ne kadar ileri gittiği kontrol edilmeli.")
+        return "olası tekrar", (f"İki oturum da ayırıcı tanıyı konu alıyor. {b['year']}. sınıftaki oturumun "
+                                f"{a['year']}. sınıftakine ne kadar yeni içerik eklediğine bakılmalı.")
     if a["block"] == b["block"]:
         if a["kind"] != b["kind"]:
-            return "pekiştirme", f"Aynı blokta {a['kind']} ve {b['kind']} olarak iki kez; bilinçli pekiştirme olabilir, tedavi/tanı kısmı örtüşebilir."
-        return "olası tekrar", "Aynı blokta aynı türde iki oturum; içerik örtüşmesi kontrol edilmeli."
+            return "pekiştirme", f"Aynı blokta önce {a['kind']}, sonra {b['kind']} olarak işleniyor. Bilinçli bir pekiştirme olabilir."
+        return "olası tekrar", "Aynı blokta aynı türden iki oturum var. İçerikleri karşılaştırılmalı."
     if rank[b["phase"]] > rank[a["phase"]]:
-        return "derinleşme", f"{a['year']}. sınıfta {PHASE_TR[a['phase']]}, {b['year']}. sınıfta {PHASE_TR[b['phase']]}; beklenen sarmal yapı."
+        return "derinleşme", f"{a['year']}. sınıfta {PHASE_TR[a['phase']]}, {b['year']}. sınıfta {PHASE_TR[b['phase']]}. Beklenen sarmal yapıya uygun."
     if a["year"] == b["year"] and a["phase"] == "klinik":
-        return "olası tekrar", "Aynı yılın iki stajında; rotasyon sırasına göre öğrenci ikisini de alıyor."
-    return "olası tekrar", "Aynı düzeyde farklı bloklarda; içerik örtüşmesi kontrol edilmeli."
+        return "olası tekrar", "Aynı yılın iki stajında geçiyor ve öğrenci iki stajı da alıyor."
+    return "olası tekrar", "Aynı düzeyde iki ayrı blokta geçiyor. İçerikleri karşılaştırılmalı."
 
 
 def repetitions(item: dict[str, Any]) -> dict[str, Any]:
@@ -170,82 +170,91 @@ def ucep_alignment(item: dict[str, Any]) -> dict[str, Any]:
 # Chat answers (Turkish markdown)
 
 def _d(iso: str | None) -> str:
-    return f"{iso[8:10]}.{iso[5:7]}.{iso[:4]}" if iso else "—"
+    return f"{iso[8:10]}.{iso[5:7]}.{iso[:4]}" if iso else ""
 
 
-def _item_label(it: dict[str, Any]) -> str:
-    return f"{it['text_tr']} (UÇEP-2020 madde {it['no']}, düzey {'-'.join(it['levels'])})"
+def _years(ys: list[int]) -> str:
+    t = [f"{y}." for y in ys]
+    return (", ".join(t[:-1]) + " ve " + t[-1] if len(t) > 1 else t[0]) + " sınıfta"
 
 
 def answer_where(item: dict[str, Any]) -> str:
     w = where_taught(item)
+    name = item["text_tr"]
     if not w["direct"]:
-        return f"**{_item_label(item)}** için ders programlarında doğrudan bir oturum bulunamadı."
-    lines = [f"**{item['text_tr']}**, 2025–2026 programında **{', '.join(f'{y}. sınıf' for y in w['years'])}** düzeyinde doğrudan işleniyor.", "",
+        return f"2025–2026 ders programlarında {name.lower()} başlıklı bir oturum bulunamadı."
+    lines = [f"{name}, 2025–2026 programında {_years(w['years'])} ayrı bir oturum olarak işleniyor.", "",
              "| Sınıf | Blok / staj | Oturum | Tür | Tarih | Anabilim dalı |", "|---|---|---|---|---|---|"]
     for r in w["direct"]:
-        lines.append(f"| {r['year']} | {r['block']} · {r['block_name']} | {r['title']} | {r['kind']} | {_d(r['date'])} | {', '.join(r['fields']) or '—'} |")
+        lines.append(f"| {r['year']} | {r['block']} {r['block_name']} | {r['title']} | {r['kind']} | {_d(r['date'])} | {', '.join(r['fields'])} |")
     if w["related"]:
-        lines += ["", "**Destekleyici oturumlar** (anahtar kavramla bulundu; doğrulanmalı):", "",
-                  "| Sınıf | Blok / staj | Oturum | Rolü |", "|---|---|---|---|"]
+        lines += ["", f"Konuya doğrudan bağlı başka oturumlar da var. Bunlar başlıklarına göre seçildi; "
+                      f"ilgili anabilim dallarıyla teyit edilmesi gerekir.", "",
+                  "| Sınıf | Blok / staj | Oturum | Konuyla ilişkisi |", "|---|---|---|---|"]
         for r in w["related"]:
             lines.append(f"| {r['year']} | {r['block']} | {r['title']} | {r['role']} |")
-    lines += ["", "_Kaynak: KUSOM 2025–2026 ders programları (2.–5. sınıf). 1. ve 6. sınıf programları sistemde yok._"]
+    lines += ["", "Kaynak: KUSOM 2025–2026 ders programları, 2. ile 5. sınıflar. 1. ve 6. sınıf programları henüz eklenmedi."]
     return "\n".join(lines)
 
 
 def answer_objectives(item: dict[str, Any]) -> str:
     o = objectives(item)
+    name = item["text_tr"]
     if o["objectives"]:
-        lines = [f"**{item['text_tr']}** ile ilgili yazılı öğrenim hedefleri:", "",
+        lines = [f"{name} ile ilgili yazılı öğrenim hedefleri:", "",
                  "| Sınıf | Blok | Oturum | Öğrenim hedefi |", "|---|---|---|---|"]
         lines += [f"| {r['year']} | {r['block']} | {r['title']} | {r['objective']} |" for r in o["objectives"]]
         return "\n".join(lines)
-    lines = [f"Sistemdeki öğrenim hedefi belgelerinde **{item['text_tr'].lower()} ile ilgili yazılı bir hedef yok.**", "",
-             f"Hedef belgeleri yalnızca {', '.join(o['blocks_with_objective_docs'])} blokları için paylaşıldı. "
-             f"{item['text_tr']} ise {', '.join(o['teaching_blocks_without_objectives'])} bloklarında işleniyor ve bu bloklar için hedef belgesi yok.", "",
-             "Hedeflerin yerine, konunun işlendiği oturumların başlıkları:", "",
+    blocks = " ve ".join(o["teaching_blocks_without_objectives"])
+    lines = [f"Elimizdeki öğrenim hedefi belgelerinde {name.lower()} ile ilgili yazılı bir hedef yok.", "",
+             f"Hedef belgeleri şu ana kadar yalnızca {', '.join(o['blocks_with_objective_docs'])} blokları için iletildi. "
+             f"{name} {blocks} bloklarında işleniyor; bu blokların hedef belgeleri henüz elimizde değil.", "",
+             "Hedefler gelene kadar konunun işlendiği oturumlar şunlar:", "",
              "| Sınıf | Blok | Oturum başlığı | Tür |", "|---|---|---|---|"]
     lines += [f"| {r['year']} | {r['block']} | {r['title']} | {r['kind']} |" for r in o["sessions"]]
-    lines += ["", "_Bu bloklar için hedef belgeleri eklendiğinde hedefler burada listelenir._"]
     return "\n".join(lines)
 
 
 def answer_repetitions(item: dict[str, Any]) -> str:
     r = repetitions(item)
+    name = item["text_tr"]
     if not r["pairs"]:
-        return f"**{item['text_tr']}** için tekrar eden oturum bulunamadı."
+        return f"{name} için birden fazla oturumda geçen bir içerik bulunamadı."
     n = {k: sum(1 for p in r["pairs"] if p["relation"] == k) for k in ("olası tekrar", "pekiştirme", "derinleşme")}
-    lead = ("**Hedef düzeyinde:** tekrar eden hedef gösterilemiyor, çünkü bu oturumlar için yazılı öğrenim hedefi yok. "
+    lead = ("Yazılı hedef olmadığı için karşılaştırmayı hedefler yerine oturumlar üzerinden yaptık. "
             if not r["objective_level_possible"] else "")
-    lead += (f"**Oturum düzeyinde:** {n['olası tekrar']} olası tekrar, {n['pekiştirme']} pekiştirme ve "
-             f"{n['derinleşme']} derinleşme (beklenen sarmal) var.")
-    lines = [lead, "", f"**{item['text_tr']}** konusunun birden fazla yerde geçtiği oturumlar, yan yana:", "",
-             "| Önce: sınıf · blok | Oturum | Sonra: sınıf · blok | Oturum | Değerlendirme |", "|---|---|---|---|---|"]
+    lead += (f"{n['olası tekrar']} olası tekrar, {n['pekiştirme']} pekiştirme ve {n['derinleşme']} derinleşme görünüyor. "
+             "Derinleşmeler sarmal programın beklenen sonucu; asıl bakılması gereken olası tekrarlar.")
+    lines = [lead, "",
+             "| Önce | Oturum | Sonra | Oturum | Değerlendirme |", "|---|---|---|---|---|"]
     for p in r["pairs"]:
         a, b = p["early"], p["late"]
-        lines.append(f"| {a['year']}. sınıf · {a['block']} | {a['title']} ({a['kind']}) | {b['year']}. sınıf · {b['block']} | "
-                     f"{b['title']} ({b['kind']}) | **{p['relation']}**: {p['why']} |")
-    lines += ["", "_Olası tekrarlar ve pekiştirmeler, ilgili anabilim dallarıyla ders içerikleri üzerinden doğrulanmalı._"]
+        lines.append(f"| {a['year']}. sınıf, {a['block']} | {a['title']} ({a['kind']}) | {b['year']}. sınıf, {b['block']} | "
+                     f"{b['title']} ({b['kind']}) | **{p['relation']}**. {p['why']} |")
+    lines += ["", "Olası tekrar ve pekiştirmelerin ders içerikleri üzerinden anabilim dallarıyla birlikte gözden geçirilmesi önerilir."]
     return "\n".join(lines)
 
 
 def answer_ucep(item: dict[str, Any]) -> str:
     u = ucep_alignment(item)
+    name = item["text_tr"]
     no_lo = all(r["status"] != "hedefte var" for r in u["rows"])
     miss = [r["expected"].lower() for r in u["missing"]]
-    lead = (f"**Kısa cevap:** UÇEP'in beklediği {len(u['rows'])} yeterliğin hiçbirinin yazılı öğrenim hedeflerinde karşılığı yok, "
-            "çünkü konunun işlendiği bloklar için hedef belgesi bulunmuyor. Ders başlıklarına bakıldığında "
-            + (f"**{', '.join(miss)}** için karşılık bulunamadı ya da yalnız dolaylı." if miss else "hepsinin karşılığı var.")
-            if no_lo else
-            (f"**Kısa cevap:** {', '.join(miss)} için karşılık yok." if miss else "**Kısa cevap:** Hepsinin karşılığı var."))
-    lines = [lead, "", f"**{_item_label(item)}** için UÇEP'in beklediği yeterlikler ve müfredattaki karşılıkları:", "",
+    if no_lo:
+        lead = (f"UÇEP-2020 {name.lower()} için {'-'.join(item['levels'])} düzeyini bekliyor (madde {item['no']}). "
+                "Konunun işlendiği bloklarda yazılı hedef olmadığı için bu beklentilerin hiçbiri hedeflerde karşılanmış görünmüyor. "
+                + (f"Ders başlıklarına bakıldığında ise {' ve '.join(miss)} eksik ya da yalnızca dolaylı olarak var."
+                   if miss else "Ders başlıklarında ise hepsinin karşılığı var."))
+    else:
+        lead = (f"UÇEP-2020 {name.lower()} için {'-'.join(item['levels'])} düzeyini bekliyor. "
+                + (f"Müfredatta {' ve '.join(miss)} için karşılık bulunamadı." if miss else "Hepsinin müfredatta karşılığı var."))
+    lines = [lead, "",
              "| UÇEP düzeyi | Beklenen | Müfredatta | Nerede |", "|---|---|---|---|"]
     for r in u["rows"]:
-        lines.append(f"| {r['level']} | {r['expected']} | **{r['status']}** | {'; '.join(r['sessions']) or '—'} |")
-    lines += ["", "_Not: Bu bloklarda yazılı öğrenim hedefi olmadığı için eşleştirme oturum başlıklarına dayanıyor; "
-                  "\"ders başlığında var\" konunun işlendiğini, ama hedefin UÇEP düzeyinde yazıldığını göstermez. "
-                  "UÇEP'in semptom ve temel hekimlik uygulamaları listeleri henüz sistemde değil._"]
+        lines.append(f"| {r['level']} | {r['expected']} | **{r['status']}** | {'; '.join(r['sessions'])} |")
+    lines += ["", "Not: Eşleştirme oturum başlıklarına dayanıyor. Bir başlığın bulunması konunun işlendiğini gösterir, "
+                  "hedefin UÇEP düzeyinde yazıldığını göstermez. UÇEP'in semptom ve temel hekimlik uygulamaları listeleri "
+                  "bu karşılaştırmaya henüz dahil değil."]
     return "\n".join(lines)
 
 

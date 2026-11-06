@@ -1,4 +1,4 @@
-"""MİMAR — Three independent pairwise rankers and Reciprocal Rank Fusion."""
+"""Three independent pairwise rankers and Reciprocal Rank Fusion."""
 from __future__ import annotations
 
 import hashlib

@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { chatApi, curriculumApi } from '@/services/api'
 import { useStore } from '@/store'
 
-// ── useCurriculum ─────────────────────────────────────────
+// useCurriculum
 
 export function useCurriculum() {
   const { language, curriculum, setCurriculum } = useStore()
@@ -17,7 +17,7 @@ export function useCurriculum() {
   return curriculum
 }
 
-// ── useChat ───────────────────────────────────────────────
+// useChat
 
 export function useChat() {
   const {

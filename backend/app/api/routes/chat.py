@@ -1,4 +1,4 @@
-"""CURATOR — Chat / Query endpoint."""
+"""Chat / Query endpoint."""
 import time
 
 from fastapi import APIRouter, HTTPException
@@ -53,7 +53,7 @@ async def chat(request: QueryRequest) -> QueryResponse:
 
 
 #  Learning pathways (shown directly; quality assured by expert review
-#  during development — see app.pathway.review)
+#  during development: see app.pathway.review)
 
 def _audit_answer(request: QueryRequest, lang: Language) -> QueryResponse | None:
     """Accreditation-style questions about a UÇEP disease (where taught, objectives, repetitions, UÇEP fit)."""

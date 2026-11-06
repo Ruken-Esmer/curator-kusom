@@ -1,4 +1,4 @@
-"""CURATOR — Structured logging via structlog."""
+"""Structured logging via structlog."""
 import logging
 import structlog
 

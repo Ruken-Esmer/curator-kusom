@@ -894,7 +894,7 @@ KUC_CURRICULUM: list[dict[str, Any]] = [
 ]
 
 
-#  Chunk Builder — converts curriculum into retrieval docs
+#  Chunk Builder: converts curriculum into retrieval docs
 
 def build_chunks(curriculum: list[dict]) -> list[dict]:
     """

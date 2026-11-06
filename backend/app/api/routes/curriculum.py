@@ -1,4 +1,4 @@
-"""CURATOR — Curriculum tree endpoint."""
+"""Curriculum tree endpoint."""
 from fastapi import APIRouter, Query
 
 from app.graph.client import neo4j_client

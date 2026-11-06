@@ -1,4 +1,4 @@
-// ─── Domain Types ────────────────────────────────────────
+// Domain Types
 
 export type Language = 'en' | 'tr'
 
@@ -43,7 +43,7 @@ export interface QueryResponse {
   processing_time_ms: number
 }
 
-// ─── Curriculum Tree ─────────────────────────────────────
+// Curriculum Tree
 
 export interface BlockInfo {
   id: string
@@ -65,7 +65,7 @@ export interface CurriculumTree {
   years: YearInfo[]
 }
 
-// ─── Graph Types ─────────────────────────────────────────
+// Graph Types
 
 export interface GraphNode {
   id: string
@@ -86,7 +86,7 @@ export interface SubgraphData {
   edges: GraphEdge[]
 }
 
-// ─── Health ──────────────────────────────────────────────
+// Health
 
 export interface HealthStatus {
   status: string

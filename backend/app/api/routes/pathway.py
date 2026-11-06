@@ -1,4 +1,4 @@
-"""CURATOR — expert review of the learning-pathway engine (prefix /api/v1/pathway/expert)."""
+"""Expert review of the learning-pathway engine (prefix /api/v1/pathway/expert)."""
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException

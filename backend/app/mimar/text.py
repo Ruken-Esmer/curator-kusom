@@ -1,4 +1,4 @@
-"""MİMAR — Fixed text preprocessing."""
+"""Fixed text preprocessing."""
 from __future__ import annotations
 
 import re

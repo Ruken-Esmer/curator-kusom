@@ -1,4 +1,4 @@
-"""CURATOR — Learning-pathway engine built on MİMAR's repetition analysis."""
+"""Learning-pathway engine built on MİMAR's repetition analysis."""
 from __future__ import annotations
 
 import re
@@ -11,7 +11,7 @@ from app.mimar.analysis import AnalysisConfig, LORecord, OverlapAnalysis, split_
 from app.mimar.text import bloom_level, raw_tokens, tokenize
 
 GEREKLI, TAZELE, TEKRAR = "gerekli", "once_tazele", "tekrar"
-LABEL_TR = {GEREKLI: "Gerekli", TAZELE: "Önce tazele", TEKRAR: "Tekrar — hızlı gözden geçir"}
+LABEL_TR = {GEREKLI: "Gerekli", TAZELE: "Önce tazele", TEKRAR: "Tekrar (hızlı gözden geçirme)"}
 
 
 @dataclass

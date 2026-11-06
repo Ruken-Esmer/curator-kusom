@@ -1,4 +1,4 @@
-"""MİMAR — End-to-end demonstration with synthetic data and simulated raters."""
+"""End-to-end demonstration with synthetic data and simulated raters."""
 from __future__ import annotations
 
 import random

@@ -5,11 +5,11 @@ import type {
 } from '@/types'
 
 interface AppStore {
-  // ── Language ──────────────────────────────────────────
+  // Language
   language: Language
   setLanguage: (l: Language) => void
 
-  // ── Chat ──────────────────────────────────────────────
+  // Chat
   messages: ChatMessage[]
   isLoading: boolean
   lastQueryType: QueryType | null
@@ -26,7 +26,7 @@ interface AppStore {
   }) => void
   clearChat: () => void
 
-  // ── Curriculum Sidebar ────────────────────────────────
+  // Curriculum Sidebar
   curriculum: CurriculumTree | null
   setCurriculum: (c: CurriculumTree) => void
   activeYear: number | null
@@ -34,7 +34,7 @@ interface AppStore {
   activeBlockId: string | null
   setActiveBlockId: (id: string | null) => void
 
-  // ── Graph Panel ───────────────────────────────────────
+  // Graph Panel
   graphNodeId: string | null
   setGraphNodeId: (id: string | null) => void
   graphPanelOpen: boolean

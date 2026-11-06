@@ -1,4 +1,4 @@
-"""MİMAR — Stratified random sampling with recorded inclusion probabilities."""
+"""Stratified random sampling with recorded inclusion probabilities."""
 from __future__ import annotations
 
 import random
