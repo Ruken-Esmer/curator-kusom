@@ -323,6 +323,7 @@ def topic_report(item: dict[str, Any]) -> dict[str, Any]:
                         "pairs": [{"early": _session(p["early"]), "late": _session(p["late"]), "relation": p["relation"],
                                    "why": p["why"], "shared_objectives": p["shared_objectives"]} for p in r["pairs"]]},
         "ucep": {"rows": u["rows"], "in_objectives": any(x["status"] == "hedefte var" for x in u["rows"])},
+        "plain": plain_answers(item),
         "source": "KUSOM 2025–2026 ders programları, 2.–5. sınıf",
     }
 
@@ -333,4 +334,120 @@ def topic_names() -> list[dict[str, Any]]:
     for it in load_ucep()["items"]:
         if sessions(it)["direct"]:
             out.append({"code": it["code"], "name": it["text_tr"], "levels": it["levels"]})
+    return out
+
+
+# Plain-language answers: one or two everyday sentences per question, no codes or abbreviations
+
+PLAIN_LEVEL = {"ÖnT": "ön tanı koyup sevk edebilmesini", "T": "tanı koyabilmesini",
+               "TT-tanı": "tanı koyabilmesini", "TT-tedavi": "tedavi edebilmesini",
+               "A": "acil durumda ilk müdahaleyi yapabilmesini", "K": "korunma önerebilmesini",
+               "İ": "hastayı uzun süre izleyebilmesini"}
+PLAIN_NOUN = {"ÖnT": "ön tanı", "T": "tanı", "TT-tanı": "tanı", "TT-tedavi": "tedavi", "A": "acil müdahale",
+              "K": "korunma", "İ": "uzun süreli izlem"}
+KIND_PLURAL = {"ders": "ders", "vaka tartışması": "vaka tartışması", "laboratuvar": "laboratuvar",
+               "beceri uygulaması": "beceri uygulaması"}
+
+
+# Turkish names for the sessions that appear in plain answers of curated topics
+TITLE_TR = {
+    "Approach to the patient with joint pain: Is it inflammatory?": "eklem ağrısı olan hastaya yaklaşım",
+    "Differential diagnosis of arthritis": "artritlerde ayırıcı tanı",
+}
+
+
+def _t(title: str) -> str:
+    return TITLE_TR.get(title, f"“{title}”")
+
+
+def _join(parts: list[str]) -> str:
+    return parts[0] if len(parts) == 1 else ", ".join(parts[:-1]) + " ve " + parts[-1]
+
+
+def _short(name: str) -> str:
+    return re.sub(r"\s*(Stajı|Bloğu)$", "", name)
+
+
+def _place(s: dict[str, Any]) -> str:
+    kind = "stajında" if s["phase"] == "klinik" else "bloğunda"
+    return f"{s['year']}. sınıfta {s['block']} {_short(s['block_name'])} {kind}"
+
+
+def plain_answers(item: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    w, o, r, u = where_taught(item), objectives(item), repetitions(item), ucep_alignment(item)
+    name = item["text_tr"]
+    out: dict[str, dict[str, Any]] = {}
+
+    # 1. where
+    if not w["direct"]:
+        out["where"] = {"text": f"Ders programlarında {name.lower()} adını taşıyan bir ders bulunamadı.", "flag": "eksik"}
+    else:
+        groups: dict[tuple, list] = {}
+        for s in w["direct"]:
+            groups.setdefault((s["year"], s["block"]), []).append(s)
+        parts = []
+        for (_, _), ss in sorted(groups.items()):
+            kinds: dict[str, int] = {}
+            for s in ss:
+                kinds[s["kind"]] = kinds.get(s["kind"], 0) + 1
+            what = _join([f"{'bir' if n == 1 else n} {k}" for k, n in kinds.items()])
+            parts.append(f"{_place(ss[0])} {what}")
+        out["where"] = {"text": f"{_join(parts)}.", "flag": ""}
+
+    # 2. objectives
+    if o["objectives"]:
+        out["objectives"] = {"text": f"Bu konu için {len(o['objectives'])} yazılı öğrenim hedefi var.", "flag": ""}
+    else:
+        miss = o["teaching_blocks_without_objectives"]
+        out["objectives"] = {
+            "text": ("Yazılı öğrenim hedefi yok. " +
+                     (f"Konunun işlendiği blokların hedef belgeleri bize henüz ulaşmadı, bu yüzden hedefler gösterilemiyor."
+                      if miss else "Hedef belgelerinde bu konuya ait bir hedef bulunamadı.")),
+            "flag": "belge eksik" if miss else "eksik"}
+
+    curated = item["code"] in PROFILES
+    if not curated:
+        n = len(w["direct"])
+        out["repetitions"] = {"text": (f"Konu {n} ayrı derste geçiyor. Bu derslerin birbirini tekrar edip etmediği bu konu için "
+                                       f"henüz incelenmedi; dersler “Ayrıntılar”da listeleniyor." if n > 1 else
+                                       "Konu tek bir derste geçtiği için tekrar yok."), "flag": "incelenmedi" if n > 1 else ""}
+        out["ucep"] = {"text": "Bu konu için UÇEP karşılaştırması henüz hazırlanmadı. Şu an yalnızca osteoartrit için hazır.",
+                       "flag": "hazırlanmadı"}
+        return out
+
+    # 3. repetitions
+    risky = [p for p in r["pairs"] if p["relation"] == "olası tekrar"]
+    fine = len(r["pairs"]) - len(risky)
+    if not r["pairs"]:
+        out["repetitions"] = {"text": "Konu tek bir yerde işlendiği için tekrar yok.", "flag": ""}
+    else:
+        txt = []
+        for p in risky:
+            a, b = p["early"], p["late"]
+            txt.append(f"{a['year']}. sınıftaki {_t(a['title'])} dersi ile {b['year']}. sınıftaki {_t(b['title'])} dersi "
+                       f"aynı konuyu işliyor olabilir; içerikleri karşılaştırılmalı.")
+        if fine:
+            txt.append(f"{'Diğer ' if risky else ''}{fine} tekrar sorun değil, çünkü konu ya sonraki yılda daha ileri düzeyde "
+                       f"ya da aynı blokta önce ders, sonra vaka olarak işleniyor.")
+        if not risky:
+            txt.insert(0, "Sorunlu bir tekrar görünmüyor.")
+        out["repetitions"] = {"text": " ".join(txt), "flag": f"{len(risky)} yere bakılmalı" if risky else ""}
+
+    # 4. UÇEP
+    rows = u["rows"]
+    want = _join([PLAIN_LEVEL[x["level"]] for x in rows])
+    have = [PLAIN_NOUN[x["level"]] for x in rows if x["status"] in ("hedefte var", "ders başlığında var")]
+    half = [x for x in rows if x["status"] == "dolaylı"]
+    none = [PLAIN_NOUN[x["level"]] for x in rows if x["status"] == "karşılığı bulunamadı"]
+    txt = [f"UÇEP, hekimin {name.lower()} hastasına {want} bekliyor."]
+    if have:
+        txt.append(f"{_join(have).capitalize()} derslerde işleniyor.")
+    for x in half:
+        yr = re.search(r"\((\d)\. sınıf\)", x["sessions"][0]) if x["sessions"] else None
+        txt.append(f"{PLAIN_NOUN[x['level']].capitalize()} yalnızca dolaylı olarak"
+                   f"{f' {yr.group(1)}. sınıftaki' if yr else ''} bir egzersiz dersinde geçiyor."
+                   if x["level"] == "K" else f"{PLAIN_NOUN[x['level']].capitalize()} yalnızca dolaylı olarak geçiyor.")
+    if none:
+        txt.append(f"{_join(none).capitalize()} hiçbir derste yok.")
+    out["ucep"] = {"text": " ".join(txt), "flag": f"{len(none)} eksik" if none else ("kısmen" if half else "")}
     return out

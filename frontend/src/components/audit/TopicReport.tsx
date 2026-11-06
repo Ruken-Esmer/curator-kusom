@@ -3,7 +3,7 @@ import { Loader2 } from 'lucide-react'
 
 const BASE = ((import.meta.env.VITE_API_URL as string | undefined) ?? '') + '/api/v1/audit'
 const ACCENT = '#7A1F2B'
-const QUICK = ['Osteoartrit', 'Astım', 'Diabetes mellitus', 'Kalp yetersizliği']
+const QUICK = ['Osteoartrit', 'Astım', 'Diabetes mellitus']
 
 type Session = { year: number; block: string; block_name: string; title: string; kind: string; date: string | null; fields: string[]; role: string }
 type Report = {
@@ -13,15 +13,17 @@ type Report = {
   objectives: { items: { year: number; block: string; title: string; objective: string }[]; docs_for: string[]; missing_docs: string[]; sessions: Session[] }
   repetitions: { by_objective: boolean; counts: Record<string, number>; pairs: { early: Session; late: Session; relation: string; why: string; shared_objectives: string[] }[] }
   ucep: { rows: { level: string; expected: string; status: string; sessions: string[] }[]; in_objectives: boolean }
+  plain: Record<'where' | 'objectives' | 'repetitions' | 'ucep', { text: string; flag: string }>
   source: string
 }
 
-const QUESTIONS = [
-  ['where', 'Hangi sınıf ve blok/stajlarda öğretiliyor?'],
-  ['objectives', 'Konuyla ilgili öğrenim hedefleri neler?'],
-  ['repetitions', 'Tekrar eden hedefler var mı?'],
-  ['ucep', 'UÇEP’te beklenip müfredatta karşılığı bulunmayanlar var mı?'],
-] as const
+const QUESTIONS: { key: 'where' | 'objectives' | 'repetitions' | 'ucep'; q: (n: string) => string }[] = [
+  { key: 'where', q: (n) => `${n} hangi sınıf ve bloklarda öğretiliyor?` },
+  { key: 'objectives', q: (n) => `${n} ile ilgili öğrenim hedefleri neler?` },
+  { key: 'repetitions', q: () => 'Tekrar eden konular var mı?' },
+  { key: 'ucep', q: () => 'UÇEP’in beklediklerinden müfredatta olmayan var mı?' },
+]
+const FLAG_CLS = (f: string) => (/eksik$/.test(f) && /^\d/.test(f) ? 'text-red-700 border-red-300 bg-red-50' : 'text-amber-800 border-amber-300 bg-amber-50')
 
 const d = (iso: string | null) => (iso ? `${iso.slice(8, 10)}.${iso.slice(5, 7)}.${iso.slice(0, 4)}` : '')
 const STATUS_CLS: Record<string, string> = {
@@ -40,11 +42,21 @@ const Table = ({ children }: { children: any }) => (
   <div className="overflow-x-auto"><table className="w-full text-[13px] border-collapse border-t border-zinc-300">{children}</table></div>
 )
 
-function Section({ id, n, title, children }: { id: string; n: number; title: string; children: any }) {
+function Answer({ n, question, plain, children }: { n: number; question: string; plain: { text: string; flag: string }; children?: any }) {
+  const [open, setOpen] = useState(false)
   return (
-    <section id={`s-${id}`} className="mt-10 scroll-mt-4">
-      <h2 className="text-[17px] font-semibold mb-3 pb-1 border-b-2 border-[#7A1F2B]">{n}. {title}</h2>
-      {children}
+    <section className="py-6 border-b border-zinc-200 break-inside-avoid">
+      <div className="flex items-start justify-between gap-4">
+        <h2 className="text-[17px] font-semibold">{n}. {question}</h2>
+        {plain.flag && <span className={`shrink-0 text-xs font-semibold border rounded px-2 py-0.5 ${FLAG_CLS(plain.flag)}`}>{plain.flag}</span>}
+      </div>
+      <p className="mt-2 text-[16px] leading-relaxed text-zinc-800 max-w-3xl">{plain.text}</p>
+      {children && <>
+        <button onClick={() => setOpen(!open)} className="print:hidden mt-3 text-sm text-[#7A1F2B] hover:underline underline-offset-2">
+          {open ? 'Ayrıntıları gizle' : 'Ayrıntıları göster'}
+        </button>
+        <div className={`${open ? 'block' : 'hidden'} print:block mt-4 text-[14px]`}>{children}</div>
+      </>}
     </section>
   )
 }
@@ -158,15 +170,14 @@ export default function TopicReport() {
       top.current?.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (e: any) { setErr(e.message); setRep(null) } finally { setBusy(false) }
   }
-  const go = (id: string) => document.getElementById(`s-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-
+  
   return (
     <div ref={top} className="h-full overflow-y-auto">
       <div className="max-w-4xl mx-auto px-6 pt-8 pb-16">
         <div className="print:hidden">
           <h1 className="text-2xl font-semibold mb-2">Konu incelemesi</h1>
           <p className="text-[15px] text-zinc-600 mb-5">
-            Bir hastalık adı yazın. Konunun hangi sınıf ve bloklarda işlendiği, öğrenim hedefleri, tekrarları ve UÇEP-2020 ile uyumu tek sayfada gösterilir.
+            Bir hastalık adı yazın. Akreditasyonda sorulan dört sorunun cevabı aşağıda çıkar.
           </p>
           <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); load(q) }}>
             <input list="topic-names" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Konu"
@@ -180,7 +191,6 @@ export default function TopicReport() {
             {QUICK.map((t, i) => (
               <span key={t}>{i > 0 && ', '}<button onClick={() => load(t)} className="text-[#7A1F2B] hover:underline underline-offset-2">{t}</button></span>
             ))}
-            {names.length > 0 && <> · Listede ders programında karşılığı olan {names.length} UÇEP hastalığı var.</>}
           </p>
           {err && <p role="alert" className="mt-4 text-sm text-red-800 border-l-4 border-red-700 bg-red-50 px-3 py-2">{err}</p>}
         </div>
@@ -189,40 +199,22 @@ export default function TopicReport() {
 
         {rep && (
           <article className={`mt-10 print:mt-0 ${busy ? 'opacity-50' : ''}`}>
-            <header className="flex items-start justify-between gap-4 border-b border-zinc-300 pb-3">
+            <header className="flex items-end justify-between gap-4 border-b-2 border-[#7A1F2B] pb-2">
               <div>
-                <p className="text-xs text-zinc-500">UÇEP-2020 madde {rep.topic.no} · {rep.topic.name_en} · beklenen düzey {rep.topic.levels.join('-')}</p>
-                <h1 className="text-[26px] font-semibold leading-tight">{rep.topic.name}</h1>
+                <h1 className="text-[28px] font-semibold leading-tight">{rep.topic.name}</h1>
+                <p className="text-sm text-zinc-500">UÇEP-2020 çekirdek hastalıklar listesi, madde {rep.topic.no}</p>
               </div>
-              <button onClick={() => window.print()} className="print:hidden shrink-0 mt-4 text-sm text-zinc-600 underline underline-offset-2 hover:text-zinc-900">Yazdır / PDF</button>
+              <button onClick={() => window.print()} className="print:hidden shrink-0 text-sm text-zinc-600 underline underline-offset-2 hover:text-zinc-900">Yazdır / PDF</button>
             </header>
 
-            {!rep.topic.curated && (
-              <p className="mt-4 text-[14px] border-l-4 border-amber-500 bg-amber-50 px-3 py-2">
-                Bu konu için oturumlar yalnızca hastalığın adıyla eşleştirildi. Konuya bağlı diğer oturumlar listelenmiyor ve UÇEP karşılaştırması
-                bu yüzden eksik kalabilir. Ayrıntılı eşleştirme şu an osteoartrit için hazır.
-              </p>
-            )}
+            <Answer n={1} question={QUESTIONS[0].q(rep.topic.name)} plain={rep.plain.where}>{rep.where.direct.length > 0 && <Where r={rep} />}</Answer>
+            <Answer n={2} question={QUESTIONS[1].q(rep.topic.name)} plain={rep.plain.objectives}><Objectives r={rep} /></Answer>
+            <Answer n={3} question={QUESTIONS[2].q(rep.topic.name)} plain={rep.plain.repetitions}>
+              {rep.topic.curated ? (rep.repetitions.pairs.length > 0 && <Repetitions r={rep} />) : (rep.where.direct.length > 1 && <Where r={rep} />)}
+            </Answer>
+            <Answer n={4} question={QUESTIONS[3].q(rep.topic.name)} plain={rep.plain.ucep}>{rep.topic.curated && <Ucep r={rep} />}</Answer>
 
-            <div className="mt-5 grid grid-cols-2 md:grid-cols-4 border border-zinc-300 rounded-md divide-x divide-y md:divide-y-0 divide-zinc-300 overflow-hidden">
-              {QUESTIONS.map(([k, label], i) => (
-                <button key={k} onClick={() => go(k)} className="text-left px-3 py-3 hover:bg-zinc-50">
-                  <span className="block text-xs text-zinc-500">{i + 1}. {label.replace(' var mı?', '').replace('UÇEP’te beklenip müfredatta karşılığı bulunmayanlar', 'UÇEP uyumu')}</span>
-                  <span className={`block text-[15px] font-semibold mt-0.5 ${k === 'ucep' && rep.summary.ucep.includes('karşılanmıyor') ? 'text-red-700' : ''}`}>{rep.summary[k]}</span>
-                </button>
-              ))}
-            </div>
-
-            <div className="text-[15px] leading-relaxed text-zinc-800">
-              <Section id="where" n={1} title={QUESTIONS[0][1]}><Where r={rep} /></Section>
-              <Section id="objectives" n={2} title={QUESTIONS[1][1]}><Objectives r={rep} /></Section>
-              <Section id="repetitions" n={3} title={QUESTIONS[2][1]}><Repetitions r={rep} /></Section>
-              <Section id="ucep" n={4} title={QUESTIONS[3][1]}><Ucep r={rep} /></Section>
-            </div>
-
-            <footer className="mt-10 pt-3 border-t border-zinc-300 text-[13px] text-zinc-500">
-              Kaynak: {rep.source}. 1. ve 6. sınıf programları henüz eklenmedi. Olası tekrarlar ve UÇEP karşılıkları ilgili anabilim dallarıyla birlikte gözden geçirilmelidir.
-            </footer>
+            <p className="mt-6 text-[13px] text-zinc-500">Kaynak: KUSOM 2025–2026 ders programları (2.–5. sınıf).</p>
           </article>
         )}
       </div>

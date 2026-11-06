@@ -78,3 +78,14 @@ def test_topic_report_answers_the_four_questions_at_once(monkeypatch):
     assert c.get("/api/v1/audit/report", params={"q": "diyabet"}).json()["topic"]["name"].startswith("Diabetes")
     assert c.get("/api/v1/audit/report", params={"q": "yok böyle bir konu"}).status_code == 404
     assert any(t["name"] == "Osteoartrit" for t in c.get("/api/v1/audit/topics").json())
+
+
+def test_plain_answers_are_short_turkish_sentences():
+    from app.audit import topic_audit as ta
+    p = ta.topic_report(ta.find_topic("Osteoartrit"))["plain"]
+    assert p["where"]["text"].startswith("3. sınıfta MSKL 303")
+    assert "eklem ağrısı olan hastaya yaklaşım" in p["repetitions"]["text"]
+    assert "Uzun süreli izlem hiçbir derste yok" in p["ucep"]["text"] and p["ucep"]["flag"] == "1 eksik"
+    # topics without a hand-made profile do not get repetition or UÇEP verdicts
+    a = ta.topic_report(ta.find_topic("Astım"))["plain"]
+    assert a["repetitions"]["flag"] == "incelenmedi" and a["ucep"]["flag"] == "hazırlanmadı"
