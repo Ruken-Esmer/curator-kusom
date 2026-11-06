@@ -96,6 +96,7 @@ export function ProjectHome({ overview: o }: { overview: any }) {
 
 export function WorkPackagePage({ id, overview: o }: { id: WorkPackage['id']; overview: any }) {
   const go = useMimar((s) => s.go)
+  const setStep = useMimar((s) => s.setStep)
   const w = WORK_PACKAGES.find((x) => x.id === id)!
   return (
     <Page title={`İP${w.no} · ${w.name}`} lead={w.goal}>
@@ -135,7 +136,10 @@ export function WorkPackagePage({ id, overview: o }: { id: WorkPackage['id']; ov
           <ul className="list-disc pl-5 text-[14px] flex flex-col gap-1.5">{w.outputs.map((s) => <li key={s}>{s}</li>)}</ul>
         </Panel>
       </div>
-      <p className="mt-4 text-[12px] text-zinc-500">Metinler başvuru formunun (13.09.2026) 3.1 bölümünden sadeleştirilmiştir; bağlayıcı ifade formdaki metindir.</p>
+      <p className="mt-4 text-[14px]">
+        <button onClick={() => { setStep(w.no - 1); go('senaryo') }} className="text-[var(--brand)] underline underline-offset-2">Osteoartrit örneğinde İP{w.no} adımını gör</button>
+      </p>
+      <p className="mt-2 text-[12px] text-zinc-500">Metinler başvuru formunun (13.09.2026) 3.1 bölümünden sadeleştirilmiştir; bağlayıcı ifade formdaki metindir.</p>
     </Page>
   )
 }

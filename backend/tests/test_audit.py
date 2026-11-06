@@ -89,3 +89,17 @@ def test_plain_answers_are_short_turkish_sentences():
     # topics without a hand-made profile do not get repetition or UÇEP verdicts
     a = ta.topic_report(ta.find_topic("Astım"))["plain"]
     assert a["repetitions"]["flag"] == "incelenmedi" and a["ucep"]["flag"] == "hazırlanmadı"
+
+
+def test_osteoarthritis_scenario_through_work_packages(monkeypatch):
+    from fastapi.testclient import TestClient
+    from app.api.routes import audit as audit_routes
+    from app.main import app
+    monkeypatch.setattr(audit_routes, "active_source", lambda: "kusom")
+    d = TestClient(app).get("/api/v1/audit/scenario/osteoartrit").json()
+    assert d["t0"]["topic"]["no"] == 237
+    assert len(d["wp1"]["oa_titles"]) == 3
+    # the pair from the hand-made match is not among the automatic results: the "expert only" case
+    assert d["wp1"]["expert_pair_rank"] is None
+    assert d["wp4"]["titles"] > d["wp1"]["titles"] and d["wp4"]["redundancy"] > 0
+    assert d["wp4"]["diseases_with_profile"] == 1

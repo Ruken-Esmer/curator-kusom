@@ -781,17 +781,15 @@ def kusom_blocks():
         for y in loader.kusom_curriculum() for b in y["blocks"]]}
 
 
-@router.get("/kusom/los")
-def kusom_los(blocks: str = Query(..., description="comma-separated block ids, e.g. CIRC204,CARD314")):
-    """Learning objectives of the chosen blocks; a topic without written objectives is represented by its session…"""
+def kusom_los_rows(codes: list[str] | None = None) -> list[dict]:
+    """Analysis rows of the chosen blocks (block codes like "MSKL 303" or ids like "MSKL303"; None = all).
+    A topic without written objectives is represented by its session title."""
     from app.data.kusom import curriculum as loader
-    if not loader.available():
-        raise HTTPException(404, "KUSOM verisi yüklü değil")
-    want = {b.strip().upper().replace(" ", "") for b in blocks.split(",") if b.strip()}
+    want = None if codes is None else {c.strip().upper().replace(" ", "") for c in codes if c.strip()}
     rows = []
     for y in loader.kusom_curriculum():
         for b in y["blocks"]:
-            if b["id"] not in want:
+            if want is not None and b["id"] not in want:
                 continue
             for d in b["topic_details"]:
                 if d["objectives"]:
@@ -803,6 +801,16 @@ def kusom_los(blocks: str = Query(..., description="comma-separated block ids, e
                     rows.append({"uid": d["id"], "year": y["year"], "course": b["code"], "text": d["title"],
                                  "topic": d["title"], "activity": d["id"], "discipline": d.get("kind", ""),
                                  "from": "ders başlığı"})
+    return rows
+
+
+@router.get("/kusom/los")
+def kusom_los(blocks: str = Query(..., description="comma-separated block ids, e.g. CIRC204,CARD314")):
+    """Learning objectives of the chosen blocks; a topic without written objectives is represented by its session title."""
+    from app.data.kusom import curriculum as loader
+    if not loader.available():
+        raise HTTPException(404, "KUSOM verisi yüklü değil")
+    rows = kusom_los_rows(blocks.split(","))
     return {"rows": rows[:3000], "truncated": len(rows) > 3000, "total": len(rows)}
 
 

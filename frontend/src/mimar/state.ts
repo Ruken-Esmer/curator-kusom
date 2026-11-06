@@ -3,7 +3,7 @@ import { create } from 'zustand'
 export type Section =
   | 'overview' | 'data' | 'analysis' | 'plan' | 'review' | 'findings'
   | 'validation' | 'as5' | 'impact' | 'stats' | 'audit' | 'people' | 'playground'
-  | 'home' | 'scan' | 'wp1' | 'wp2' | 'wp3' | 'wp4' | 'wp5' | 'wp6'
+  | 'home' | 'senaryo' | 'scan' | 'wp1' | 'wp2' | 'wp3' | 'wp4' | 'wp5' | 'wp6'
 
 interface MimarState {
   user: any | null
@@ -13,6 +13,8 @@ interface MimarState {
   analysisId: string | null
   setAnalysisId: (id: string | null) => void
   refreshKey: number
+  step: number
+  setStep: (n: number) => void
   refresh: () => void
 }
 
@@ -24,6 +26,8 @@ export const useMimar = create<MimarState>((set) => ({
   analysisId: null,
   setAnalysisId: (analysisId) => set({ analysisId }),
   refreshKey: 0,
+  step: 0,
+  setStep: (step) => set({ step }),
   refresh: () => set((s) => ({ refreshKey: s.refreshKey + 1 })),
 }))
 

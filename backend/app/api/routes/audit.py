@@ -32,3 +32,11 @@ def report(q: str):
     if item is None:
         raise HTTPException(404, f"“{q}” UÇEP-2020 çekirdek hastalık listesinde bulunamadı.")
     return ta.topic_report(item)
+
+
+@router.get("/scenario/osteoartrit")
+def osteoarthritis_scenario():
+    """Osteoarthritis through the six work packages: the computed parts (first call takes ~15 s, then cached)."""
+    _need_kusom()
+    from app.audit.scenario import scenario
+    return scenario()

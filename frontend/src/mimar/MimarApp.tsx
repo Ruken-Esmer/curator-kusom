@@ -18,6 +18,7 @@ import PeopleSection from './sections/People'
 import Playground from './sections/Playground'
 import { ProjectHome, WorkPackagePage } from './sections/WorkPackages'
 import MimarAnalyze from './MimarAnalyze'
+import OsteoScenario from './sections/OsteoScenario'
 import { WORK_PACKAGES, type WorkPackage } from './workPackages'
 
 type Item = { id: Section; label: string; step?: string; doneKey?: (o: any) => boolean; lockKey?: (o: any) => string | null }
@@ -117,7 +118,7 @@ export default function MimarApp() {
   ))
 
   const view = {
-    home: <ProjectHome overview={o} />, scan: <MimarAnalyze />,
+    home: <ProjectHome overview={o} />, senaryo: <OsteoScenario />, scan: <MimarAnalyze />,
     wp1: <WorkPackagePage id="wp1" overview={o} />, wp2: <WorkPackagePage id="wp2" overview={o} />, wp3: <WorkPackagePage id="wp3" overview={o} />,
     wp4: <WorkPackagePage id="wp4" overview={o} />, wp5: <WorkPackagePage id="wp5" overview={o} />, wp6: <WorkPackagePage id="wp6" overview={o} />,
     overview: <Overview overview={o} />, data: <DataSection />, analysis: <AnalysisSection />, plan: <PlanSection />,
@@ -135,6 +136,9 @@ export default function MimarApp() {
         <nav aria-label="MİMAR bölümleri">
           <button className={`m-rail-item ${section === 'home' ? 'is-active' : ''}`} onClick={() => go('home')}>
             <span className="m-rail-step is-plain">◎</span><span>Proje özeti</span><span />
+          </button>
+          <button className={`m-rail-item ${section === 'senaryo' ? 'is-active' : ''}`} onClick={() => { useMimar.getState().setStep(0); go('senaryo') }}>
+            <span className="m-rail-step is-plain">→</span><span>Örnek: osteoartrit</span><span />
           </button>
           {isStaff && <div className="m-rail-group">İş paketleri</div>}
           {isStaff && PACKAGES.map(({ wp, items }) => {
